@@ -1,8 +1,8 @@
-import { Platform } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import { Platform } from "react-native";
 
 async function perform(action: () => Promise<void>): Promise<void> {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === "web") {
     return;
   }
   try {
@@ -21,9 +21,13 @@ export function lightImpact(): Promise<void> {
 }
 
 export function success(): Promise<void> {
-  return perform(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  return perform(() =>
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  );
 }
 
 export function warning(): Promise<void> {
-  return perform(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
+  return perform(() =>
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+  );
 }

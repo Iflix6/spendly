@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useFonts } from 'expo-font';
+import { useExpenseStore } from "@/store/useExpenseStore";
+import { ThemeProvider } from "@/theme/ThemeProvider";
 import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter';
-import { ThemeProvider } from '@/theme/ThemeProvider';
-import { useExpenseStore } from '@/store/useExpenseStore';
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+} from "@expo-google-fonts/inter";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
@@ -28,7 +28,7 @@ export default function RootLayout() {
     Inter_700Bold,
   });
   const [storeReady, setStoreReady] = useState(() =>
-    useExpenseStore.persist.hasHydrated()
+    useExpenseStore.persist.hasHydrated(),
   );
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
-              contentStyle: { backgroundColor: 'transparent' },
+              contentStyle: { backgroundColor: "transparent" },
             }}
           />
         </ThemeProvider>

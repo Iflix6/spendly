@@ -1,27 +1,26 @@
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { useExpenseStore } from "@/store/useExpenseStore";
+import { StatusBar } from "expo-status-bar";
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  type ReactNode,
-} from 'react';
-import { useColorScheme } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import {
-  interpolateColor,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-  type SharedValue,
-} from 'react-native-reanimated';
-import Animated from 'react-native-reanimated';
-import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
-import { useExpenseStore } from '@/store/useExpenseStore';
-import { darkColors, lightColors, type ThemeColors } from './tokens';
-import { durations, easing } from './motion';
+    createContext,
+    useContext,
+    useEffect,
+    useMemo,
+    type ReactNode,
+} from "react";
+import { useColorScheme } from "react-native";
+import Animated, {
+    interpolateColor,
+    useAnimatedStyle,
+    useDerivedValue,
+    useSharedValue,
+    withTiming,
+    type SharedValue,
+} from "react-native-reanimated";
+import { durations, easing } from "./motion";
+import { darkColors, lightColors, type ThemeColors } from "./tokens";
 
-export type ThemeMode = 'system' | 'light' | 'dark';
+export type ThemeMode = "system" | "light" | "dark";
 
 interface ThemeValue {
   colors: ThemeColors;
@@ -41,7 +40,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setMode = useExpenseStore((state) => state.setThemeMode);
   const systemScheme = useColorScheme();
   const reduceMotion = useReducedMotionSafe();
-  const isDark = mode === 'dark' || (mode === 'system' && systemScheme === 'dark');
+  const isDark =
+    mode === "dark" || (mode === "system" && systemScheme === "dark");
   const colors = isDark ? darkColors : lightColors;
   const themeProgress = useSharedValue(isDark ? 1 : 0);
 
@@ -53,16 +53,56 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [isDark, reduceMotion, themeProgress]);
 
   const animatedColors = useDerivedValue<ThemeColors>(() => ({
-    bg: interpolateColor(themeProgress.value, [0, 1], [lightColors.bg, darkColors.bg]),
-    surface: interpolateColor(themeProgress.value, [0, 1], [lightColors.surface, darkColors.surface]),
-    surfaceAlt: interpolateColor(themeProgress.value, [0, 1], [lightColors.surfaceAlt, darkColors.surfaceAlt]),
-    border: interpolateColor(themeProgress.value, [0, 1], [lightColors.border, darkColors.border]),
-    text: interpolateColor(themeProgress.value, [0, 1], [lightColors.text, darkColors.text]),
-    textMuted: interpolateColor(themeProgress.value, [0, 1], [lightColors.textMuted, darkColors.textMuted]),
-    accent: interpolateColor(themeProgress.value, [0, 1], [lightColors.accent, darkColors.accent]),
-    success: interpolateColor(themeProgress.value, [0, 1], [lightColors.success, darkColors.success]),
-    warning: interpolateColor(themeProgress.value, [0, 1], [lightColors.warning, darkColors.warning]),
-    danger: interpolateColor(themeProgress.value, [0, 1], [lightColors.danger, darkColors.danger]),
+    bg: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.bg, darkColors.bg],
+    ),
+    surface: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.surface, darkColors.surface],
+    ),
+    surfaceAlt: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.surfaceAlt, darkColors.surfaceAlt],
+    ),
+    border: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.border, darkColors.border],
+    ),
+    text: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.text, darkColors.text],
+    ),
+    textMuted: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.textMuted, darkColors.textMuted],
+    ),
+    accent: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.accent, darkColors.accent],
+    ),
+    success: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.success, darkColors.success],
+    ),
+    warning: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.warning, darkColors.warning],
+    ),
+    danger: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.danger, darkColors.danger],
+    ),
   }));
 
   const rootStyle = useAnimatedStyle(() => ({
@@ -71,12 +111,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ThemeContextValue>(
     () => ({ colors, isDark, mode, setMode, animatedColors }),
-    [animatedColors, colors, isDark, mode, setMode]
+    [animatedColors, colors, isDark, mode, setMode],
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style={isDark ? "light" : "dark"} />
       <Animated.View style={[{ flex: 1 }, rootStyle]}>{children}</Animated.View>
     </ThemeContext.Provider>
   );
@@ -85,7 +125,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function useTheme(): ThemeValue {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
+    throw new Error("useTheme must be used within ThemeProvider");
   }
   const { colors, isDark, mode, setMode } = context;
   return { colors, isDark, mode, setMode };
@@ -94,7 +134,7 @@ export function useTheme(): ThemeValue {
 export function useAnimatedThemeColors(): SharedValue<ThemeColors> {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useAnimatedThemeColors must be used within ThemeProvider');
+    throw new Error("useAnimatedThemeColors must be used within ThemeProvider");
   }
   return context.animatedColors;
 }

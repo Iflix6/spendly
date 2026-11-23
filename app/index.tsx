@@ -1,25 +1,25 @@
-import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useExpenseStore } from '@/store/useExpenseStore';
-import { useTheme, type ThemeMode } from '@/theme/ThemeProvider';
+import { isSameMonth } from "@/lib/dates";
+import { selection } from "@/lib/haptics";
+import { formatMoney } from "@/lib/money";
+import { monthlyDateLabel, totalForMonth } from "@/lib/stats";
+import { useExpenseStore } from "@/store/useExpenseStore";
+import { useTheme, type ThemeMode } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  letterSpacing,
-  lightCardShadow,
-  opacity,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
-} from '@/theme/tokens';
-import { formatMoney } from '@/lib/money';
-import { isSameMonth } from '@/lib/dates';
-import { monthlyDateLabel, totalForMonth } from '@/lib/stats';
-import { selection } from '@/lib/haptics';
+    fontFamily,
+    layout,
+    letterSpacing,
+    lightCardShadow,
+    opacity,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
+} from "@/theme/tokens";
+import { useMemo } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const THEME_ORDER: readonly ThemeMode[] = ['system', 'light', 'dark'];
+const THEME_ORDER: readonly ThemeMode[] = ["system", "light", "dark"];
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     ...typography.caption,
     letterSpacing: letterSpacing.wide,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   title: {
     ...typography.title,
@@ -50,18 +50,18 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   cardLabel: {
     ...typography.caption,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: letterSpacing.label,
   },
   liveBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.xs,
   },
   liveDot: {
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     borderWidth: layout.borderWidth,
     paddingHorizontal: spacing.base,
     marginTop: spacing.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   themeButtonText: {
     ...typography.body,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   footer: {
     ...typography.caption,
     marginTop: spacing.xxl,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
@@ -130,11 +130,13 @@ export default function HomeScreen() {
   const now = useMemo(() => new Date(), []);
   const monthTotal = useMemo(
     () => totalForMonth(expenses, now),
-    [expenses, now]
+    [expenses, now],
   );
   const monthCount = useMemo(
-    () => expenses.filter((expense) => isSameMonth(new Date(expense.date), now)).length,
-    [expenses, now]
+    () =>
+      expenses.filter((expense) => isSameMonth(new Date(expense.date), now))
+        .length,
+    [expenses, now],
   );
 
   const cycleTheme = () => {
@@ -145,7 +147,10 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.eyebrow, { color: colors.accent }]}>
@@ -177,7 +182,9 @@ export default function HomeScreen() {
               This month
             </Text>
             <View style={styles.liveBadge}>
-              <View style={[styles.liveDot, { backgroundColor: colors.success }]} />
+              <View
+                style={[styles.liveDot, { backgroundColor: colors.success }]}
+              />
               <Text style={[styles.liveText, { color: colors.textMuted }]}>
                 Local data
               </Text>
@@ -190,7 +197,9 @@ export default function HomeScreen() {
             {monthlyDateLabel(now)}
           </Text>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={[styles.count, { color: colors.text }]}>{monthCount}</Text>
+          <Text style={[styles.count, { color: colors.text }]}>
+            {monthCount}
+          </Text>
           <Text style={[styles.countLabel, { color: colors.textMuted }]}>
             expenses recorded this month
           </Text>
@@ -201,8 +210,8 @@ export default function HomeScreen() {
             Foundation check
           </Text>
           <Text style={[styles.sectionBody, { color: colors.textMuted }]}>
-            Typography, theming, deterministic seed data, and local persistence are
-            connected. No account or network connection is required.
+            Typography, theming, deterministic seed data, and local persistence
+            are connected. No account or network connection is required.
           </Text>
           <Pressable
             accessibilityRole="button"

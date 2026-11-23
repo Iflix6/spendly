@@ -1,4 +1,4 @@
-import { Easing } from 'react-native-reanimated';
+import { Easing } from "react-native-reanimated";
 
 export const springs = {
   snappy: { damping: 18, stiffness: 220, mass: 1 },

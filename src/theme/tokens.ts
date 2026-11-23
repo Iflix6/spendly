@@ -1,4 +1,4 @@
-import type { TextStyle } from 'react-native';
+import type { TextStyle } from "react-native";
 
 export interface ThemeColors {
   bg: string;
@@ -14,29 +14,29 @@ export interface ThemeColors {
 }
 
 export const lightColors: ThemeColors = {
-  bg: '#F6F7FB',
-  surface: '#FFFFFF',
-  surfaceAlt: '#EEF0F6',
-  border: '#E3E6EE',
-  text: '#11131A',
-  textMuted: '#6B7280',
-  accent: '#6C5CE7',
-  success: '#34C98B',
-  warning: '#F5B83D',
-  danger: '#FF5C5C',
+  bg: "#F6F7FB",
+  surface: "#FFFFFF",
+  surfaceAlt: "#EEF0F6",
+  border: "#E3E6EE",
+  text: "#11131A",
+  textMuted: "#6B7280",
+  accent: "#6C5CE7",
+  success: "#34C98B",
+  warning: "#F5B83D",
+  danger: "#FF5C5C",
 };
 
 export const darkColors: ThemeColors = {
-  bg: '#0B0D12',
-  surface: '#151922',
-  surfaceAlt: '#1D2230',
-  border: '#262C3B',
-  text: '#F2F4F8',
-  textMuted: '#9AA3B2',
-  accent: '#6C5CE7',
-  success: '#34C98B',
-  warning: '#F5B83D',
-  danger: '#FF5C5C',
+  bg: "#0B0D12",
+  surface: "#151922",
+  surfaceAlt: "#1D2230",
+  border: "#262C3B",
+  text: "#F2F4F8",
+  textMuted: "#9AA3B2",
+  accent: "#6C5CE7",
+  success: "#34C98B",
+  warning: "#F5B83D",
+  danger: "#FF5C5C",
 };
 
 export const spacing = {
@@ -74,10 +74,10 @@ export const letterSpacing = {
 } as const;
 
 export const fontFamily = {
-  regular: 'Inter_400Regular',
-  medium: 'Inter_500Medium',
-  semibold: 'Inter_600SemiBold',
-  bold: 'Inter_700Bold',
+  regular: "Inter_400Regular",
+  medium: "Inter_500Medium",
+  semibold: "Inter_600SemiBold",
+  bold: "Inter_700Bold",
 } as const;
 
 export const typography = {
@@ -85,40 +85,40 @@ export const typography = {
     fontSize: 40,
     lineHeight: 44,
     fontFamily: fontFamily.bold,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   title: {
     fontSize: 24,
     lineHeight: 30,
     fontFamily: fontFamily.bold,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   headline: {
     fontSize: 18,
     lineHeight: 24,
     fontFamily: fontFamily.semibold,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   body: {
     fontSize: 15,
     lineHeight: 22,
     fontFamily: fontFamily.regular,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   caption: {
     fontSize: 12,
     lineHeight: 16,
     fontFamily: fontFamily.medium,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 } as const satisfies Record<string, TextStyle>;
 
 export const tabularNums = {
-  fontVariant: ['tabular-nums'],
+  fontVariant: ["tabular-nums"],
 } satisfies TextStyle;
 
 export const lightCardShadow = {
-  shadowColor: '#000000',
+  shadowColor: "#000000",
   shadowOpacity: 0.08,
   shadowRadius: 16,
   shadowOffset: { width: 0, height: 6 },

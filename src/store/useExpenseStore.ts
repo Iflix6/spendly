@@ -1,18 +1,18 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 import {
-  DEFAULT_BUDGET_CENTS,
-  DEFAULT_THEME_MODE,
-  ID_RADIX,
-  ID_RANDOM_LENGTH,
-  NOTE_MAX,
-  STORE_KEY,
-  STORE_VERSION,
-} from '@/constants';
-import type { CategoryId } from '@/constants/categories';
-import type { ThemeMode } from '@/theme/ThemeProvider';
-import { generateSeed } from '@/lib/seed';
+    DEFAULT_BUDGET_CENTS,
+    DEFAULT_THEME_MODE,
+    ID_RADIX,
+    ID_RANDOM_LENGTH,
+    NOTE_MAX,
+    STORE_KEY,
+    STORE_VERSION,
+} from "@/constants";
+import type { CategoryId } from "@/constants/categories";
+import { generateSeed } from "@/lib/seed";
+import type { ThemeMode } from "@/theme/ThemeProvider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export interface Expense {
   id: string;
@@ -23,11 +23,11 @@ export interface Expense {
   createdAt: number;
 }
 
-export type ExpenseInput = Omit<Expense, 'id' | 'createdAt'>;
+export type ExpenseInput = Omit<Expense, "id" | "createdAt">;
 
 type PersistedExpenseState = Pick<
   ExpenseState,
-  'expenses' | 'budgetCents' | 'themeMode' | 'hasSeeded' | 'lastDeleted'
+  "expenses" | "budgetCents" | "themeMode" | "hasSeeded" | "lastDeleted"
 >;
 
 export interface ExpenseState {
@@ -39,18 +39,20 @@ export interface ExpenseState {
   addExpense: (expense: ExpenseInput) => Expense;
   updateExpense: (
     id: string,
-    patch: Partial<Omit<Expense, 'id' | 'createdAt'>>
+    patch: Partial<Omit<Expense, "id" | "createdAt">>,
   ) => void;
   deleteExpense: (id: string) => void;
   undoDelete: () => void;
   setBudget: (cents: number) => void;
-  setThemeMode: (mode: ExpenseState['themeMode']) => void;
+  setThemeMode: (mode: ExpenseState["themeMode"]) => void;
   resetDemoData: () => void;
 }
 
 function generateLocalId(): string {
   const timestamp = Date.now().toString(ID_RADIX);
-  const random = Math.random().toString(ID_RADIX).slice(2, 2 + ID_RANDOM_LENGTH);
+  const random = Math.random()
+    .toString(ID_RADIX)
+    .slice(2, 2 + ID_RANDOM_LENGTH);
   return `${timestamp}-${random}`;
 }
 
@@ -84,12 +86,14 @@ export const useExpenseStore = create<ExpenseState>()(
               ...patch,
               id: expense.id,
               createdAt: expense.createdAt,
-              amountCents: patch.amountCents === undefined
-                ? expense.amountCents
-                : Math.round(patch.amountCents),
-              note: patch.note === undefined
-                ? expense.note
-                : patch.note.slice(0, NOTE_MAX),
+              amountCents:
+                patch.amountCents === undefined
+                  ? expense.amountCents
+                  : Math.round(patch.amountCents),
+              note:
+                patch.note === undefined
+                  ? expense.note
+                  : patch.note.slice(0, NOTE_MAX),
             };
           }),
         }));
@@ -113,7 +117,7 @@ export const useExpenseStore = create<ExpenseState>()(
           }
           const restored = state.lastDeleted;
           const expenses = state.expenses.some(
-            (expense) => expense.id === restored.id
+            (expense) => expense.id === restored.id,
           )
             ? state.expenses
             : [restored, ...state.expenses];
@@ -154,7 +158,6 @@ export const useExpenseStore = create<ExpenseState>()(
           });
         }
       },
-    }
-  )
+    },
+  ),
 );
-

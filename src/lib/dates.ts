@@ -1,23 +1,23 @@
+import { WEEK_BUCKET_BOUNDARIES } from "@/constants";
 import {
-  format,
-  getDate,
-  getDaysInMonth,
-  isSameMonth as isSameCalendarMonth,
-  isToday,
-  isYesterday,
-  startOfMonth,
-  endOfMonth,
-} from 'date-fns';
-import { WEEK_BUCKET_BOUNDARIES } from '@/constants';
+    endOfMonth,
+    format,
+    getDate,
+    getDaysInMonth,
+    isSameMonth as isSameCalendarMonth,
+    isToday,
+    isYesterday,
+    startOfMonth,
+} from "date-fns";
 
 export function dayLabel(date: Date): string {
   if (isToday(date)) {
-    return 'Today';
+    return "Today";
   }
   if (isYesterday(date)) {
-    return 'Yesterday';
+    return "Yesterday";
   }
-  return format(date, 'EEE, d MMM');
+  return format(date, "EEE, d MMM");
 }
 
 export function isSameMonth(first: Date, second: Date): boolean {
@@ -30,7 +30,7 @@ export function monthRange(date: Date): { start: Date; end: Date } {
 
 export function weekBucket(dayOfMonth: number): number {
   const boundaryIndex = WEEK_BUCKET_BOUNDARIES.findIndex(
-    (boundary) => dayOfMonth <= boundary
+    (boundary) => dayOfMonth <= boundary,
   );
   return boundaryIndex >= 0 ? boundaryIndex : WEEK_BUCKET_BOUNDARIES.length;
 }
@@ -46,7 +46,7 @@ export function daysInMonth(date: Date): number {
 }
 
 export function localDateKey(date: Date): string {
-  return format(date, 'yyyy-MM-dd');
+  return format(date, "yyyy-MM-dd");
 }
 
 export function dayOfMonth(date: Date): number {

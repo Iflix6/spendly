@@ -1,8 +1,8 @@
-import { addDays, format, getDaysInMonth, subMonths } from 'date-fns';
-import { PERCENT_PRECISION, WEEK_BUCKET_BOUNDARIES } from '@/constants';
-import { CATEGORY_IDS, type CategoryId } from '@/constants/categories';
-import type { Expense } from '@/store/useExpenseStore';
-import { isSameMonth, localDateKey, weekBucket } from './dates';
+import { PERCENT_PRECISION, WEEK_BUCKET_BOUNDARIES } from "@/constants";
+import { CATEGORY_IDS, type CategoryId } from "@/constants/categories";
+import type { Expense } from "@/store/useExpenseStore";
+import { addDays, format, getDaysInMonth, subMonths } from "date-fns";
+import { isSameMonth, localDateKey, weekBucket } from "./dates";
 
 export interface DaySpend {
   date: string;
@@ -14,26 +14,29 @@ export interface WeekSpend {
   amountCents: number;
 }
 
-export function totalForMonth(expenses: readonly Expense[], month: Date): number {
+export function totalForMonth(
+  expenses: readonly Expense[],
+  month: Date,
+): number {
   return expenses.reduce(
     (total, expense) =>
       isSameMonth(new Date(expense.date), month)
         ? total + expense.amountCents
         : total,
-    0
+    0,
   );
 }
 
 export function totalsByCategory(
   expenses: readonly Expense[],
-  month: Date
+  month: Date,
 ): Record<CategoryId, number> {
   const totals = CATEGORY_IDS.reduce(
     (result, categoryId) => {
       result[categoryId] = 0;
       return result;
     },
-    {} as Record<CategoryId, number>
+    {} as Record<CategoryId, number>,
   );
 
   for (const expense of expenses) {
@@ -46,7 +49,7 @@ export function totalsByCategory(
 
 export function spendByDay(
   expenses: readonly Expense[],
-  month: Date
+  month: Date,
 ): DaySpend[] {
   const start = new Date(month.getFullYear(), month.getMonth(), 1);
   const days = Array.from({ length: getDaysInMonth(month) }, (_, index) => {
@@ -68,11 +71,11 @@ export function spendByDay(
 
 export function spendByWeek(
   expenses: readonly Expense[],
-  month: Date
+  month: Date,
 ): WeekSpend[] {
   const weeks: WeekSpend[] = Array.from(
     { length: WEEK_BUCKET_BOUNDARIES.length + 1 },
-    (_, bucket) => ({ bucket, amountCents: 0 })
+    (_, bucket) => ({ bucket, amountCents: 0 }),
   );
 
   for (const expense of expenses) {
@@ -85,10 +88,7 @@ export function spendByWeek(
   return weeks;
 }
 
-export function monthDelta(
-  expenses: readonly Expense[],
-  month: Date
-): number {
+export function monthDelta(expenses: readonly Expense[], month: Date): number {
   const current = totalForMonth(expenses, month);
   const previous = totalForMonth(expenses, subMonths(month, 1));
   if (previous === 0) {
@@ -100,5 +100,5 @@ export function monthDelta(
 }
 
 export function monthlyDateLabel(month: Date): string {
-  return format(month, 'MMMM yyyy');
+  return format(month, "MMMM yyyy");
 }

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "spendly-tmp",
-    "slug": "spendly-tmp",
+    "name": "Spendly",
+    "slug": "spendly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "spendlytmp",
+    "scheme": "spendly",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#6C5CE7",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }

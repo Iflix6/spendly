@@ -1,0 +1,157 @@
+﻿node.exe : npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\supre\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn tar TA...expo\cli\build':Strin 
+   g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\react-native\ReactCommon\react\renderer\animated'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 'C:\dev\spendly\
+node_modules\expo-router\build\react-navigation\routers\extendRouter.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\react-native\ReactCommon'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-router\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\react-native\ReactCommon'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\@expo\ui\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo\node_modules\@expo\cli\build'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\prebuilds'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 
+'C:\dev\spendly\node_modules\expo-modules-core\react-native.config.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 
+'C:\dev\spendly\node_modules\expo-modules-core\spm.config.json'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat 
+'C:\dev\spendly\node_modules\expo-modules-core\src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 
+'C:\dev\spendly\node_modules\expo-modules-core\types.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 
+'C:\dev\spendly\node_modules\expo-modules-core\types.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open 
+'C:\dev\spendly\node_modules\expo-modules-core\LICENSE'

@@ -1,6 +1,6 @@
 import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
 import { layout, opacity, radii, spacing, typography } from "@/theme/tokens";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";

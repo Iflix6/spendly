@@ -2,9 +2,9 @@ import {
     FloatingTabBar,
     type FloatingTabRoute,
 } from "@/components/FloatingTabBar";
+import { TabBlurTargetContext } from "@/components/TabBlurTargetContext";
 import { TAB_ICONS } from "@/constants/navigation";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { BlurTargetView } from "expo-blur";
 import { Tabs } from "expo-router";
 import {
     useCallback,
@@ -12,17 +12,11 @@ import {
     type ComponentProps,
     type ComponentRef,
 } from "react";
-import { StyleSheet, type View } from "react-native";
+import type { View } from "react-native";
 
 type TabBarProps = Parameters<
   NonNullable<ComponentProps<typeof Tabs>["tabBar"]>
 >[0];
-
-const styles = StyleSheet.create({
-  target: {
-    flex: 1,
-  },
-});
 
 export default function TabsLayout() {
   const reduceMotion = useReducedMotionSafe();
@@ -50,7 +44,7 @@ export default function TabsLayout() {
   );
 
   return (
-    <BlurTargetView ref={blurTarget} style={styles.target}>
+    <TabBlurTargetContext.Provider value={blurTarget}>
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -63,6 +57,6 @@ export default function TabsLayout() {
         <Tabs.Screen name="expenses" options={{ title: "Expenses" }} />
         <Tabs.Screen name="stats" options={{ title: "Stats" }} />
       </Tabs>
-    </BlurTargetView>
+    </TabBlurTargetContext.Provider>
   );
 }

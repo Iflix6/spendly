@@ -3,7 +3,7 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { durations, easing, springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import { layout, spacing, typography } from "@/theme/tokens";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
@@ -125,7 +125,11 @@ export function FloatingTabItem({
           style={[styles.icon, activeIconStyle]}
           pointerEvents="none"
         >
-          <Ionicons name={icon} size={TAB_BAR.iconSize} color={colors.accent} />
+          <Ionicons
+            name={icon}
+            size={TAB_BAR.iconSize}
+            color={colors.accent}
+          />
         </Animated.View>
       </Animated.View>
       <Animated.View

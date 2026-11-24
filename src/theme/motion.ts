@@ -12,6 +12,7 @@ export const durations = {
   slow: 400,
   chart: 900,
   theme: 300,
+  reduced: 120,
 } as const;
 
 export const easing = {

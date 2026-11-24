@@ -3,11 +3,37 @@ import { useTabBarHeight } from "@/hooks/useTabBarHeight";
 import { useExpenseStore } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { darkColors, lightColors, spacing } from "@/theme/tokens";
-import { beforeEach, describe, expect, it } from "@jest/globals";
-import { render } from "@testing-library/react-native";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { fireEvent, render } from "@testing-library/react-native";
 import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AddExpenseStub from "../add";
+import ExpenseDetailStub from "../expense/[id]";
 import HomeScreen from "../(tabs)/index";
+
+const mockBack = jest.fn();
+
+jest.mock("expo-router", () => ({
+  useIsFocused: () => true,
+  useRouter: () => ({ back: mockBack }),
+}));
+
+jest.mock("@expo/vector-icons/Ionicons", () => {
+  const React = require("react");
+  const { Text } = require("react-native");
+  return {
+    __esModule: true,
+    default: ({
+      name,
+      size,
+      color,
+    }: {
+      name: string;
+      size?: number;
+      color?: string;
+    }) => React.createElement(Text, { style: { fontSize: size, color } }, name),
+  };
+});
 
 const safeAreaMetrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -29,6 +55,7 @@ function renderScreen(screen: React.ReactElement) {
 
 beforeEach(() => {
   useExpenseStore.setState({ themeMode: "light" });
+  mockBack.mockClear();
 });
 
 describe("tab screen shell", () => {
@@ -51,5 +78,27 @@ describe("tab screen shell", () => {
       safeAreaMetrics.insets.bottom +
       spacing.xl;
     expect(getByTestId("tab-bar-height").props.children).toBe(expected);
+  });
+});
+
+describe("stack stubs", () => {
+  it("closes the Add stub and returns to the tab shell", async () => {
+    const { getByRole, getByText } = await renderScreen(<AddExpenseStub />);
+    expect(getByText("Add expense")).toHaveStyle({ color: lightColors.text });
+
+    await fireEvent.press(getByRole("button", { name: "Close add expense" }));
+    expect(mockBack).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns from the expense detail stub", async () => {
+    const { getByRole, getByText } = await renderScreen(
+      <ExpenseDetailStub />,
+    );
+    expect(getByText("Expense details")).toHaveStyle({
+      color: lightColors.text,
+    });
+
+    await fireEvent.press(getByRole("button", { name: "Back to expenses" }));
+    expect(mockBack).toHaveBeenCalledTimes(1);
   });
 });

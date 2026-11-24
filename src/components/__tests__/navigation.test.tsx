@@ -17,6 +17,23 @@ jest.mock("expo-router", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+jest.mock("@expo/vector-icons/Ionicons", () => {
+  const React = require("react");
+  const { Text } = require("react-native");
+  return {
+    __esModule: true,
+    default: ({
+      name,
+      size,
+      color,
+    }: {
+      name: string;
+      size?: number;
+      color?: string;
+    }) => React.createElement(Text, { style: { fontSize: size, color } }, name),
+  };
+});
+
 const routes: readonly FloatingTabRoute[] = [
   { key: "home", title: "Home", icon: "home-outline" },
   { key: "expenses", title: "Expenses", icon: "receipt-outline" },

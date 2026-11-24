@@ -5,7 +5,7 @@ import { lightImpact } from "@/lib/haptics";
 import { springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import { fabGlow, opacity, radii } from "@/theme/tokens";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";

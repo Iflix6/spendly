@@ -88,6 +88,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       [0, 1],
       [lightColors.accent, darkColors.accent],
     ),
+    accentAlt: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.accentAlt, darkColors.accentAlt],
+    ),
+    onAccent: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.onAccent, darkColors.onAccent],
+    ),
     success: interpolateColor(
       themeProgress.value,
       [0, 1],

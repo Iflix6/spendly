@@ -1,3 +1,4 @@
+import { SheetOpenProgressProvider } from "@/components/SheetOpenProgressProvider";
 import { useExpenseStore } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { Inter_400Regular } from "@expo-google-fonts/inter/400Regular";
@@ -54,12 +55,27 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: "transparent" },
-            }}
-          />
+          <SheetOpenProgressProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: "transparent" },
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
+              <Stack.Screen
+                name="add"
+                options={{
+                  presentation: "transparentModal",
+                  animation: "none",
+                }}
+              />
+              <Stack.Screen
+                name="expense/[id]"
+                options={{ presentation: "card" }}
+              />
+            </Stack>
+          </SheetOpenProgressProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

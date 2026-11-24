@@ -8,6 +8,8 @@ export interface ThemeColors {
   text: string;
   textMuted: string;
   accent: string;
+  accentAlt: string;
+  onAccent: string;
   success: string;
   warning: string;
   danger: string;
@@ -21,6 +23,8 @@ export const lightColors: ThemeColors = {
   text: "#11131A",
   textMuted: "#6B7280",
   accent: "#6C5CE7",
+  accentAlt: "#8B7CF6",
+  onAccent: "#FFFFFF",
   success: "#34C98B",
   warning: "#F5B83D",
   danger: "#FF5C5C",
@@ -34,6 +38,8 @@ export const darkColors: ThemeColors = {
   text: "#F2F4F8",
   textMuted: "#9AA3B2",
   accent: "#6C5CE7",
+  accentAlt: "#8B7CF6",
+  onAccent: "#FFFFFF",
   success: "#34C98B",
   warning: "#F5B83D",
   danger: "#FF5C5C",
@@ -66,6 +72,9 @@ export const opacity = {
   subtle: 0.08,
   muted: 0.65,
   tint: 0.15,
+  glass: 0.72,
+  modal: 0.96,
+  fabGlow: 0.18,
 } as const;
 
 export const letterSpacing = {
@@ -123,4 +132,11 @@ export const lightCardShadow = {
   shadowRadius: 16,
   shadowOffset: { width: 0, height: 6 },
   elevation: 4,
+} satisfies TextStyle;
+
+export const fabGlow = {
+  shadowOpacity: 0.28,
+  shadowRadius: 20,
+  shadowOffset: { width: 0, height: 8 },
+  elevation: 12,
 } satisfies TextStyle;

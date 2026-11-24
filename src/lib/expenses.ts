@@ -1,7 +1,4 @@
-import {
-  CATEGORY_BY_ID,
-  type CategoryId,
-} from "@/constants/categories";
+import { CATEGORY_BY_ID, type CategoryId } from "@/constants/categories";
 import type { Expense } from "@/store/useExpenseStore";
 import { dayLabel, localDateKey } from "./dates";
 

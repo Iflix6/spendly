@@ -4,7 +4,14 @@ import { SNACKBAR } from "@/constants/expenses";
 import * as haptics from "@/lib/haptics";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
-import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import {
+    afterEach,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    jest,
+} from "@jest/globals";
 import { fireEvent, render } from "@testing-library/react-native";
 import type { ReactElement } from "react";
 

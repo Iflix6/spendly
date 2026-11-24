@@ -3,30 +3,30 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { durations, easing } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  opacity,
-  radii,
-  spacing,
-  typography,
+    fontFamily,
+    layout,
+    opacity,
+    radii,
+    spacing,
+    typography,
 } from "@/theme/tokens";
 import {
-  Canvas,
-  Circle,
-  Group,
-  Line,
-  RoundedRect,
+    Canvas,
+    Circle,
+    Group,
+    Line,
+    RoundedRect,
 } from "@shopify/react-native-skia";
 import { useEffect, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import {
-  cancelAnimation,
-  interpolate,
-  useDerivedValue,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
+    cancelAnimation,
+    interpolate,
+    useDerivedValue,
+    useSharedValue,
+    withRepeat,
+    withSequence,
+    withTiming,
 } from "react-native-reanimated";
 
 interface EmptyStateProps {

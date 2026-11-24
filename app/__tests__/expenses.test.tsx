@@ -66,16 +66,21 @@ jest.mock("@/components/CategoryChip", () => {
   const React = require("react");
   const { Pressable } = require("react-native");
   return {
-    CategoryChip: ({ label, selected, onPress }: {
+    CategoryChip: ({
+      label,
+      selected,
+      onPress,
+    }: {
       label: string;
       selected: boolean;
       onPress: () => void;
-    }) => React.createElement(Pressable, {
-      accessibilityRole: "button",
-      accessibilityLabel: label,
-      accessibilityState: { selected },
-      onPress,
-    }),
+    }) =>
+      React.createElement(Pressable, {
+        accessibilityRole: "button",
+        accessibilityLabel: label,
+        accessibilityState: { selected },
+        onPress,
+      }),
   };
 });
 
@@ -83,21 +88,29 @@ jest.mock("@/components/EmptyState", () => {
   const React = require("react");
   const { Pressable, Text, View } = require("react-native");
   return {
-    EmptyState: ({ hasFilters, onClearFilters }: {
+    EmptyState: ({
+      hasFilters,
+      onClearFilters,
+    }: {
       hasFilters: boolean;
       onClearFilters: () => void;
-    }) => React.createElement(
-      View,
-      null,
-      React.createElement(Text, null, hasFilters ? "No matching expenses" : "No expenses yet"),
-      hasFilters
-        ? React.createElement(Pressable, {
-            accessibilityRole: "button",
-            accessibilityLabel: "Clear filters",
-            onPress: onClearFilters,
-          })
-        : null,
-    ),
+    }) =>
+      React.createElement(
+        View,
+        null,
+        React.createElement(
+          Text,
+          null,
+          hasFilters ? "No matching expenses" : "No expenses yet",
+        ),
+        hasFilters
+          ? React.createElement(Pressable, {
+              accessibilityRole: "button",
+              accessibilityLabel: "Clear filters",
+              onPress: onClearFilters,
+            })
+          : null,
+      ),
   };
 });
 
@@ -105,32 +118,37 @@ jest.mock("@/components/SwipeableRow", () => {
   const React = require("react");
   const { Pressable, Text } = require("react-native");
   return {
-    SwipeableRow: ({ expense, onPress, onDelete }: {
+    SwipeableRow: ({
+      expense,
+      onPress,
+      onDelete,
+    }: {
       expense: { id: string; note: string };
       onPress: (expense: { id: string; note: string }) => void;
       onDelete: (id: string) => void;
-    }) => React.createElement(
-      React.Fragment,
-      null,
+    }) =>
       React.createElement(
-        Pressable,
-        {
-          testID: `row-${expense.id}`,
-          accessibilityRole: "button",
-          onPress: () => onPress(expense),
-        },
-        React.createElement(Text, null, expense.note),
+        React.Fragment,
+        null,
+        React.createElement(
+          Pressable,
+          {
+            testID: `row-${expense.id}`,
+            accessibilityRole: "button",
+            onPress: () => onPress(expense),
+          },
+          React.createElement(Text, null, expense.note),
+        ),
+        React.createElement(
+          Pressable,
+          {
+            accessibilityRole: "button",
+            accessibilityLabel: `Delete ${expense.id}`,
+            onPress: () => onDelete(expense.id),
+          },
+          React.createElement(Text, null, `Delete ${expense.id}`),
+        ),
       ),
-      React.createElement(
-        Pressable,
-        {
-          accessibilityRole: "button",
-          accessibilityLabel: `Delete ${expense.id}`,
-          onPress: () => onDelete(expense.id),
-        },
-        React.createElement(Text, null, `Delete ${expense.id}`),
-      ),
-    ),
   };
 });
 
@@ -226,9 +244,7 @@ describe("Expenses screen", () => {
     expect(getByText("Bolt ride")).toBeTruthy();
 
     fireEvent.press(getByRole("button", { name: "Food" }));
-    await waitFor(() =>
-      expect(getByText("No matching expenses")).toBeTruthy(),
-    );
+    await waitFor(() => expect(getByText("No matching expenses")).toBeTruthy());
     expect(haptics.selection).toHaveBeenCalledTimes(1);
 
     fireEvent.press(getByRole("button", { name: "Clear filters" }));
@@ -268,4 +284,3 @@ describe("Expenses screen", () => {
     expect(getByText("Expenses")).toHaveStyle({ color: darkColors.text });
   });
 });
-

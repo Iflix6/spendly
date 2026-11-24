@@ -1,8 +1,5 @@
-import {
-  resistSwipeTranslation,
-  swipeReleaseAction,
-} from "@/lib/swipe";
 import { SWIPE } from "@/constants/expenses";
+import { resistSwipeTranslation, swipeReleaseAction } from "@/lib/swipe";
 import { describe, expect, it } from "@jest/globals";
 
 describe("swipe helpers", () => {
@@ -12,9 +9,7 @@ describe("swipe helpers", () => {
 
   it("tracks movement linearly up to the action width", () => {
     expect(resistSwipeTranslation(-48)).toBe(-48);
-    expect(resistSwipeTranslation(-SWIPE.actionWidth)).toBe(
-      -SWIPE.actionWidth,
-    );
+    expect(resistSwipeTranslation(-SWIPE.actionWidth)).toBe(-SWIPE.actionWidth);
   });
 
   it("adds rubber-band resistance beyond the action width", () => {

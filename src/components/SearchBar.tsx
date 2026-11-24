@@ -5,16 +5,11 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { layout, radii, spacing, typography } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useMemo } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
 } from "react-native-reanimated";
 
 interface SearchBarProps {

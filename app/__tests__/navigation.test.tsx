@@ -7,9 +7,9 @@ import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { fireEvent, render } from "@testing-library/react-native";
 import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import HomeScreen from "../(tabs)/index";
 import AddExpenseStub from "../add";
 import ExpenseDetailStub from "../expense/[id]";
-import HomeScreen from "../(tabs)/index";
 
 const mockBack = jest.fn();
 
@@ -91,9 +91,7 @@ describe("stack stubs", () => {
   });
 
   it("returns from the expense detail stub", async () => {
-    const { getByRole, getByText } = await renderScreen(
-      <ExpenseDetailStub />,
-    );
+    const { getByRole, getByText } = await renderScreen(<ExpenseDetailStub />);
     expect(getByText("Expense details")).toHaveStyle({
       color: lightColors.text,
     });

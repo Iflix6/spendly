@@ -125,11 +125,7 @@ export function FloatingTabItem({
           style={[styles.icon, activeIconStyle]}
           pointerEvents="none"
         >
-          <Ionicons
-            name={icon}
-            size={TAB_BAR.iconSize}
-            color={colors.accent}
-          />
+          <Ionicons name={icon} size={TAB_BAR.iconSize} color={colors.accent} />
         </Animated.View>
       </Animated.View>
       <Animated.View

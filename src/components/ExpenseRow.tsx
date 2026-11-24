@@ -1,27 +1,27 @@
 import { CategoryIcon } from "@/components/CategoryIcon";
-import { EXPENSE_ROW } from "@/constants/expenses";
 import { CATEGORY_BY_ID } from "@/constants/categories";
+import { EXPENSE_ROW } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { formatMoney } from "@/lib/money";
+import type { Expense } from "@/store/useExpenseStore";
 import { springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  lightCardShadow,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
+    fontFamily,
+    layout,
+    lightCardShadow,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
 } from "@/theme/tokens";
-import type { Expense } from "@/store/useExpenseStore";
 import { format } from "date-fns";
 import { memo, useCallback, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
 } from "react-native-reanimated";
 
 interface ExpenseRowProps {

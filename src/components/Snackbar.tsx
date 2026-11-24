@@ -3,20 +3,20 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  lightCardShadow,
-  radii,
-  spacing,
-  typography,
+    fontFamily,
+    layout,
+    lightCardShadow,
+    radii,
+    spacing,
+    typography,
 } from "@/theme/tokens";
 import { useEffect, useMemo } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
-  FadeIn,
-  FadeOut,
-  FadeOutDown,
-  SlideInUp,
+    FadeIn,
+    FadeOut,
+    FadeOutDown,
+    SlideInUp,
 } from "react-native-reanimated";
 
 interface SnackbarProps {

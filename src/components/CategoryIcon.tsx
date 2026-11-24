@@ -1,8 +1,5 @@
+import { CATEGORY_BY_ID, type CategoryId } from "@/constants/categories";
 import { CATEGORY_ICON } from "@/constants/expenses";
-import {
-  CATEGORY_BY_ID,
-  type CategoryId,
-} from "@/constants/categories";
 import { opacity, radii } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMemo } from "react";

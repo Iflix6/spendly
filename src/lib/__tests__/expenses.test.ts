@@ -1,8 +1,5 @@
+import { filterExpenses, groupExpensesByDay } from "@/lib/expenses";
 import type { Expense } from "@/store/useExpenseStore";
-import {
-  filterExpenses,
-  groupExpensesByDay,
-} from "@/lib/expenses";
 import { describe, expect, it } from "@jest/globals";
 
 const expenses: Expense[] = [
@@ -34,9 +31,9 @@ const expenses: Expense[] = [
 
 describe("expense filtering", () => {
   it("matches note text case-insensitively", () => {
-    expect(filterExpenses(expenses, "LUNCH", "all").map(({ id }) => id)).toEqual([
-      "food-today",
-    ]);
+    expect(
+      filterExpenses(expenses, "LUNCH", "all").map(({ id }) => id),
+    ).toEqual(["food-today"]);
   });
 
   it("matches category labels case-insensitively", () => {

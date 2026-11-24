@@ -1,22 +1,17 @@
-import { CATEGORY_CHIP } from "@/constants/expenses";
 import type { Category } from "@/constants/categories";
+import { CATEGORY_CHIP } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { springs } from "@/theme/motion";
 import { useAnimatedThemeColors } from "@/theme/ThemeProvider";
-import {
-  layout,
-  radii,
-  spacing,
-  typography,
-} from "@/theme/tokens";
+import { layout, radii, spacing, typography } from "@/theme/tokens";
 import { useEffect, useRef } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withSpring,
+    interpolateColor,
+    useAnimatedStyle,
+    useSharedValue,
+    withSequence,
+    withSpring,
 } from "react-native-reanimated";
 
 interface CategoryChipProps {
@@ -83,7 +78,10 @@ export function CategoryChip({
       scale.value = reduceMotion
         ? 1
         : withSequence(
-            withSpring(selected ? CATEGORY_CHIP.selectedScale : 1, springs.snappy),
+            withSpring(
+              selected ? CATEGORY_CHIP.selectedScale : 1,
+              springs.snappy,
+            ),
             withSpring(1, springs.snappy),
           );
     }

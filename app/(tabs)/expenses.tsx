@@ -5,48 +5,34 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { Snackbar } from "@/components/Snackbar";
 import { SwipeableRow } from "@/components/SwipeableRow";
 import { useTabBlurTarget } from "@/components/TabBlurTargetContext";
+import { CATEGORIES, type Category } from "@/constants/categories";
 import {
-  CATEGORIES,
-  type Category,
-} from "@/constants/categories";
-import {
-  EXPENSE_LIST_MOTION,
-  EXPENSE_SEARCH_DEBOUNCE_MS,
+    EXPENSE_LIST_MOTION,
+    EXPENSE_SEARCH_DEBOUNCE_MS,
 } from "@/constants/expenses";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useTabBarHeight } from "@/hooks/useTabBarHeight";
 import {
-  groupExpensesByDay,
-  type CategoryFilter,
-  type ExpenseSection,
+    groupExpensesByDay,
+    type CategoryFilter,
+    type ExpenseSection,
 } from "@/lib/expenses";
 import { selection } from "@/lib/haptics";
 import { formatMoney } from "@/lib/money";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { useTheme } from "@/theme/ThemeProvider";
-import {
-  fontFamily,
-  spacing,
-  tabularNums,
-  typography,
-} from "@/theme/tokens";
+import { spacing, tabularNums, typography } from "@/theme/tokens";
 import { BlurTargetView } from "expo-blur";
 import { useIsFocused, useRouter } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  ScrollView,
-  SectionList,
-  StyleSheet,
-  Text,
-  View,
-  type SectionListProps,
-  type SectionListRenderItemInfo,
+    ScrollView,
+    SectionList,
+    StyleSheet,
+    Text,
+    View,
+    type SectionListProps,
+    type SectionListRenderItemInfo,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -143,15 +129,10 @@ export default function ExpensesScreen() {
     [debouncedSearch, expenses, selectedCategory],
   );
   const visibleTotalCents = useMemo(
-    () =>
-      sections.reduce(
-        (total, section) => total + section.totalCents,
-        0,
-      ),
+    () => sections.reduce((total, section) => total + section.totalCents, 0),
     [sections],
   );
-  const hasFilters =
-    searchText.trim().length > 0 || selectedCategory !== "all";
+  const hasFilters = searchText.trim().length > 0 || selectedCategory !== "all";
 
   const handleRowPress = useCallback(
     (expense: Expense) => {
@@ -196,7 +177,11 @@ export default function ExpensesScreen() {
   }, []);
 
   const renderItem = useCallback(
-    ({ item, index, section }: SectionListRenderItemInfo<Expense, ExpenseSection>) => (
+    ({
+      item,
+      index,
+      section,
+    }: SectionListRenderItemInfo<Expense, ExpenseSection>) => (
       <SwipeableRow
         expense={item}
         isOpen={openRowId === item.id}
@@ -208,13 +193,7 @@ export default function ExpensesScreen() {
         onPress={handleRowPress}
       />
     ),
-    [
-      handleCloseRow,
-      handleDelete,
-      handleOpenRow,
-      handleRowPress,
-      openRowId,
-    ],
+    [handleCloseRow, handleDelete, handleOpenRow, handleRowPress, openRowId],
   );
   const renderSectionHeader = useCallback<SectionHeaderRenderer>(
     ({ section }) => (
@@ -224,10 +203,7 @@ export default function ExpensesScreen() {
   );
   const listEmptyComponent = useMemo(
     () => (
-      <EmptyState
-        hasFilters={hasFilters}
-        onClearFilters={handleClearFilters}
-      />
+      <EmptyState hasFilters={hasFilters} onClearFilters={handleClearFilters} />
     ),
     [handleClearFilters, hasFilters],
   );

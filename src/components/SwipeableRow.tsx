@@ -1,48 +1,29 @@
 import { ExpenseRow } from "@/components/ExpenseRow";
-import {
-  EXPENSE_LIST_MOTION,
-  SWIPE,
-} from "@/constants/expenses";
 import { CATEGORY_BY_ID } from "@/constants/categories";
+import { EXPENSE_LIST_MOTION, SWIPE } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { lightImpact, warning } from "@/lib/haptics";
-import {
-  resistSwipeTranslation,
-  swipeReleaseAction,
-} from "@/lib/swipe";
+import { resistSwipeTranslation, swipeReleaseAction } from "@/lib/swipe";
+import type { Expense } from "@/store/useExpenseStore";
 import { durations, easing, springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
-import {
-  fontFamily,
-  layout,
-  radii,
-  spacing,
-  typography,
-} from "@/theme/tokens";
-import type { Expense } from "@/store/useExpenseStore";
+import { fontFamily, layout, radii, spacing, typography } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  cancelAnimation,
-  FadeIn,
-  FadeInDown,
-  FadeOut,
-  LinearTransition,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  type ExitAnimationsValues,
+    cancelAnimation,
+    FadeIn,
+    FadeInDown,
+    FadeOut,
+    LinearTransition,
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+    withTiming,
+    type ExitAnimationsValues,
 } from "react-native-reanimated";
 
 interface SwipeableRowProps {
@@ -161,10 +142,7 @@ export function SwipeableRow({
         })
         .onUpdate((event) => {
           "worklet";
-          const rawTranslation = Math.min(
-            0,
-            startX.value + event.translationX,
-          );
+          const rawTranslation = Math.min(0, startX.value + event.translationX);
           translateX.value = resistSwipeTranslation(rawTranslation);
 
           if (
@@ -190,10 +168,7 @@ export function SwipeableRow({
             return;
           }
 
-          const rawTranslation = Math.min(
-            0,
-            startX.value + event.translationX,
-          );
+          const rawTranslation = Math.min(0, startX.value + event.translationX);
 
           if (rawTranslation <= -SWIPE.fullDeleteThreshold) {
             deleteTriggered.value = true;
@@ -207,10 +182,7 @@ export function SwipeableRow({
             ? shouldOpen
               ? -SWIPE.actionWidth
               : 0
-            : withSpring(
-                shouldOpen ? -SWIPE.actionWidth : 0,
-                springs.snappy,
-              );
+            : withSpring(shouldOpen ? -SWIPE.actionWidth : 0, springs.snappy);
 
           if (shouldOpen) {
             runOnJS(handleOpen)();
@@ -240,10 +212,7 @@ export function SwipeableRow({
     transform: [{ translateX: translateX.value }],
   }));
   const actionStyle = useAnimatedStyle(() => ({
-    opacity: Math.min(
-      1,
-      Math.abs(translateX.value) / SWIPE.actionWidth,
-    ),
+    opacity: Math.min(1, Math.abs(translateX.value) / SWIPE.actionWidth),
   }));
   const entering = useMemo(() => {
     if (reduceMotion) {

@@ -1,5 +1,3 @@
-# Spendly — Project Spec
-
 ## Scope (LOCKED)
 
 IN: add/edit/delete expenses, grouped list with search + category filter, fixed categories, monthly stats (donut + bar chart), one monthly budget with animated ring, light/dark/system theme, deterministic seed data.
@@ -15,36 +13,20 @@ Expo (latest stable SDK) + TypeScript strict + Expo Router; react-native-reanima
 Money = integer cents. `CURRENCY_SYMBOL = "$"` in src/constants.
 
 ```ts
-type CategoryId =
-  | "food"
-  | "transport"
-  | "shopping"
-  | "bills"
-  | "fun"
-  | "health";
+type CategoryId = 'food' | 'transport' | 'shopping' | 'bills' | 'fun' | 'health';
 interface Expense {
-  id: string;
-  amountCents: number;
-  categoryId: CategoryId;
-  date: string; // ISO, local day at 12:00 to avoid TZ drift
-  note: string; // max 80 chars, may be empty
+  id: string; amountCents: number; categoryId: CategoryId;
+  date: string;      // ISO, local day at 12:00 to avoid TZ drift
+  note: string;      // max 80 chars, may be empty
   createdAt: number; // epoch ms
 }
 interface ExpenseState {
-  expenses: Expense[];
-  budgetCents: number; // default 150000
-  themeMode: "system" | "light" | "dark";
-  hasSeeded: boolean;
-  lastDeleted: Expense | null;
-  addExpense(e: Omit<Expense, "id" | "createdAt">): Expense;
-  updateExpense(
-    id: string,
-    patch: Partial<Omit<Expense, "id" | "createdAt">>,
-  ): void;
-  deleteExpense(id: string): void;
-  undoDelete(): void;
-  setBudget(cents: number): void;
-  setThemeMode(m: ExpenseState["themeMode"]): void;
+  expenses: Expense[]; budgetCents: number; // default 150000
+  themeMode: 'system' | 'light' | 'dark'; hasSeeded: boolean; lastDeleted: Expense | null;
+  addExpense(e: Omit<Expense,'id'|'createdAt'>): Expense;
+  updateExpense(id: string, patch: Partial<Omit<Expense,'id'|'createdAt'>>): void;
+  deleteExpense(id: string): void; undoDelete(): void;
+  setBudget(cents: number): void; setThemeMode(m: ExpenseState['themeMode']): void;
   resetDemoData(): void;
 }
 ```
@@ -79,3 +61,4 @@ components/: AnimatedNumber BudgetRing DonutChart BarChart ExpenseRow SwipeableR
 ## Quality bars
 
 60fps on mid-range Android (React.memo rows, stable keys, useCallback/useMemo, no inline style objects in list items). No yellow boxes/warnings. Every pressable has accessibilityRole + accessibilityLabel; AA contrast in both themes; layouts survive 1.3x font scale. After each phase: `npx tsc --noEmit` and `npx jest` must pass.
+

@@ -31,7 +31,10 @@ import {
 
 interface EmptyStateProps {
   hasFilters: boolean;
-  onClearFilters: () => void;
+  onClearFilters?: () => void;
+  onAdd?: () => void;
+  onAccent?: boolean;
+  embedded?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -39,6 +42,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: spacing.xxl,
     paddingHorizontal: spacing.xl,
+  },
+  embedded: {
+    paddingTop: spacing.lg,
   },
   title: {
     ...typography.headline,
@@ -63,7 +69,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
+export function EmptyState({
+  hasFilters,
+  onClearFilters,
+  onAdd,
+  onAccent = false,
+  embedded = false,
+}: EmptyStateProps) {
   const { colors } = useTheme();
   const reduceMotion = useReducedMotionSafe();
   const floatProgress = useSharedValue(0);
@@ -109,16 +121,22 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
     [],
   );
   const titleStyle = useMemo(
-    () => [styles.title, { color: colors.text }],
-    [colors.text],
+    () => [styles.title, { color: onAccent ? colors.onAccent : colors.text }],
+    [colors.onAccent, colors.text, onAccent],
   );
   const descriptionStyle = useMemo(
-    () => [styles.description, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [
+      styles.description,
+      { color: onAccent ? colors.onAccent : colors.textMuted },
+    ],
+    [colors.onAccent, colors.textMuted, onAccent],
   );
   const clearButtonStyle = useMemo(
-    () => [styles.clearButton, { backgroundColor: colors.surfaceAlt }],
-    [colors.surfaceAlt],
+    () => [
+      styles.clearButton,
+      { backgroundColor: onAccent ? colors.onAccent : colors.surfaceAlt },
+    ],
+    [colors.onAccent, colors.surfaceAlt, onAccent],
   );
   const clearLabelStyle = useMemo(
     () => [styles.clearLabel, { color: colors.accent }],
@@ -126,7 +144,7 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, embedded && styles.embedded]}>
       <Canvas
         style={canvasStyle}
         accessibilityElementsHidden
@@ -136,7 +154,7 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
           cx={EMPTY_STATE.canvasWidth / 2}
           cy={EMPTY_STATE.canvasHeight / 2}
           r={EMPTY_STATE.haloRadius}
-          color={colors.accent}
+          color={onAccent ? colors.onAccent : colors.accent}
           opacity={opacity.subtle}
         />
         <Group transform={floatTransform}>
@@ -146,7 +164,8 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
             width={EMPTY_STATE.receiptWidth}
             height={EMPTY_STATE.receiptHeight}
             r={EMPTY_STATE.receiptRadius}
-            color={colors.surfaceAlt}
+            color={onAccent ? colors.onAccent : colors.surfaceAlt}
+            opacity={onAccent ? opacity.tint : 1}
           />
           <Line
             p1={{
@@ -157,7 +176,8 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
               x: EMPTY_STATE.lineEndX,
               y: EMPTY_STATE.firstLineY,
             }}
-            color={colors.border}
+            color={onAccent ? colors.onAccent : colors.border}
+            opacity={onAccent ? opacity.muted : 1}
             strokeWidth={EMPTY_STATE.lineStrokeWidth}
           />
           <Line
@@ -169,7 +189,8 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
               x: EMPTY_STATE.lineEndX,
               y: EMPTY_STATE.secondLineY,
             }}
-            color={colors.border}
+            color={onAccent ? colors.onAccent : colors.border}
+            opacity={onAccent ? opacity.muted : 1}
             strokeWidth={EMPTY_STATE.lineStrokeWidth}
           />
           <RoundedRect
@@ -178,7 +199,7 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
             width={EMPTY_STATE.walletWidth}
             height={EMPTY_STATE.walletHeight}
             r={EMPTY_STATE.walletRadius}
-            color={colors.accent}
+            color={onAccent ? colors.onAccent : colors.accent}
           />
           <RoundedRect
             x={EMPTY_STATE.pocketX}
@@ -186,13 +207,14 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
             width={EMPTY_STATE.pocketWidth}
             height={EMPTY_STATE.pocketHeight}
             r={EMPTY_STATE.pocketRadius}
-            color={colors.accentAlt}
+            color={onAccent ? colors.onAccent : colors.accentAlt}
+            opacity={onAccent ? opacity.glass : 1}
           />
           <Circle
             cx={EMPTY_STATE.claspX}
             cy={EMPTY_STATE.claspY}
             r={EMPTY_STATE.claspRadius}
-            color={colors.onAccent}
+            color={onAccent ? colors.accent : colors.onAccent}
           />
           <Circle
             cx={EMPTY_STATE.coinX}
@@ -203,21 +225,29 @@ export function EmptyState({ hasFilters, onClearFilters }: EmptyStateProps) {
         </Group>
       </Canvas>
       <Text style={titleStyle}>
-        {hasFilters ? "No matching expenses" : "No expenses yet"}
+        {hasFilters
+          ? "No matching expenses"
+          : onAdd
+            ? "No expenses this month"
+            : "No expenses yet"}
       </Text>
       <Text style={descriptionStyle}>
         {hasFilters
           ? "Try a different search or category."
-          : "Your expenses will appear here once you add them."}
+          : onAdd
+            ? "Add your first expense to see this month at a glance."
+            : "Your expenses will appear here once you add them."}
       </Text>
-      {hasFilters ? (
+      {(hasFilters && onClearFilters) || (!hasFilters && onAdd) ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Clear filters"
-          onPress={onClearFilters}
+          accessibilityLabel={hasFilters ? "Clear filters" : "Add an expense"}
+          onPress={hasFilters ? onClearFilters : onAdd}
           style={clearButtonStyle}
         >
-          <Text style={clearLabelStyle}>Clear filters</Text>
+          <Text style={clearLabelStyle}>
+            {hasFilters ? "Clear filters" : "Add an expense"}
+          </Text>
         </Pressable>
       ) : null}
     </View>

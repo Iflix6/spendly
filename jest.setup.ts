@@ -102,13 +102,7 @@ jest.mock("@shopify/react-native-skia", () => {
   const Shape = ({ children }: { children?: unknown }) =>
     React.createElement(View, null, children);
   const pathBuilder: Record<string, () => unknown> = {};
-  for (const method of [
-    "moveTo",
-    "lineTo",
-    "quadTo",
-    "addArc",
-    "close",
-  ]) {
+  for (const method of ["moveTo", "lineTo", "quadTo", "addArc", "close"]) {
     pathBuilder[method] = () => pathBuilder;
   }
   pathBuilder.build = () => ({});

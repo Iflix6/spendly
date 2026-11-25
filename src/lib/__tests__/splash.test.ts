@@ -1,7 +1,4 @@
-import {
-  getSplashRevealDurationMs,
-  shouldRevealSplash,
-} from "@/lib/splash";
+import { getSplashRevealDurationMs, shouldRevealSplash } from "@/lib/splash";
 import { splash } from "@/theme/motion";
 import { describe, expect, it } from "@jest/globals";
 
@@ -74,12 +71,11 @@ describe("splash reveal readiness", () => {
   });
 
   it("shortens a delayed reveal and finishes immediately at the cap", () => {
-    const elapsedMs =
-      splash.maximumVisibleMs - splash.revealDurationMs / 2;
+    const elapsedMs = splash.maximumVisibleMs - splash.revealDurationMs / 2;
 
-    expect(
-      getSplashRevealDurationMs({ elapsedMs, reduceMotion: false }),
-    ).toBe(splash.maximumVisibleMs - elapsedMs);
+    expect(getSplashRevealDurationMs({ elapsedMs, reduceMotion: false })).toBe(
+      splash.maximumVisibleMs - elapsedMs,
+    );
     expect(
       getSplashRevealDurationMs({
         elapsedMs: splash.maximumVisibleMs,
@@ -115,7 +111,8 @@ describe("splash reveal readiness", () => {
     expect(
       shouldRevealSplash({
         isAppReady: false,
-        elapsedMs: splash.maximumVisibleMs - splash.reduced.fadeOutDurationMs - 1,
+        elapsedMs:
+          splash.maximumVisibleMs - splash.reduced.fadeOutDurationMs - 1,
         reduceMotion: true,
       }),
     ).toBe(false);

@@ -9,14 +9,14 @@ import { spacing, tabularNums, typography } from "@/theme/tokens";
 import { Canvas, Circle, Group, Path, Skia } from "@shopify/react-native-skia";
 import { useEffect, useMemo, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Animated, {
-  cancelAnimation,
-  interpolateColor,
-  useDerivedValue,
-  useSharedValue,
-  withSequence,
-  withSpring,
-  withTiming,
+import {
+    cancelAnimation,
+    interpolateColor,
+    useDerivedValue,
+    useSharedValue,
+    withSequence,
+    withSpring,
+    withTiming,
 } from "react-native-reanimated";
 
 interface BudgetRingProps {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   center: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: spacing.xs,
@@ -96,7 +96,10 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
   }, [progress, reduceMotion, ringState.visualRatio]);
 
   useEffect(() => {
-    if (hasPulsed.current || ringState.visualRatio < BUDGET_RING.maxVisualRatio) {
+    if (
+      hasPulsed.current ||
+      ringState.visualRatio < BUDGET_RING.maxVisualRatio
+    ) {
       return;
     }
 
@@ -135,7 +138,7 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
     ),
   );
   const progressPath = useDerivedValue(() =>
-    Skia.PathMaker.Make()
+    Skia.PathBuilder.Make()
       .addArc(
         oval,
         BUDGET_RING.startAngleDegrees,
@@ -168,11 +171,7 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
           strokeCap="round"
           style="stroke"
         />
-        <Group
-          transform={pulseTransform}
-          origin={{ x: center, y: center }}
-          pointerEvents="none"
-        >
+        <Group transform={pulseTransform} origin={{ x: center, y: center }}>
           <Path
             path={progressPath}
             start={0}

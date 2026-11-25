@@ -1,9 +1,5 @@
 import { useTheme } from "@/theme/ThemeProvider";
-import {
-  layout,
-  lightCardShadow,
-  radii,
-} from "@/theme/tokens";
+import { layout, lightCardShadow, radii } from "@/theme/tokens";
 import { useMemo, type ReactNode } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 

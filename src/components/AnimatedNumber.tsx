@@ -1,10 +1,16 @@
-import { ANIMATED_NUMBER } from "@/constants/home";
 import { KEYPAD_MAX_DECIMALS } from "@/constants";
+import { ANIMATED_NUMBER } from "@/constants/home";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { tabularNums, typography } from "@/theme/tokens";
 import { useMemo } from "react";
-import { StyleSheet, Text, View, type StyleProp, type TextStyle } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    type StyleProp,
+    type TextStyle,
+} from "react-native";
 import { AnimatedDigit } from "./AnimatedDigit";
-import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 
 interface AnimatedNumberProps {
   value: number;
@@ -13,7 +19,7 @@ interface AnimatedNumberProps {
   suffix?: string;
   style?: StyleProp<TextStyle>;
   accessibilityLabel?: string;
-  maximumFontSizeMultiplier?: number;
+  maxFontSizeMultiplier?: number;
 }
 
 const styles = StyleSheet.create({
@@ -25,7 +31,7 @@ const styles = StyleSheet.create({
 
 export function formatAnimatedNumber(
   value: number,
-  fractionDigits = ANIMATED_NUMBER.defaultFractionDigits,
+  fractionDigits: number = ANIMATED_NUMBER.defaultFractionDigits,
 ): string {
   const safeValue = Number.isFinite(value) ? value : 0;
   const precision = Math.max(
@@ -46,7 +52,7 @@ export function AnimatedNumber({
   suffix = "",
   style,
   accessibilityLabel,
-  maximumFontSizeMultiplier,
+  maxFontSizeMultiplier,
 }: AnimatedNumberProps) {
   const reduceMotion = useReducedMotionSafe();
   const flattenedStyle = StyleSheet.flatten(style);
@@ -69,20 +75,20 @@ export function AnimatedNumber({
   const decimalIndex = formatted.indexOf(".");
   const integerPart =
     decimalIndex >= 0 ? formatted.slice(0, decimalIndex) : formatted;
-  const fractionPart = decimalIndex >= 0 ? formatted.slice(decimalIndex + 1) : "";
+  const fractionPart =
+    decimalIndex >= 0 ? formatted.slice(decimalIndex + 1) : "";
   const label = `${prefix}${formatted}${suffix}`;
 
   return (
     <View
       accessible
       accessibilityLabel={accessibilityLabel ?? label}
-      importantForAccessibility="no-hide-descendants"
       style={styles.root}
     >
       {prefix.length > 0 ? (
         <Text
           accessible={false}
-          maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
           style={textStyle}
         >
           {prefix}
@@ -96,13 +102,13 @@ export function AnimatedNumber({
             digitHeight={digitHeight}
             reduceMotion={reduceMotion}
             style={textStyle}
-            maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
           />
         ) : (
           <Text
             key={`integer-static-${index}`}
             accessible={false}
-            maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
             style={textStyle}
           >
             {character}
@@ -112,7 +118,7 @@ export function AnimatedNumber({
       {decimalIndex >= 0 ? (
         <Text
           accessible={false}
-          maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
           style={textStyle}
         >
           .
@@ -125,13 +131,13 @@ export function AnimatedNumber({
           digitHeight={digitHeight}
           reduceMotion={reduceMotion}
           style={textStyle}
-          maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
         />
       ))}
       {suffix.length > 0 ? (
         <Text
           accessible={false}
-          maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+          maxFontSizeMultiplier={maxFontSizeMultiplier}
           style={textStyle}
         >
           {suffix}

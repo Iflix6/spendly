@@ -13,6 +13,7 @@ import {
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useTabBarHeight } from "@/hooks/useTabBarHeight";
 import {
+    categoryFilterFromParam,
     groupExpensesByDay,
     type CategoryFilter,
     type ExpenseSection,
@@ -23,7 +24,7 @@ import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { useTheme } from "@/theme/ThemeProvider";
 import { spacing, tabularNums, typography } from "@/theme/tokens";
 import { BlurTargetView } from "expo-blur";
-import { useIsFocused, useRouter } from "expo-router";
+import { useIsFocused, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     ScrollView,
@@ -99,6 +100,11 @@ const keyExtractor = (expense: Expense): string => expense.id;
 export default function ExpensesScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const params = useLocalSearchParams<{ category?: string | string[] }>();
+  const routeCategory = useMemo(
+    () => categoryFilterFromParam(params.category),
+    [params.category],
+  );
   const isFocused = useIsFocused();
   const blurTarget = useTabBlurTarget();
   const bottomPadding = useTabBarHeight();
@@ -108,7 +114,7 @@ export default function ExpensesScreen() {
   const { showSnackbar } = useSnackbar();
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] =
-    useState<CategoryFilter>("all");
+    useState<CategoryFilter>(routeCategory);
   const [openRowId, setOpenRowId] = useState<string | null>(null);
   const isInitialRender = useRef(true);
   const debouncedSearch = useDebouncedValue(
@@ -119,6 +125,11 @@ export default function ExpensesScreen() {
   useEffect(() => {
     isInitialRender.current = false;
   }, []);
+
+  useEffect(() => {
+    setSelectedCategory(routeCategory);
+    setOpenRowId(null);
+  }, [routeCategory]);
 
   const sections = useMemo(
     () => groupExpensesByDay(expenses, debouncedSearch, selectedCategory),
@@ -161,12 +172,18 @@ export default function ExpensesScreen() {
     setSearchText("");
     setSelectedCategory("all");
     setOpenRowId(null);
-  }, []);
-  const handleCategoryPress = useCallback((category: CategoryFilter) => {
-    void selection();
-    setSelectedCategory((current) => (current === category ? "all" : category));
-    setOpenRowId(null);
-  }, []);
+    router.setParams({ category: "all" });
+  }, [router]);
+  const handleCategoryPress = useCallback(
+    (category: CategoryFilter) => {
+      void selection();
+      const nextCategory = selectedCategory === category ? "all" : category;
+      setSelectedCategory(nextCategory);
+      setOpenRowId(null);
+      router.setParams({ category: nextCategory });
+    },
+    [router, selectedCategory],
+  );
 
   const renderItem = useCallback(
     ({

@@ -1,8 +1,21 @@
-import { CATEGORY_BY_ID, type CategoryId } from "@/constants/categories";
+import {
+    CATEGORY_BY_ID,
+    CATEGORY_IDS,
+    type CategoryId,
+} from "@/constants/categories";
 import type { Expense } from "@/store/useExpenseStore";
 import { dayLabel, localDateKey } from "./dates";
 
 export type CategoryFilter = CategoryId | "all";
+
+export function categoryFilterFromParam(value: unknown): CategoryFilter {
+  const candidate = Array.isArray(value) ? value[0] : value;
+
+  return typeof candidate === "string" &&
+    CATEGORY_IDS.includes(candidate as CategoryId)
+    ? (candidate as CategoryId)
+    : "all";
+}
 
 export interface ExpenseSection {
   key: string;

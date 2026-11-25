@@ -3,11 +3,11 @@ import { durations, easing, springs } from "@/theme/motion";
 import { useEffect, useMemo, useRef } from "react";
 import { StyleSheet, Text, View, type TextStyle } from "react-native";
 import Animated, {
-  cancelAnimation,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
+    cancelAnimation,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+    withTiming,
 } from "react-native-reanimated";
 
 interface AnimatedDigitProps {
@@ -15,12 +15,11 @@ interface AnimatedDigitProps {
   digitHeight: number;
   reduceMotion: boolean;
   style: TextStyle;
-  maximumFontSizeMultiplier?: number;
+  maxFontSizeMultiplier?: number;
 }
 
-const DIGITS = Array.from(
-  { length: ANIMATED_NUMBER.digitCount },
-  (_, index) => String(index),
+const DIGITS = Array.from({ length: ANIMATED_NUMBER.digitCount }, (_, index) =>
+  String(index),
 );
 
 const styles = StyleSheet.create({
@@ -40,7 +39,7 @@ export function AnimatedDigit({
   digitHeight,
   reduceMotion,
   style,
-  maximumFontSizeMultiplier,
+  maxFontSizeMultiplier,
 }: AnimatedDigitProps) {
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
@@ -89,11 +88,11 @@ export function AnimatedDigit({
       importantForAccessibility="no-hide-descendants"
     >
       <Animated.View style={[styles.column, columnStyle]}>
-        {DIGITS.map((value, index) => (
+        {DIGITS.map((value) => (
           <Text
             key={value}
             accessible={false}
-            maximumFontSizeMultiplier={maximumFontSizeMultiplier}
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
             style={digitStyle}
           >
             {value}

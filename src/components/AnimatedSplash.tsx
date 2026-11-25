@@ -5,10 +5,7 @@ import {
 } from "@/constants/splash";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { lightImpact } from "@/lib/haptics";
-import {
-  getSplashRevealDurationMs,
-  shouldRevealSplash,
-} from "@/lib/splash";
+import { getSplashRevealDurationMs, shouldRevealSplash } from "@/lib/splash";
 import {
     createSplashMarkPaths,
     type SplashPathCommand,

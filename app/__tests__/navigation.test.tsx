@@ -2,7 +2,9 @@ import { SheetOpenProgressProvider } from "@/components/SheetOpenProgressProvide
 import { SnackbarProvider } from "@/components/SnackbarProvider";
 import { TAB_BAR } from "@/constants/navigation";
 import { useTabBarHeight } from "@/hooks/useTabBarHeight";
-import { useExpenseStore } from "@/store/useExpenseStore";
+import { toNoonISO } from "@/lib/dates";
+import * as haptics from "@/lib/haptics";
+import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { darkColors, lightColors, spacing } from "@/theme/tokens";
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
@@ -14,11 +16,17 @@ import AddExpenseScreen from "../add";
 import ExpenseDetailStub from "../expense/[id]";
 
 const mockBack = jest.fn();
+const mockNavigate = jest.fn();
+const mockPush = jest.fn();
 
 jest.mock("expo-router", () => ({
   useIsFocused: () => true,
   useLocalSearchParams: () => ({}),
-  useRouter: () => ({ back: mockBack }),
+  useRouter: () => ({
+    back: mockBack,
+    navigate: mockNavigate,
+    push: mockPush,
+  }),
 }));
 
 jest.mock("@expo/vector-icons/Ionicons", () => {
@@ -60,21 +68,124 @@ function renderScreen(screen: React.ReactElement) {
   );
 }
 
+const monthlyExpense: Expense = {
+  id: "home-food",
+  amountCents: 1250,
+  categoryId: "food",
+  date: toNoonISO(new Date()),
+  note: "Lunch at Mama Put",
+  createdAt: 100,
+};
+
 beforeEach(() => {
-  useExpenseStore.setState({ themeMode: "light" });
+  useExpenseStore.setState({
+    expenses: [monthlyExpense],
+    budgetCents: 100000,
+    themeMode: "light",
+    lastDeleted: null,
+  });
   mockBack.mockClear();
+  mockNavigate.mockClear();
+  mockPush.mockClear();
+  jest.spyOn(haptics, "selection").mockResolvedValue(undefined);
 });
 
 describe("tab screen shell", () => {
-  it("renders the Home title with light theme colors", async () => {
+  it("renders the Spendly wordmark with light theme colors", async () => {
     const { getByText } = await renderScreen(<HomeScreen />);
-    expect(getByText("Home")).toHaveStyle({ color: lightColors.text });
+    expect(getByText("Spendly")).toHaveStyle({ color: lightColors.text });
   });
 
-  it("renders the Home title with dark theme colors", async () => {
+  it("renders the Spendly wordmark with dark theme colors", async () => {
     useExpenseStore.setState({ themeMode: "dark" });
     const { getByText } = await renderScreen(<HomeScreen />);
-    expect(getByText("Home")).toHaveStyle({ color: darkColors.text });
+    expect(getByText("Spendly")).toHaveStyle({ color: darkColors.text });
+  });
+
+  it("opens Expenses with the selected category from Home", async () => {
+    const { getByTestId } = await renderScreen(<HomeScreen />);
+
+    await fireEvent.press(getByTestId("category-card-food"));
+
+    expect(mockNavigate).toHaveBeenCalledWith("/(tabs)/expenses?category=food");
+    expect(haptics.selection).toHaveBeenCalledTimes(1);
+  });
+
+  it("clears the category filter through See all", async () => {
+    const { getByRole } = await renderScreen(<HomeScreen />);
+
+    await fireEvent.press(getByRole("button", { name: "See all expenses" }));
+
+    expect(mockNavigate).toHaveBeenCalledWith("/(tabs)/expenses?category=all");
+  });
+
+  it("limits Recent to five monthly expenses and opens a detail", async () => {
+    const monthlyExpenses = Array.from({ length: 6 }, (_, index) => ({
+      ...monthlyExpense,
+      id: `recent-${index}`,
+      note: `Recent expense ${index}`,
+      createdAt: index + 1,
+    }));
+    useExpenseStore.setState({ expenses: monthlyExpenses });
+    const { getByLabelText, queryByLabelText } = await renderScreen(
+      <HomeScreen />,
+    );
+
+    for (let index = 1; index <= 5; index += 1) {
+      expect(
+        getByLabelText(`Recent expense ${index}, Food, $12.50`),
+      ).toBeTruthy();
+    }
+    expect(queryByLabelText("Recent expense 0, Food, $12.50")).toBeNull();
+
+    await fireEvent.press(getByLabelText("Recent expense 4, Food, $12.50"));
+    expect(mockPush).toHaveBeenCalledWith("/expense/recent-4");
+  });
+
+  it("shows the over-budget ring copy without capping the percentage", async () => {
+    useExpenseStore.setState({ budgetCents: 1000 });
+    const { getByText } = await renderScreen(<HomeScreen />);
+
+    expect(getByText("125%")).toBeTruthy();
+    expect(getByText("over by $2.50")).toBeTruthy();
+  });
+
+  it("opens the budget editor from the hero ring", async () => {
+    const { getByLabelText, getByText } = await renderScreen(<HomeScreen />);
+
+    await fireEvent.press(
+      getByLabelText("Edit monthly budget, currently $1,000.00"),
+    );
+
+    expect(getByText("Monthly budget")).toBeTruthy();
+  });
+
+  it("reuses the budget editor from Settings", async () => {
+    const { getByLabelText, getByRole, getByText, queryByText } =
+      await renderScreen(<HomeScreen />);
+
+    await fireEvent.press(getByRole("button", { name: "Open settings" }));
+    await fireEvent.press(getByLabelText("Monthly budget $1,000.00, edit"));
+
+    expect(queryByText("Settings")).toBeNull();
+    expect(getByText("Monthly budget")).toBeTruthy();
+  });
+
+  it("opens settings and links an empty month to Add", async () => {
+    useExpenseStore.setState({ expenses: [] });
+    const { getByRole, getByText, queryByText } = await renderScreen(
+      <HomeScreen />,
+    );
+
+    expect(getByText("No expenses this month")).toBeTruthy();
+    expect(queryByText("This month by category")).toBeNull();
+
+    await fireEvent.press(getByRole("button", { name: "Open settings" }));
+    expect(getByText("Settings")).toBeTruthy();
+
+    await fireEvent.press(getByRole("button", { name: "Close settings" }));
+    await fireEvent.press(getByRole("button", { name: "Add an expense" }));
+    expect(mockPush).toHaveBeenCalledWith("/add");
   });
 
   it("includes the bar, bottom margin, safe area, and content clearance", async () => {

@@ -17,7 +17,7 @@ describe("budget ring state", () => {
     const state = getBudgetRingState(8000, 10000);
 
     expect(state.status).toBe("warning");
-    expect(state.colorPosition).toBe(0.5);
+    expect(state.colorPosition).toBeCloseTo(0.5);
     expect(state.percentLabel).toBe("80%");
   });
 

@@ -1,4 +1,8 @@
-import { filterExpenses, groupExpensesByDay } from "@/lib/expenses";
+import {
+    categoryFilterFromParam,
+    filterExpenses,
+    groupExpensesByDay,
+} from "@/lib/expenses";
 import type { Expense } from "@/store/useExpenseStore";
 import { describe, expect, it } from "@jest/globals";
 
@@ -28,6 +32,25 @@ const expenses: Expense[] = [
     createdAt: 100,
   },
 ];
+
+describe("category route parameters", () => {
+  it("accepts a valid category", () => {
+    expect(categoryFilterFromParam("food")).toBe("food");
+    expect(categoryFilterFromParam("transport")).toBe("transport");
+  });
+
+  it("uses the first value when the router supplies an array", () => {
+    expect(categoryFilterFromParam(["shopping", "food"])).toBe("shopping");
+  });
+
+  it("falls back to All for unsupported or malformed values", () => {
+    expect(categoryFilterFromParam("all")).toBe("all");
+    expect(categoryFilterFromParam("invalid")).toBe("all");
+    expect(categoryFilterFromParam(undefined)).toBe("all");
+    expect(categoryFilterFromParam(12)).toBe("all");
+    expect(categoryFilterFromParam([])).toBe("all");
+  });
+});
 
 describe("expense filtering", () => {
   it("matches note text case-insensitively", () => {

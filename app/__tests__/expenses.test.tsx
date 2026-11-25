@@ -10,6 +10,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import ExpensesScreen from "../(tabs)/expenses";
 
 const mockPush = jest.fn();
+const mockSetParams = jest.fn();
+let mockCategoryParam: string | string[] | undefined;
 
 jest.setTimeout(15000);
 
@@ -155,7 +157,8 @@ jest.mock("@/components/SwipeableRow", () => {
 
 jest.mock("expo-router", () => ({
   useIsFocused: () => true,
-  useRouter: () => ({ push: mockPush }),
+  useLocalSearchParams: () => ({ category: mockCategoryParam }),
+  useRouter: () => ({ push: mockPush, setParams: mockSetParams }),
 }));
 
 jest.mock("@expo/vector-icons/Ionicons", () => {
@@ -218,12 +221,14 @@ function renderScreen(screen: ReactElement = <ExpensesScreen />) {
 }
 
 beforeEach(() => {
+  mockCategoryParam = undefined;
   useExpenseStore.setState({
     expenses,
     themeMode: "light",
     lastDeleted: null,
   });
   mockPush.mockClear();
+  mockSetParams.mockClear();
   jest.spyOn(haptics, "selection").mockResolvedValue(undefined);
 });
 
@@ -238,6 +243,30 @@ describe("Expenses screen", () => {
     expect(mockPush).toHaveBeenCalledWith("/expense/food-today");
   });
 
+  it("preselects a valid category from the route", async () => {
+    mockCategoryParam = "transport";
+    const { getByRole, getByText, queryByText } = await renderScreen();
+
+    expect(
+      getByRole("button", { name: "Transport" }).props.accessibilityState,
+    ).toEqual({ selected: true });
+    expect(getByText("Bolt ride")).toBeTruthy();
+    expect(queryByText("Lunch at Mama Put")).toBeNull();
+    expect(queryByText("New sneakers")).toBeNull();
+  });
+
+  it("falls back to All for an invalid route category", async () => {
+    mockCategoryParam = "invalid";
+    const { getByRole, getByText } = await renderScreen();
+
+    expect(
+      getByRole("button", { name: "All" }).props.accessibilityState,
+    ).toEqual({ selected: true });
+    expect(getByText("Lunch at Mama Put")).toBeTruthy();
+    expect(getByText("Bolt ride")).toBeTruthy();
+    expect(getByText("New sneakers")).toBeTruthy();
+  });
+
   it("combines debounced search with the selected category", async () => {
     const { getByLabelText, getByRole, getByText, queryByText } =
       await renderScreen();
@@ -248,11 +277,13 @@ describe("Expenses screen", () => {
 
     fireEvent.press(getByRole("button", { name: "Food" }));
     await waitFor(() => expect(getByText("No matching expenses")).toBeTruthy());
+    expect(mockSetParams).toHaveBeenCalledWith({ category: "food" });
     expect(haptics.selection).toHaveBeenCalledTimes(1);
 
     fireEvent.press(getByRole("button", { name: "Clear filters" }));
     await waitFor(() => expect(getByText("Lunch at Mama Put")).toBeTruthy());
     expect(getByText("Bolt ride")).toBeTruthy();
+    expect(mockSetParams).toHaveBeenLastCalledWith({ category: "all" });
   });
 
   it("returns to All when the selected category is tapped again", async () => {

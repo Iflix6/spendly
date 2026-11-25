@@ -15,6 +15,8 @@ export const durations = {
   reduced: 120,
 } as const;
 
+export const themeSwitchProgress = 0.5;
+
 export const easing = {
   entrance: Easing.bezier(0.2, 0.8, 0.2, 1),
   standard: Easing.out(Easing.cubic),

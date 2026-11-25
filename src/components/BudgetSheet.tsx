@@ -132,16 +132,16 @@ export function BudgetSheet({ onDismiss }: BudgetSheetProps) {
     [colors.border, colors.surface],
   );
   const currencyStyle = useMemo(
-    () => [styles.currency, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.currency, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const amountStyle = useMemo(
     () => [styles.amount, { color: colors.text }],
     [colors.text],
   );
   const hintStyle = useMemo(
-    () => [styles.hint, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.hint, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const saveStyle = useMemo(
     () => [

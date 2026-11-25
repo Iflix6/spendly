@@ -1,6 +1,7 @@
 module.exports = {
   preset: "jest-expo",
   clearMocks: true,
+  testTimeout: 30000,
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },

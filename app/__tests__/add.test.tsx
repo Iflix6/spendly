@@ -17,8 +17,6 @@ import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AddExpenseScreen from "../add";
 
-jest.setTimeout(15000);
-
 const mockBack = jest.fn();
 let mockParams: { id?: string } = {};
 

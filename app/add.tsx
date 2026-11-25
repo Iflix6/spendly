@@ -275,10 +275,17 @@ export default function AddExpenseScreen() {
     );
   }, [amountScale, amountShake, reduceMotion]);
 
-  const handleCategoryPress = useCallback((nextCategory: CategoryId) => {
-    void selection();
-    setCategoryId(nextCategory);
-  }, []);
+  const handleCategoryPress = useCallback(
+    (nextCategory: CategoryId | null) => {
+      if (nextCategory === null) {
+        return;
+      }
+
+      void selection();
+      setCategoryId(nextCategory);
+    },
+    [],
+  );
 
   const handleTodayPress = useCallback(() => {
     void selection();
@@ -391,16 +398,16 @@ export default function AddExpenseScreen() {
     [colors.border, colors.surface, saving],
   );
   const currencyStyle = useMemo(
-    () => [styles.currency, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.currency, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const amountStyle = useMemo(
     () => [styles.amount, { color: colors.text }],
     [colors.text],
   );
   const sectionLabelStyle = useMemo(
-    () => [styles.sectionLabel, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.sectionLabel, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const noteInputStyle = useMemo(
     () => [
@@ -415,8 +422,8 @@ export default function AddExpenseScreen() {
     [colors.accent, colors.border, colors.surfaceAlt, colors.text],
   );
   const deleteLabelStyle = useMemo(
-    () => [styles.deleteLabel, { color: colors.danger }],
-    [colors.danger],
+    () => [styles.deleteLabel, { color: colors.dangerText }],
+    [colors.dangerText],
   );
   const contentStyle = useMemo(
     () => [
@@ -496,7 +503,7 @@ export default function AddExpenseScreen() {
                 category={category}
                 label={category.label}
                 selected={categoryId === category.id}
-                onPress={() => handleCategoryPress(category.id)}
+                onPress={handleCategoryPress}
               />
             ))}
           </ScrollView>
@@ -546,7 +553,7 @@ export default function AddExpenseScreen() {
         <View style={styles.section}>
           <View style={styles.noteHeader}>
             <Text style={sectionLabelStyle}>Note</Text>
-            <Text style={[styles.noteCounter, { color: colors.textMuted }]}>
+            <Text style={[styles.noteCounter, { color: colors.mutedText }]}>
               {note.length}/{NOTE_MAX}
             </Text>
           </View>
@@ -555,7 +562,7 @@ export default function AddExpenseScreen() {
             value={note}
             onChangeText={setNote}
             placeholder="Add a note (optional)"
-            placeholderTextColor={colors.textMuted}
+            placeholderTextColor={colors.mutedText}
             maxLength={NOTE_MAX}
             style={noteInputStyle}
             returnKeyType="done"

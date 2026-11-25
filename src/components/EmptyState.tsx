@@ -127,9 +127,9 @@ export function EmptyState({
   const descriptionStyle = useMemo(
     () => [
       styles.description,
-      { color: onAccent ? colors.onAccent : colors.textMuted },
+      { color: onAccent ? colors.onAccent : colors.mutedText },
     ],
-    [colors.onAccent, colors.textMuted, onAccent],
+    [colors.mutedText, colors.onAccent, onAccent],
   );
   const clearButtonStyle = useMemo(
     () => [
@@ -139,8 +139,11 @@ export function EmptyState({
     [colors.onAccent, colors.surfaceAlt, onAccent],
   );
   const clearLabelStyle = useMemo(
-    () => [styles.clearLabel, { color: colors.accent }],
-    [colors.accent],
+    () => [
+      styles.clearLabel,
+      { color: onAccent ? colors.accent : colors.accentText },
+    ],
+    [colors.accent, colors.accentText, onAccent],
   );
 
   return (

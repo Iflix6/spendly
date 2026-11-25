@@ -13,8 +13,6 @@ const mockPush = jest.fn();
 const mockSetParams = jest.fn();
 let mockCategoryParam: string | string[] | undefined;
 
-jest.setTimeout(15000);
-
 jest.mock("@/hooks/useDebouncedValue", () => ({
   useDebouncedValue: (value: unknown) => value,
 }));
@@ -70,19 +68,21 @@ jest.mock("@/components/CategoryChip", () => {
   const { Pressable } = require("react-native");
   return {
     CategoryChip: ({
+      category,
       label,
       selected,
       onPress,
     }: {
+      category: { id: string } | null;
       label: string;
       selected: boolean;
-      onPress: () => void;
+      onPress: (categoryId: string | null) => void;
     }) =>
       React.createElement(Pressable, {
         accessibilityRole: "button",
         accessibilityLabel: label,
         accessibilityState: { selected },
-        onPress,
+        onPress: () => onPress(category?.id ?? null),
       }),
   };
 });

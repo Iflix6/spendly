@@ -57,10 +57,15 @@ export function DeltaPill({
   const isLower = hasPrevious && deltaPercent < 0;
   const isHigher = hasPrevious && deltaPercent > 0;
   const statusColor = isLower
+    ? colors.successText
+    : isHigher
+      ? colors.dangerText
+      : colors.mutedText;
+  const tintColor = isLower
     ? colors.success
     : isHigher
       ? colors.danger
-      : colors.textMuted;
+      : colors.mutedText;
   const icon = isLower
     ? "trending-down-outline"
     : isHigher
@@ -90,9 +95,9 @@ export function DeltaPill({
   const tintStyle = useMemo(
     () => [
       styles.tint,
-      { backgroundColor: statusColor, opacity: opacity.tint },
+      { backgroundColor: tintColor, opacity: opacity.tint },
     ],
-    [statusColor],
+    [tintColor],
   );
   const labelStyle = useMemo(
     () => [styles.label, { color: statusColor }],

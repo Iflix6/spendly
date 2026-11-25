@@ -11,7 +11,7 @@ import { DONUT_CHART } from "@/constants/stats";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { getDonutSlices, hitTestDonut } from "@/lib/chartGeometry";
 import { selection } from "@/lib/haptics";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, formatMoneySpoken } from "@/lib/money";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import { fontFamily, spacing, tabularNums, typography } from "@/theme/tokens";
@@ -174,17 +174,34 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
     },
     [center, handleSelect, innerRadius, radius, slices],
   );
+  const chartSummary = useMemo(() => {
+    const totalLabel = formatMoneySpoken(totalCents);
+    if (data.length === 0) {
+      return `Spending by category. Total ${totalLabel}.`;
+    }
+
+    const breakdown = data
+      .map((datum) => {
+        const percent =
+          totalCents > 0 ? (datum.amountCents / totalCents) * 100 : 0;
+        return `${CATEGORY_BY_ID[datum.categoryId].label}, ${formatMoneySpoken(
+          datum.amountCents,
+        )}, ${percent.toFixed(PERCENT_PRECISION)} percent`;
+      })
+      .join("; ");
+    return `Spending by category. Total ${totalLabel}. ${breakdown}`;
+  }, [data, totalCents]);
   const centerTitleStyle = useMemo(
-    () => [styles.centerTitle, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.centerTitle, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const centerAmountStyle = useMemo(
     () => [styles.centerAmount, { color: colors.text }],
     [colors.text],
   );
   const centerPercentStyle = useMemo(
-    () => [styles.centerPercent, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.centerPercent, { color: colors.mutedText }],
+    [colors.mutedText],
   );
 
   return (
@@ -195,6 +212,9 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
     >
       <View style={styles.measure} onLayout={handleLayout}>
         <Animated.View
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel={chartSummary}
           entering={chartEntrance}
           style={[styles.chart, canvasStyle]}
         >
@@ -253,7 +273,7 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
             }
             selected={selectedCategoryId === datum.categoryId}
             index={index}
-            onPress={() => handleSelect(datum.categoryId)}
+            onPress={handleSelect}
           />
         ))}
       </View>

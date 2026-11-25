@@ -3,7 +3,10 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { useSheetOpenProgress } from "@/hooks/useSheetOpenProgress";
 import { shouldDismissSheet } from "@/lib/sheet";
 import { durations, easing, springs } from "@/theme/motion";
-import { useTheme } from "@/theme/ThemeProvider";
+import {
+    useAnimatedThemeColors,
+    useTheme,
+} from "@/theme/ThemeProvider";
 import { layout, lightCardShadow, radii, spacing } from "@/theme/tokens";
 import {
     forwardRef,
@@ -88,7 +91,8 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
     },
     ref,
   ) {
-    const { colors, isDark } = useTheme();
+    const { isDark } = useTheme();
+    const animatedColors = useAnimatedThemeColors();
     const reduceMotion = useReducedMotionSafe();
     const { height: windowHeight } = useWindowDimensions();
     const sheetOpenProgress = useSheetOpenProgress();
@@ -197,7 +201,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
     ]);
 
     const backdropStyle = useAnimatedStyle(() => ({
-      backgroundColor: colors.backdrop,
+      backgroundColor: animatedColors.value.backdrop,
       opacity:
         Math.min(1, Math.max(0, 1 - translateY.value / windowHeight)) *
         BOTTOM_SHEET.backdropOpacity,
@@ -211,23 +215,19 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
           windowHeight * BOTTOM_SHEET.maxHeightRatio - keyboardHeight,
         ),
         transform: [{ translateY: translateY.value - keyboardHeight }],
+        backgroundColor: animatedColors.value.surface,
+        borderColor: isDark
+          ? animatedColors.value.border
+          : animatedColors.value.surface,
       };
     });
     const sheetContainerStyle = useMemo(
-      () => [
-        styles.sheet,
-        {
-          backgroundColor: colors.surface,
-          borderColor: isDark ? colors.border : colors.surface,
-        },
-        isDark ? null : lightCardShadow,
-      ],
-      [colors.border, colors.surface, isDark],
+      () => [styles.sheet, isDark ? null : lightCardShadow],
+      [isDark],
     );
-    const handleStyle = useMemo(
-      () => [styles.handle, { backgroundColor: colors.border }],
-      [colors.border],
-    );
+    const handleStyle = useAnimatedStyle(() => ({
+      backgroundColor: animatedColors.value.border,
+    }));
     const handleBackdropPress = useCallback(() => {
       if (dismissEnabled) {
         requestDismiss();
@@ -258,7 +258,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
               accessible
               accessibilityLabel={`Drag down to dismiss ${dismissLabel.toLocaleLowerCase()}`}
             >
-              <View style={handleStyle} />
+              <Animated.View style={[styles.handle, handleStyle]} />
             </View>
           </GestureDetector>
           <View style={styles.content}>{children}</View>

@@ -4,7 +4,7 @@ import { durations, easing, springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import { layout, spacing, typography } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
     useAnimatedStyle,
@@ -18,7 +18,8 @@ interface FloatingTabItemProps {
   focused: boolean;
   icon: TabIconName;
   label: string;
-  onPress: () => void;
+  routeKey: string;
+  onPress: (routeKey: string) => void;
 }
 
 const styles = StyleSheet.create({
@@ -49,10 +50,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export function FloatingTabItem({
+export const FloatingTabItem = memo(function FloatingTabItem({
   focused,
   icon,
   label,
+  routeKey,
   onPress,
 }: FloatingTabItemProps) {
   const { colors } = useTheme();
@@ -101,13 +103,16 @@ export function FloatingTabItem({
   const labelStyle = useAnimatedStyle(() => ({
     opacity: colorProgress.value,
   }));
+  const handlePress = useCallback(() => {
+    onPress(routeKey);
+  }, [onPress, routeKey]);
 
   return (
     <Pressable
       accessibilityRole="tab"
       accessibilityLabel={label}
       accessibilityState={{ selected: focused }}
-      onPress={onPress}
+      onPress={handlePress}
       style={styles.item}
     >
       <Animated.View style={[styles.iconWrap, scaleStyle]} pointerEvents="none">
@@ -118,7 +123,7 @@ export function FloatingTabItem({
           <Ionicons
             name={icon}
             size={TAB_BAR.iconSize}
-            color={colors.textMuted}
+            color={colors.mutedText}
           />
         </Animated.View>
         <Animated.View
@@ -134,11 +139,11 @@ export function FloatingTabItem({
       >
         <Text
           numberOfLines={1}
-          style={[styles.label, { color: colors.accent }]}
+          style={[styles.label, { color: colors.accentText }]}
         >
           {label}
         </Text>
       </Animated.View>
     </Pressable>
   );
-}
+});

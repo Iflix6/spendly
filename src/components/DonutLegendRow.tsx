@@ -14,7 +14,7 @@ import {
     tabularNums,
     typography,
 } from "@/theme/tokens";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import {
     Pressable,
     StyleSheet,
@@ -30,7 +30,7 @@ interface DonutLegendRowProps {
   percent: number;
   selected: boolean;
   index: number;
-  onPress: () => void;
+  onPress: (categoryId: CategoryId) => void;
 }
 
 const styles = StyleSheet.create({
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function DonutLegendRow({
+export const DonutLegendRow = memo(function DonutLegendRow({
   categoryId,
   amountCents,
   percent,
@@ -94,8 +94,8 @@ export function DonutLegendRow({
     [colors.text],
   );
   const percentStyle = useMemo(
-    () => [styles.percent, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.percent, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const amountStyle = useMemo(
     () => [styles.amount, { color: colors.text }],
@@ -104,6 +104,9 @@ export function DonutLegendRow({
   const handleTouchStart = useCallback((event: GestureResponderEvent) => {
     event.stopPropagation();
   }, []);
+  const handlePress = useCallback(() => {
+    onPress(categoryId);
+  }, [categoryId, onPress]);
 
   return (
     <Animated.View entering={entering}>
@@ -113,7 +116,7 @@ export function DonutLegendRow({
         accessibilityLabel={`${category.label}, ${amountLabel}, ${percentLabel}${selected ? ", selected" : ""}`}
         accessibilityState={{ selected }}
         onTouchStart={handleTouchStart}
-        onPress={onPress}
+        onPress={handlePress}
         style={rowStyle}
       >
         <CategoryIcon categoryId={categoryId} />
@@ -131,4 +134,4 @@ export function DonutLegendRow({
       </Pressable>
     </Animated.View>
   );
-}
+});

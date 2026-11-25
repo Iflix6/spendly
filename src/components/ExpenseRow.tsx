@@ -1,6 +1,7 @@
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { CATEGORY_BY_ID } from "@/constants/categories";
 import { EXPENSE_ROW } from "@/constants/expenses";
+import { AMOUNT_INPUT } from "@/constants/expenseForm";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { dayLabel } from "@/lib/dates";
 import {
@@ -72,6 +73,8 @@ const styles = StyleSheet.create({
     ...typography.body,
     ...tabularNums,
     fontFamily: fontFamily.semibold,
+    flexShrink: 1,
+    textAlign: "right",
   },
 });
 
@@ -152,8 +155,8 @@ export const ExpenseRow = memo(function ExpenseRow({
     [colors.text],
   );
   const captionStyle = useMemo(
-    () => [styles.caption, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.caption, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const amountStyle = useMemo(
     () => [styles.amount, { color: colors.text }],
@@ -190,7 +193,13 @@ export const ExpenseRow = memo(function ExpenseRow({
             {category.label} · {time}
           </Text>
         </View>
-        <Text ref={amountRef} style={amountStyle}>
+        <Text
+          ref={amountRef}
+          style={amountStyle}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={AMOUNT_INPUT.minimumFontScale}
+        >
           {amount}
         </Text>
       </Animated.View>

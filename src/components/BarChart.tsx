@@ -11,7 +11,7 @@ import {
 } from "@/lib/chartGeometry";
 import { localDateKey } from "@/lib/dates";
 import { selection } from "@/lib/haptics";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, formatMoneySpoken } from "@/lib/money";
 import type { DaySpend, WeekSpend } from "@/lib/stats";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -175,7 +175,35 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
     () => [axisMaxCents, axisMaxCents / 2, 0],
     [axisMaxCents],
   );
+  const gridGeometry = useMemo(
+    () =>
+      gridValues.map((value) => {
+        const y =
+          BAR_CHART.topPadding +
+          (1 - value / axisMaxCents) * plotHeight;
+        return {
+          value,
+          y,
+          top: y - typography.caption.lineHeight / 2,
+          p1: { x: 0, y },
+          p2: { x: plotWidth, y },
+        };
+      }),
+    [axisMaxCents, gridValues, plotHeight, plotWidth],
+  );
   const selectedBar = selectedIndex === null ? undefined : bars[selectedIndex];
+  const chartSummary = useMemo(() => {
+    const period = mode === "week" ? "Weekly" : "Daily";
+    const entries = bars
+      .filter((bar) => bar.amountCents > 0)
+      .map(
+        (bar) =>
+          `${bar.label}, ${formatMoneySpoken(bar.amountCents)}`,
+      );
+    return entries.length > 0
+      ? `${period} spending chart. ${entries.join("; ")}`
+      : `${period} spending chart. No spending recorded.`;
+  }, [bars, mode]);
   const modeEntrance = reduceMotion
     ? FadeIn.duration(durations.reduced)
     : FadeIn.duration(durations.base);
@@ -222,16 +250,36 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
     [bars.length, hitArea],
   );
   const axisLabelStyle = useMemo(
-    () => [styles.axisLabel, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.axisLabel, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const labelStyle = useMemo(
-    () => [styles.label, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.label, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const todayLabelStyle = useMemo(
-    () => [styles.label, styles.todayLabel, { color: colors.accent }],
-    [colors.accent],
+    () => [styles.label, styles.todayLabel, { color: colors.accentText }],
+    [colors.accentText],
+  );
+  const axisLabelStyles = useMemo(
+    () => gridGeometry.map((grid) => [axisLabelStyle, { top: grid.top }]),
+    [axisLabelStyle, gridGeometry],
+  );
+  const scrollContentStyle = useMemo(
+    () => ({ width: canvasWidth }),
+    [canvasWidth],
+  );
+  const contentStyle = useMemo(
+    () => [styles.content, { width: canvasWidth }],
+    [canvasWidth],
+  );
+  const labelsStyle = useMemo(
+    () => [styles.labels, { width: canvasWidth }],
+    [canvasWidth],
+  );
+  const labelSlotStyles = useMemo(
+    () => bars.map(() => ({ width: slotWidth })),
+    [bars, slotWidth],
   );
 
   const tooltipLeft = selectedBar
@@ -265,22 +313,16 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
       </View>
       <View style={styles.chartRow}>
         <View style={styles.axis} pointerEvents="none">
-          {gridValues.map((value) => {
-            const top =
-              BAR_CHART.topPadding +
-              (1 - value / axisMaxCents) * plotHeight -
-              typography.caption.lineHeight / 2;
-            return (
-              <Text
-                key={value}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                style={[axisLabelStyle, { top }]}
-              >
-                {formatAxisLabel(value)}
-              </Text>
-            );
-          })}
+          {gridGeometry.map((grid, index) => (
+            <Text
+              key={grid.value}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={axisLabelStyles[index]}
+            >
+              {formatAxisLabel(grid.value)}
+            </Text>
+          ))}
         </View>
         <Animated.View
           key={mode}
@@ -292,30 +334,26 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
             horizontal
             scrollEnabled={mode === "day"}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ width: canvasWidth }}
+            contentContainerStyle={scrollContentStyle}
           >
-            <View style={[styles.content, { width: canvasWidth }]}>
+            <View style={contentStyle}>
               <Canvas
                 testID="bar-canvas"
                 style={styles.canvas}
                 onTouchStart={handleTouch}
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
+                accessible
+                accessibilityRole="image"
+                accessibilityLabel={chartSummary}
               >
-                {gridValues.map((value) => {
-                  const y =
-                    BAR_CHART.topPadding +
-                    (1 - value / axisMaxCents) * plotHeight;
-                  return (
-                    <Line
-                      key={value}
-                      p1={{ x: 0, y }}
-                      p2={{ x: plotWidth, y }}
-                      color={colors.border}
-                      strokeWidth={layout.borderWidth}
-                    />
-                  );
-                })}
+                {gridGeometry.map((grid) => (
+                  <Line
+                    key={grid.value}
+                    p1={grid.p1}
+                    p2={grid.p2}
+                    color={colors.border}
+                    strokeWidth={layout.borderWidth}
+                  />
+                ))}
                 {bars.map((bar, index) =>
                   bar.isToday ? (
                     <RoundedRect
@@ -347,13 +385,13 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
                 ))}
               </Canvas>
               <View
-                style={[styles.labels, { width: canvasWidth }]}
+                style={labelsStyle}
                 pointerEvents="none"
               >
                 {bars.map((bar, index) => (
                   <View
                     key={bar.key}
-                    style={[styles.labelSlot, { width: slotWidth }]}
+                    style={labelSlotStyles[index]}
                   >
                     <Text
                       testID={`bar-label-${bar.key}`}

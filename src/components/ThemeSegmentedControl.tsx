@@ -1,13 +1,17 @@
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { selection } from "@/lib/haptics";
 import { useExpenseStore } from "@/store/useExpenseStore";
 import { springs } from "@/theme/motion";
-import { useAnimatedThemeColors, type ThemeMode } from "@/theme/ThemeProvider";
+import {
+    useAnimatedThemeColors,
+    useTheme,
+    type ThemeMode,
+} from "@/theme/ThemeProvider";
 import { fontFamily, layout, radii, spacing, typography } from "@/theme/tokens";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Pressable,
     StyleSheet,
-    Text,
     type LayoutChangeEvent
 } from "react-native";
 import Animated, {
@@ -51,6 +55,8 @@ const styles = StyleSheet.create({
 
 export function ThemeSegmentedControl() {
   const animatedColors = useAnimatedThemeColors();
+  const { colors } = useTheme();
+  const reduceMotion = useReducedMotionSafe();
   const mode = useExpenseStore((state) => state.themeMode);
   const setThemeMode = useExpenseStore((state) => state.setThemeMode);
   const [segmentWidth, setSegmentWidth] = useState(0);
@@ -67,9 +73,11 @@ export function ThemeSegmentedControl() {
 
     const target = selectedIndex * segmentWidth;
     thumbOffset.value =
-      previousWidth.current === 0 ? target : withSpring(target, springs.snappy);
+      previousWidth.current === 0 || reduceMotion
+        ? target
+        : withSpring(target, springs.snappy);
     previousWidth.current = segmentWidth;
-  }, [segmentWidth, selectedIndex, thumbOffset]);
+  }, [reduceMotion, segmentWidth, selectedIndex, thumbOffset]);
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const innerWidth = Math.max(
@@ -115,19 +123,17 @@ export function ThemeSegmentedControl() {
             onPress={() => handlePress(option.mode)}
             style={styles.segment}
           >
-            <Text
+            <Animated.Text
               numberOfLines={1}
               style={[
                 styles.label,
                 {
-                  color: selected
-                    ? animatedColors.value.onAccent
-                    : animatedColors.value.textMuted,
+                  color: selected ? colors.onAccent : colors.mutedText,
                 },
               ]}
             >
               {option.label}
-            </Text>
+            </Animated.Text>
           </Pressable>
         );
       })}

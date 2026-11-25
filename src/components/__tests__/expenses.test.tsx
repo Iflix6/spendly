@@ -4,6 +4,7 @@ import { SNACKBAR } from "@/constants/expenses";
 import * as haptics from "@/lib/haptics";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
+import { lightColors } from "@/theme/tokens";
 import {
     afterEach,
     beforeEach,
@@ -55,9 +56,9 @@ afterEach(() => {
 });
 
 describe("SwipeableRow", () => {
-  it("deletes from the revealed action with light haptic feedback", async () => {
+  it("deletes from the revealed action with accessible contrast and haptics", async () => {
     const onDelete = jest.fn();
-    const { getByRole } = await renderWithTheme(
+    const { getByRole, getByText } = await renderWithTheme(
       <SwipeableRow
         expense={expense}
         isOpen
@@ -70,7 +71,14 @@ describe("SwipeableRow", () => {
       />,
     );
 
-    fireEvent.press(getByRole("button", { name: "Delete Food expense" }));
+    expect(getByText("Delete")).toHaveStyle({ color: lightColors.onDanger });
+    expect(getByText("trash-outline")).toHaveStyle({
+      color: lightColors.onDanger,
+    });
+
+    await fireEvent.press(
+      getByRole("button", { name: "Delete Food expense" }),
+    );
 
     expect(haptics.lightImpact).toHaveBeenCalledTimes(1);
     expect(onDelete).toHaveBeenCalledWith(expense.id);

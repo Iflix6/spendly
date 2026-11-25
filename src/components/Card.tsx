@@ -1,7 +1,11 @@
-import { useTheme } from "@/theme/ThemeProvider";
+import {
+    useAnimatedThemeColors,
+    useTheme,
+} from "@/theme/ThemeProvider";
 import { layout, lightCardShadow, radii } from "@/theme/tokens";
 import { useMemo, type ReactNode } from "react";
-import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { StyleSheet, type StyleProp, type ViewStyle } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 interface CardProps {
   children: ReactNode;
@@ -16,19 +20,22 @@ const styles = StyleSheet.create({
 });
 
 export function Card({ children, style }: CardProps) {
-  const { colors, isDark } = useTheme();
+  const { isDark } = useTheme();
+  const animatedColors = useAnimatedThemeColors();
   const cardStyle = useMemo(
-    () => [
-      styles.card,
-      {
-        backgroundColor: colors.surface,
-        borderColor: isDark ? colors.border : colors.surface,
-      },
-      isDark ? null : lightCardShadow,
-      style,
-    ],
-    [colors.border, colors.surface, isDark, style],
+    () => [styles.card, isDark ? null : lightCardShadow],
+    [isDark],
   );
+  const surfaceStyle = useAnimatedStyle(() => ({
+    backgroundColor: animatedColors.value.surface,
+    borderColor: isDark
+      ? animatedColors.value.border
+      : animatedColors.value.surface,
+  }));
 
-  return <View style={cardStyle}>{children}</View>;
+  return (
+    <Animated.View style={[cardStyle, surfaceStyle, style]}>
+      {children}
+    </Animated.View>
+  );
 }

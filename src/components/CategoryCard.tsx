@@ -1,6 +1,7 @@
 import { Card } from "@/components/Card";
 import { CategoryIcon } from "@/components/CategoryIcon";
-import type { Category } from "@/constants/categories";
+import type { Category, CategoryId } from "@/constants/categories";
+import { AMOUNT_INPUT } from "@/constants/expenseForm";
 import { CATEGORY_CARD } from "@/constants/home";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { formatMoney } from "@/lib/money";
@@ -14,7 +15,7 @@ import {
     tabularNums,
     typography,
 } from "@/theme/tokens";
-import { useCallback, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
     cancelAnimation,
@@ -27,7 +28,7 @@ interface CategoryCardProps {
   category: Category;
   amountCents: number;
   progress: number;
-  onPress: () => void;
+  onPress: (categoryId: CategoryId) => void;
 }
 
 const styles = StyleSheet.create({
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function CategoryCard({
+export const CategoryCard = memo(function CategoryCard({
   category,
   amountCents,
   progress,
@@ -92,6 +93,10 @@ export function CategoryCard({
     transform: [{ scale: pressScale.value }],
   }));
   const cardStyle = useMemo(() => styles.card, []);
+  const fillStyle = useMemo(
+    () => [styles.fill, { backgroundColor: category.color }],
+    [category.color],
+  );
   const trackStyle = useMemo(
     () => [styles.track, { backgroundColor: colors.surfaceAlt }],
     [colors.surfaceAlt],
@@ -112,13 +117,16 @@ export function CategoryCard({
   const handlePressOut = useCallback(() => {
     pressScale.value = reduceMotion ? 1 : withSpring(1, springs.snappy);
   }, [pressScale, reduceMotion]);
+  const handlePress = useCallback(() => {
+    onPress(category.id);
+  }, [category.id, onPress]);
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${category.label}, ${amount}. Show expenses`}
       accessibilityHint="Opens expenses filtered by this category"
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.pressable}
@@ -130,20 +138,21 @@ export function CategoryCard({
           <Text style={labelStyle} numberOfLines={1}>
             {category.label}
           </Text>
-          <Text style={amountStyle} numberOfLines={1}>
+          <Text
+            style={amountStyle}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={AMOUNT_INPUT.minimumFontScale}
+          >
             {amount}
           </Text>
           <View style={trackStyle}>
             <Animated.View
-              style={[
-                styles.fill,
-                { backgroundColor: category.color },
-                progressStyle,
-              ]}
+              style={[fillStyle, progressStyle]}
             />
           </View>
         </Card>
       </Animated.View>
     </Pressable>
   );
-}
+});

@@ -2,78 +2,101 @@ jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
-/* jest.mock("react-native-reanimated", () => {
-  const { Pressable, Text, View } = require("react-native");
-  const createBuilder = () => {
-    const builder: {
-      duration: () => unknown;
-      delay: () => unknown;
-      easing: () => unknown;
-    } = {
-      duration: () => builder,
-      delay: () => builder,
-      easing: () => builder,
+jest.mock(
+  "react-native-reanimated",
+  () => {
+    const React = require("react") as typeof import("react");
+    const { Pressable, Text, View } = require("react-native");
+    const createBuilder = () => {
+      const builder: {
+        duration: () => unknown;
+        delay: () => unknown;
+        easing: () => unknown;
+      } = {
+        duration: () => builder,
+        delay: () => builder,
+        easing: () => builder,
+      };
+      return builder;
     };
-    return builder;
-  };
-  const createAnimation = () => ({ duration: () => createBuilder() });
+    const createAnimation = () => ({ duration: () => createBuilder() });
 
-  return {
-    __esModule: true,
-    default: {
-      Pressable,
-      Text,
-      View,
-      createAnimatedComponent: (component: unknown) => component,
-    },
-    Easing: {
-      bezier: () => () => 0,
-      cubic: () => 0,
-      linear: () => 0,
-      out: () => () => 0,
-    },
-    FadeIn: createAnimation(),
-    FadeInDown: createAnimation(),
-    FadeOut: createAnimation(),
-    FadeOutDown: createAnimation(),
-    LinearTransition: createAnimation(),
-    SlideInLeft: createAnimation(),
-    SlideInRight: createAnimation(),
-    SlideInUp: createAnimation(),
-    cancelAnimation: () => undefined,
-    interpolate: (value: number) => value,
-    interpolateColor: () => "#000000",
-    runOnJS: (callback: (...args: unknown[]) => unknown) => callback,
-    useAnimatedKeyboard: () => ({
-      height: { value: 0 },
-      state: { value: 0 },
-    }),
-    useAnimatedReaction: () => undefined,
-    useAnimatedStyle: (updater: () => unknown) => updater(),
-    useDerivedValue: (updater: () => unknown) => ({ value: updater() }),
-    useReducedMotion: () => false,
-    useSharedValue: (value: unknown) => ({ value }),
-    withDelay: (_delay: number, animation: unknown) => animation,
-    withRepeat: (animation: unknown) => animation,
-    withSequence: (...values: unknown[]) => values[values.length - 1],
-    withSpring: (
-      value: unknown,
-      _config?: unknown,
-      callback?: (finished: boolean) => void,
-    ) => {
-      callback?.(true);
-      return value;
-    },
-    withTiming: (
-      value: unknown,
-      _config?: unknown,
-      callback?: (finished: boolean) => void,
-    ) => {
-      callback?.(true);
-      return value;
-    },
+    return {
+      __esModule: true,
+      default: {
+        Pressable,
+        Text,
+        View,
+        createAnimatedComponent: (component: unknown) => component,
+      },
+      Easing: {
+        bezier: () => () => 0,
+        cubic: () => 0,
+        linear: () => 0,
+        out: () => () => 0,
+      },
+      FadeIn: createAnimation(),
+      FadeInDown: createAnimation(),
+      FadeOut: createAnimation(),
+      FadeOutDown: createAnimation(),
+      LinearTransition: createAnimation(),
+      SlideInLeft: createAnimation(),
+      SlideInRight: createAnimation(),
+      SlideInUp: createAnimation(),
+      cancelAnimation: () => undefined,
+      interpolate: (value: number) => value,
+      interpolateColor: () => "#000000",
+      runOnJS: (callback: (...args: unknown[]) => unknown) => callback,
+      useAnimatedKeyboard: () => ({
+        height: { value: 0 },
+        state: { value: 0 },
+      }),
+      useAnimatedReaction: (
+        prepare: () => unknown,
+        react: (current: unknown, previous: unknown) => void,
+      ) => {
+        const previous = React.useRef<unknown>(null);
+        React.useEffect(() => {
+          const current = prepare();
+          react(current, previous.current);
+          previous.current = current;
+        });
+      },
+      useAnimatedStyle: (updater: () => unknown) => updater(),
+      useDerivedValue: (updater: () => unknown) => {
+        const ref = React.useRef<{ value: unknown }>({ value: updater() });
+        ref.current.value = updater();
+        return ref.current;
+      },
+      useReducedMotion: () => false,
+      useSharedValue: (value: unknown) => {
+        const ref = React.useRef({ value });
+        ref.current.value = value;
+        return ref.current;
+      },
+      withDelay: (_delay: number, animation: unknown) => animation,
+      withRepeat: (animation: unknown) => animation,
+      withSequence: (...values: unknown[]) => values[values.length - 1],
+      withSpring: (
+        value: unknown,
+        _config?: unknown,
+        callback?: (finished: boolean) => void,
+      ) => {
+        callback?.(true);
+        return value;
+      },
+      withTiming: (
+        value: unknown,
+        _config?: unknown,
+        callback?: (finished: boolean) => void,
+      ) => {
+        callback?.(true);
+        return value;
+      },
+    };
   },
-}); */
+  { virtual: true },
+);
 
 jest.mock("expo-blur", () => {
   const { View } = require("react-native");

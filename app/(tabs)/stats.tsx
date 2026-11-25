@@ -182,17 +182,13 @@ export default function StatsScreen() {
     router.push("/add");
   }, [router]);
 
-  const targetStyle = useMemo(
-    () => [styles.target, { backgroundColor: colors.bg }],
-    [colors.bg],
-  );
   const titleStyle = useMemo(
     () => [styles.title, { color: colors.text }],
     [colors.text],
   );
   const totalLabelStyle = useMemo(
-    () => [styles.totalLabel, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.totalLabel, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const totalAmountStyle = useMemo(
     () => [styles.totalAmount, { color: colors.text }],
@@ -210,7 +206,7 @@ export default function StatsScreen() {
   return (
     <BlurTargetView
       ref={isFocused ? blurTarget : undefined}
-      style={targetStyle}
+      style={styles.target}
     >
       <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
         <ScrollView

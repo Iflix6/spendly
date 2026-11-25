@@ -91,7 +91,7 @@ export function SearchBar({ value, onChangeText, onClear }: SearchBarProps) {
       <Ionicons
         name="search-outline"
         size={SEARCH_BAR.iconSize}
-        color={colors.textMuted}
+        color={colors.mutedText}
         style={styles.searchIcon}
       />
       <TextInput
@@ -100,7 +100,7 @@ export function SearchBar({ value, onChangeText, onClear }: SearchBarProps) {
         value={value}
         onChangeText={onChangeText}
         placeholder="Search expenses"
-        placeholderTextColor={colors.textMuted}
+        placeholderTextColor={colors.mutedText}
         autoCapitalize="none"
         autoCorrect={false}
         returnKeyType="search"
@@ -118,7 +118,7 @@ export function SearchBar({ value, onChangeText, onClear }: SearchBarProps) {
           <Ionicons
             name="close-circle"
             size={SEARCH_BAR.iconSize}
-            color={colors.textMuted}
+            color={colors.mutedText}
           />
         </Animated.View>
       </Pressable>

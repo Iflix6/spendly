@@ -164,8 +164,8 @@ export function SettingsSheet({ onDismiss, onEditBudget }: SettingsSheetProps) {
     [colors.border, colors.surface],
   );
   const sectionLabelStyle = useMemo(
-    () => [styles.sectionLabel, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.sectionLabel, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const budgetRowStyle = useMemo(
     () => [
@@ -182,26 +182,26 @@ export function SettingsSheet({ onDismiss, onEditBudget }: SettingsSheetProps) {
     [colors.text],
   );
   const rowValueStyle = useMemo(
-    () => [styles.rowValue, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.rowValue, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const resetStyle = useMemo(
     () => [
       styles.reset,
       {
         backgroundColor: colors.surfaceAlt,
-        borderColor: resetArmed ? colors.danger : colors.border,
+        borderColor: resetArmed ? colors.dangerText : colors.border,
       },
     ],
-    [colors.border, colors.danger, colors.surfaceAlt, resetArmed],
+    [colors.border, colors.dangerText, colors.surfaceAlt, resetArmed],
   );
   const resetLabelStyle = useMemo(
-    () => [styles.resetLabel, { color: colors.danger }],
-    [colors.danger],
+    () => [styles.resetLabel, { color: colors.dangerText }],
+    [colors.dangerText],
   );
   const versionStyle = useMemo(
-    () => [styles.version, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.version, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const contentStyle = useMemo(
     () => [
@@ -251,7 +251,7 @@ export function SettingsSheet({ onDismiss, onEditBudget }: SettingsSheetProps) {
           <Ionicons
             name="chevron-forward"
             size={spacing.xl}
-            color={colors.textMuted}
+            color={colors.mutedText}
           />
         </Pressable>
         <Pressable

@@ -447,7 +447,7 @@ export default function ExpenseDetailScreen() {
   }));
   const deleteStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedColors.value.surface,
-    borderColor: animatedColors.value.danger,
+    borderColor: animatedColors.value.dangerText,
   }));
   const iconStyle = useAnimatedStyle(() =>
     animateElement(progress, transitionOrigin?.icon ?? null, iconTarget),
@@ -471,28 +471,28 @@ export default function ExpenseDetailScreen() {
     [colors.text],
   );
   const detailLabelStyle = useMemo(
-    () => [styles.detailLabel, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.detailLabel, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const detailValueStyle = useMemo(
     () => [styles.detailValue, { color: colors.text }],
     [colors.text],
   );
   const noNoteStyle = useMemo(
-    () => [styles.noNote, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.noNote, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const createdStyle = useMemo(
-    () => [styles.created, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.created, { color: colors.mutedText }],
+    [colors.mutedText],
   );
   const editLabelStyle = useMemo(
-    () => [styles.actionLabel, { color: colors.accent }],
-    [colors.accent],
+    () => [styles.actionLabel, { color: colors.accentText }],
+    [colors.accentText],
   );
   const deleteLabelStyle = useMemo(
-    () => [styles.actionLabel, { color: colors.danger }],
-    [colors.danger],
+    () => [styles.actionLabel, { color: colors.dangerText }],
+    [colors.dangerText],
   );
 
   return (

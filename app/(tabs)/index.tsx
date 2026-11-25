@@ -250,10 +250,6 @@ export default function HomeScreen() {
     router.push("/add");
   }, [router]);
 
-  const targetStyle = useMemo(
-    () => [styles.target, { backgroundColor: colors.bg }],
-    [colors.bg],
-  );
   const wordmarkStyle = useMemo(
     () => [styles.wordmark, { color: colors.text }],
     [colors.text],
@@ -293,8 +289,8 @@ export default function HomeScreen() {
     [colors.text],
   );
   const seeAllLabelStyle = useMemo(
-    () => [styles.seeAllLabel, { color: colors.accent }],
-    [colors.accent],
+    () => [styles.seeAllLabel, { color: colors.accentText }],
+    [colors.accentText],
   );
   const contentStyle = useMemo(
     () => [styles.content, { paddingBottom: bottomPadding }],
@@ -305,7 +301,7 @@ export default function HomeScreen() {
     <>
       <BlurTargetView
         ref={isFocused ? blurTarget : undefined}
-        style={targetStyle}
+        style={styles.target}
       >
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <ScrollView
@@ -403,7 +399,7 @@ export default function HomeScreen() {
                           ? categoryTotals[category.id] / largestCategoryCents
                           : 0
                       }
-                      onPress={() => handleCategoryPress(category.id)}
+                      onPress={handleCategoryPress}
                     />
                   ))}
                 </ScrollView>

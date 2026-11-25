@@ -2,6 +2,8 @@ export const ANIMATED_NUMBER = {
   digitCount: 10,
   defaultFractionDigits: 2,
   lineHeightRatio: 1.2,
+  estimatedGlyphWidthRatio: 0.6,
+  minimumFontScale: 0.4,
 } as const;
 
 export const BUDGET_RING = {

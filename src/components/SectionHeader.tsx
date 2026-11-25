@@ -41,8 +41,8 @@ export const SectionHeader = memo(function SectionHeader({
     [colors.text],
   );
   const totalStyle = useMemo(
-    () => [styles.total, { color: colors.textMuted }],
-    [colors.textMuted],
+    () => [styles.total, { color: colors.mutedText }],
+    [colors.mutedText],
   );
 
   return (

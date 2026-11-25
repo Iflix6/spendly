@@ -92,8 +92,8 @@ export function Snackbar({
     [colors.text],
   );
   const actionLabelStyle = useMemo(
-    () => [styles.actionLabel, { color: colors.accent }],
-    [colors.accent],
+    () => [styles.actionLabel, { color: colors.accentText }],
+    [colors.accentText],
   );
   const entering = reduceMotion
     ? FadeIn.duration(durations.reduced)

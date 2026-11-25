@@ -1,10 +1,10 @@
-import type { Category } from "@/constants/categories";
+import type { Category, CategoryId } from "@/constants/categories";
 import { CATEGORY_CHIP } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { springs } from "@/theme/motion";
 import { useAnimatedThemeColors } from "@/theme/ThemeProvider";
 import { layout, radii, spacing, typography } from "@/theme/tokens";
-import { useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Animated, {
     interpolateColor,
@@ -18,7 +18,7 @@ interface CategoryChipProps {
   category: Category | null;
   label: string;
   selected: boolean;
-  onPress: () => void;
+  onPress: (categoryId: CategoryId | null) => void;
 }
 
 const styles = StyleSheet.create({
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function CategoryChip({
+export const CategoryChip = memo(function CategoryChip({
   category,
   label,
   selected,
@@ -100,7 +100,7 @@ export function CategoryChip({
     color: interpolateColor(
       progress.value,
       [0, 1],
-      [colors.value.textMuted, colors.value.onAccent],
+      [colors.value.mutedText, colors.value.onAccent]
     ),
   }));
   const chipStyle = useAnimatedStyle(() => ({
@@ -114,13 +114,16 @@ export function CategoryChip({
   const dotStyle = useAnimatedStyle(() => ({
     backgroundColor: category?.color ?? colors.value.accent,
   }));
+  const handlePress = useCallback(() => {
+    onPress(category?.id ?? null);
+  }, [category?.id, onPress]);
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityState={{ selected }}
-      onPress={onPress}
+      onPress={handlePress}
       style={styles.pressable}
     >
       <Animated.View
@@ -137,4 +140,4 @@ export function CategoryChip({
       </Animated.View>
     </Pressable>
   );
-}
+});

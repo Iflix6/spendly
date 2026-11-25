@@ -109,7 +109,7 @@ describe("BarChart", () => {
 
     await fireEvent.press(getByRole("tab", { name: "Day view" }));
     expect(getByTestId(`bar-label-${today}`)).toHaveStyle({
-      color: lightColors.accent,
+      color: lightColors.accentText,
     });
   });
 });

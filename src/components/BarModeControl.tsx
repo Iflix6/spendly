@@ -97,7 +97,7 @@ export function BarModeControl({ mode, onChange }: BarModeControlProps) {
     color: animatedColors.value.onAccent,
   }));
   const unselectedLabelStyle = useAnimatedStyle(() => ({
-    color: animatedColors.value.textMuted,
+    color: animatedColors.value.mutedText,
   }));
 
   return (

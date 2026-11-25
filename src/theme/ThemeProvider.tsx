@@ -6,18 +6,21 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useState,
     type ReactNode,
 } from "react";
 import { useColorScheme } from "react-native";
 import Animated, {
     interpolateColor,
+    runOnJS,
+    useAnimatedReaction,
     useAnimatedStyle,
     useDerivedValue,
     useSharedValue,
     withTiming,
     type SharedValue,
 } from "react-native-reanimated";
-import { durations, easing } from "./motion";
+import { durations, easing, themeSwitchProgress } from "./motion";
 import { darkColors, lightColors, type ThemeColors } from "./tokens";
 
 export type ThemeMode = "system" | "light" | "dark";
@@ -42,7 +45,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotionSafe();
   const isDark =
     mode === "dark" || (mode === "system" && systemScheme === "dark");
-  const colors = isDark ? darkColors : lightColors;
+  const [colors, setColors] = useState<ThemeColors>(() =>
+    isDark ? darkColors : lightColors,
+  );
   const themeProgress = useSharedValue(isDark ? 1 : 0);
 
   useEffect(() => {
@@ -51,6 +56,31 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       easing: easing.standard,
     });
   }, [isDark, reduceMotion, themeProgress]);
+
+  useAnimatedReaction(
+    () => {
+      "worklet";
+      return themeProgress.value;
+    },
+    (progress, previous) => {
+      "worklet";
+      if (previous === null) {
+        return;
+      }
+
+      if (
+        previous < themeSwitchProgress &&
+        progress >= themeSwitchProgress
+      ) {
+        runOnJS(setColors)(darkColors);
+      } else if (
+        previous >= themeSwitchProgress &&
+        progress < themeSwitchProgress
+      ) {
+        runOnJS(setColors)(lightColors);
+      }
+    },
+  );
 
   const animatedColors = useDerivedValue<ThemeColors>(() => ({
     bg: interpolateColor(
@@ -78,21 +108,27 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       [0, 1],
       [lightColors.border, darkColors.border],
     ),
-    text: interpolateColor(
-      themeProgress.value,
-      [0, 1],
-      [lightColors.text, darkColors.text],
-    ),
-    textMuted: interpolateColor(
-      themeProgress.value,
-      [0, 1],
-      [lightColors.textMuted, darkColors.textMuted],
-    ),
+    text:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.text
+        : darkColors.text,
+    textMuted:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.textMuted
+        : darkColors.textMuted,
+    mutedText:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.mutedText
+        : darkColors.mutedText,
     accent: interpolateColor(
       themeProgress.value,
       [0, 1],
       [lightColors.accent, darkColors.accent],
     ),
+    accentText:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.accentText
+        : darkColors.accentText,
     accentAlt: interpolateColor(
       themeProgress.value,
       [0, 1],
@@ -103,16 +139,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       [0, 1],
       [lightColors.accentDeep, darkColors.accentDeep],
     ),
-    onAccent: interpolateColor(
-      themeProgress.value,
-      [0, 1],
-      [lightColors.onAccent, darkColors.onAccent],
-    ),
+    onAccent:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.onAccent
+        : darkColors.onAccent,
     success: interpolateColor(
       themeProgress.value,
       [0, 1],
       [lightColors.success, darkColors.success],
     ),
+    successText:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.successText
+        : darkColors.successText,
     warning: interpolateColor(
       themeProgress.value,
       [0, 1],
@@ -123,20 +162,29 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       [0, 1],
       [lightColors.danger, darkColors.danger],
     ),
+    dangerText:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.dangerText
+        : darkColors.dangerText,
+    onDanger:
+      themeProgress.value < themeSwitchProgress
+        ? lightColors.onDanger
+        : darkColors.onDanger,
   }));
 
   const rootStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedColors.value.bg,
   }));
 
+  const displayIsDark = colors === darkColors;
   const value = useMemo<ThemeContextValue>(
-    () => ({ colors, isDark, mode, setMode, animatedColors }),
-    [animatedColors, colors, isDark, mode, setMode],
+    () => ({ colors, isDark: displayIsDark, mode, setMode, animatedColors }),
+    [animatedColors, colors, displayIsDark, mode, setMode],
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <StatusBar style={isDark ? "light" : "dark"} />
+      <StatusBar style={displayIsDark ? "light" : "dark"} />
       <Animated.View style={[{ flex: 1 }, rootStyle]}>{children}</Animated.View>
     </ThemeContext.Provider>
   );

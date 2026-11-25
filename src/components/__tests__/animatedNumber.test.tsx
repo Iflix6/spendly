@@ -3,7 +3,7 @@ import {
     formatAnimatedNumber,
 } from "@/components/AnimatedNumber";
 import { describe, expect, it } from "@jest/globals";
-import { render } from "@testing-library/react-native";
+import { fireEvent, render } from "@testing-library/react-native";
 
 describe("AnimatedNumber", () => {
   it("exposes the full formatted value with prefix and suffix", async () => {
@@ -37,6 +37,20 @@ describe("AnimatedNumber", () => {
     );
 
     expect(getByText("$")).toHaveStyle({ fontSize: 28 });
+  });
+
+  it("scales nine-digit amounts to the available width", async () => {
+    const { getByLabelText, getByText } = await render(
+      <AnimatedNumber value={999999999} prefix="$" style={{ fontSize: 40 }} />,
+    );
+
+    await fireEvent(getByLabelText("$999,999,999.00"), "layout", {
+      nativeEvent: {
+        layout: { x: 0, y: 0, width: 180, height: 48 },
+      },
+    });
+
+    expect(getByText("$")).toHaveStyle({ fontSize: 20 });
   });
 
   it("formats negative and non-finite values safely", () => {

@@ -2,11 +2,12 @@ import { KEYPAD_MAX_DECIMALS } from "@/constants";
 import { ANIMATED_NUMBER } from "@/constants/home";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { tabularNums, typography } from "@/theme/tokens";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
     StyleSheet,
     Text,
     View,
+    type LayoutChangeEvent,
     type StyleProp,
     type TextStyle,
 } from "react-native";
@@ -26,6 +27,9 @@ const styles = StyleSheet.create({
   root: {
     flexDirection: "row",
     alignItems: "center",
+    flexShrink: 1,
+    maxWidth: "100%",
+    overflow: "hidden",
   },
 });
 
@@ -57,17 +61,9 @@ export function AnimatedNumber({
   const reduceMotion = useReducedMotionSafe();
   const flattenedStyle = StyleSheet.flatten(style);
   const fontSize = flattenedStyle?.fontSize ?? typography.body.fontSize;
-  const digitHeight =
+  const baseDigitHeight =
     flattenedStyle?.lineHeight ?? fontSize * ANIMATED_NUMBER.lineHeightRatio;
-  const textStyle = useMemo<TextStyle>(
-    () => ({
-      ...typography.body,
-      ...flattenedStyle,
-      ...tabularNums,
-      lineHeight: digitHeight,
-    }),
-    [digitHeight, flattenedStyle],
-  );
+  const [availableWidth, setAvailableWidth] = useState(0);
   const formatted = useMemo(
     () => formatAnimatedNumber(value, fractionDigits),
     [fractionDigits, value],
@@ -78,11 +74,44 @@ export function AnimatedNumber({
   const fractionPart =
     decimalIndex >= 0 ? formatted.slice(decimalIndex + 1) : "";
   const label = `${prefix}${formatted}${suffix}`;
+  const fontScale = Math.max(1, maxFontSizeMultiplier ?? 1);
+  const estimatedWidth =
+    Array.from(label).length *
+    fontSize *
+    ANIMATED_NUMBER.estimatedGlyphWidthRatio *
+    fontScale;
+  const fitScale =
+    availableWidth > 0
+      ? Math.min(
+          1,
+          Math.max(
+            ANIMATED_NUMBER.minimumFontScale,
+            availableWidth / Math.max(1, estimatedWidth),
+          ),
+        )
+      : 1;
+  const fittedFontSize = fontSize * fitScale;
+  const digitHeight = baseDigitHeight * fitScale;
+  const textStyle = useMemo<TextStyle>(
+    () => ({
+      ...typography.body,
+      ...flattenedStyle,
+      ...tabularNums,
+      fontSize: fittedFontSize,
+      lineHeight: digitHeight,
+    }),
+    [digitHeight, fittedFontSize, flattenedStyle],
+  );
+  const handleLayout = useCallback((event: LayoutChangeEvent) => {
+    const width = event.nativeEvent.layout.width;
+    setAvailableWidth((current) => (current === width ? current : width));
+  }, []);
 
   return (
     <View
       accessible
       accessibilityLabel={accessibilityLabel ?? label}
+      onLayout={handleLayout}
       style={styles.root}
     >
       {prefix.length > 0 ? (

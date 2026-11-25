@@ -8,7 +8,7 @@ import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { darkColors, lightColors, spacing } from "@/theme/tokens";
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { fireEvent, render } from "@testing-library/react-native";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "../(tabs)/index";
@@ -21,17 +21,29 @@ const mockCanGoBack = jest.fn(() => true);
 const mockNavigate = jest.fn();
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
+const mockRouter = {
+  back: mockBack,
+  canGoBack: mockCanGoBack,
+  navigate: mockNavigate,
+  push: mockPush,
+  replace: mockReplace,
+};
+
+jest.mock("@/lib/expenseTransition", () => {
+  const actual =
+    jest.requireActual<typeof import("@/lib/expenseTransition")>(
+      "@/lib/expenseTransition",
+    );
+  return {
+    ...actual,
+    measureExpenseRowTransition: jest.fn(() => Promise.resolve(null)),
+  };
+});
 
 jest.mock("expo-router", () => ({
   useIsFocused: () => true,
   useLocalSearchParams: () => mockParams,
-  useRouter: () => ({
-    back: mockBack,
-    canGoBack: mockCanGoBack,
-    navigate: mockNavigate,
-    push: mockPush,
-    replace: mockReplace,
-  }),
+  useRouter: () => mockRouter,
 }));
 
 jest.mock("@expo/vector-icons/Ionicons", () => {
@@ -150,7 +162,9 @@ describe("tab screen shell", () => {
     expect(queryByLabelText(recentExpenseLabel(0))).toBeNull();
 
     await fireEvent.press(getByLabelText(recentExpenseLabel(4)));
-    expect(mockPush).toHaveBeenCalledWith("/expense/recent-4");
+    await waitFor(() =>
+      expect(mockPush).toHaveBeenCalledWith("/expense/recent-4"),
+    );
   });
 
   it("shows the over-budget ring copy without capping the percentage", async () => {

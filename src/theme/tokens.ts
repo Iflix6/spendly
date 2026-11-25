@@ -8,13 +8,18 @@ export interface ThemeColors {
   border: string;
   text: string;
   textMuted: string;
+  mutedText: string;
   accent: string;
+  accentText: string;
   accentAlt: string;
   accentDeep: string;
   onAccent: string;
   success: string;
+  successText: string;
   warning: string;
   danger: string;
+  dangerText: string;
+  onDanger: string;
 }
 
 export const lightColors: ThemeColors = {
@@ -25,13 +30,18 @@ export const lightColors: ThemeColors = {
   border: "#E3E6EE",
   text: "#11131A",
   textMuted: "#6B7280",
+  mutedText: "#626B7A",
   accent: "#6C5CE7",
+  accentText: "#5F4BD1",
   accentAlt: "#8B7CF6",
   accentDeep: "#4B3CC4",
   onAccent: "#FFFFFF",
   success: "#34C98B",
+  successText: "#187A52",
   warning: "#F5B83D",
   danger: "#FF5C5C",
+  dangerText: "#C53434",
+  onDanger: "#11131A",
 };
 
 export const darkColors: ThemeColors = {
@@ -42,13 +52,18 @@ export const darkColors: ThemeColors = {
   border: "#262C3B",
   text: "#F2F4F8",
   textMuted: "#9AA3B2",
+  mutedText: "#9AA3B2",
   accent: "#6C5CE7",
+  accentText: "#A99AF8",
   accentAlt: "#8B7CF6",
   accentDeep: "#4B3CC4",
   onAccent: "#FFFFFF",
   success: "#34C98B",
+  successText: "#34C98B",
   warning: "#F5B83D",
   danger: "#FF5C5C",
+  dangerText: "#FF5C5C",
+  onDanger: "#11131A",
 };
 
 export const splashColors = {

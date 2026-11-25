@@ -121,16 +121,18 @@ describe("Stats screen", () => {
     expect(getByText(monthlyDateLabel(previousMonth))).toBeTruthy();
   });
 
-  it("shows a danger delta when spending is higher", async () => {
+  it("shows an accessible danger delta when spending is higher", async () => {
     const { getByText } = await renderScreen();
 
-    expect(getByText("50.0% vs last month")).toBeTruthy();
+    expect(getByText("50.0% vs last month")).toHaveStyle({
+      color: lightColors.dangerText,
+    });
     expect(getByText("trending-up-outline")).toHaveStyle({
-      color: lightColors.danger,
+      color: lightColors.dangerText,
     });
   });
 
-  it("shows a success delta when spending is lower", async () => {
+  it("shows an accessible success delta when spending is lower", async () => {
     useExpenseStore.setState({
       expenses: [
         expense("current", currentMonth, 5000),
@@ -139,9 +141,11 @@ describe("Stats screen", () => {
     });
     const { getByText } = await renderScreen();
 
-    expect(getByText("50.0% vs last month")).toBeTruthy();
+    expect(getByText("50.0% vs last month")).toHaveStyle({
+      color: lightColors.successText,
+    });
     expect(getByText("trending-down-outline")).toHaveStyle({
-      color: lightColors.success,
+      color: lightColors.successText,
     });
   });
 
@@ -153,7 +157,7 @@ describe("Stats screen", () => {
 
     expect(getByText("No prior month")).toBeTruthy();
     expect(getByText("remove-outline")).toHaveStyle({
-      color: lightColors.textMuted,
+      color: lightColors.mutedText,
     });
   });
 

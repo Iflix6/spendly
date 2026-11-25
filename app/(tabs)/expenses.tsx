@@ -175,9 +175,10 @@ export default function ExpensesScreen() {
     router.setParams({ category: "all" });
   }, [router]);
   const handleCategoryPress = useCallback(
-    (category: CategoryFilter) => {
+    (category: CategoryFilter | null) => {
       void selection();
-      const nextCategory = selectedCategory === category ? "all" : category;
+      const filter = category ?? "all";
+      const nextCategory = selectedCategory === filter ? "all" : filter;
       setSelectedCategory(nextCategory);
       setOpenRowId(null);
       router.setParams({ category: nextCategory });
@@ -217,17 +218,13 @@ export default function ExpensesScreen() {
     [handleClearFilters, hasFilters],
   );
 
-  const targetStyle = useMemo(
-    () => [styles.target, { backgroundColor: colors.bg }],
-    [colors.bg],
-  );
   const screenTitleStyle = useMemo(
     () => [styles.screenTitle, { color: colors.text }],
     [colors.text],
   );
   const screenTotalStyle = useMemo(
-    () => [styles.screenTotal, { color: colors.accent }],
-    [colors.accent],
+    () => [styles.screenTotal, { color: colors.accentText }],
+    [colors.accentText],
   );
   const listContentStyle = useMemo(
     () => [styles.listContent, { paddingBottom: bottomPadding }],
@@ -236,7 +233,7 @@ export default function ExpensesScreen() {
   return (
     <BlurTargetView
       ref={isFocused ? blurTarget : undefined}
-      style={targetStyle}
+      style={styles.target}
     >
       <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
         <View style={styles.screenHeader}>
@@ -261,7 +258,7 @@ export default function ExpensesScreen() {
                 category={option.category}
                 label={option.label}
                 selected={selectedCategory === option.id}
-                onPress={() => handleCategoryPress(option.id)}
+                onPress={handleCategoryPress}
               />
             ))}
           </ScrollView>

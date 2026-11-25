@@ -193,10 +193,7 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
         </Text>
         <Text
           accessible={false}
-          style={[
-            styles.detail,
-            { color: ringState.isOverBudget ? colors.danger : colors.onAccent },
-          ]}
+          style={[styles.detail, { color: colors.onAccent }]}
           numberOfLines={1}
           adjustsFontSizeToFit
           minimumFontScale={AMOUNT_INPUT.minimumFontScale}

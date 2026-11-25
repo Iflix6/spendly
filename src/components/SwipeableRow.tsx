@@ -9,7 +9,7 @@ import { durations, easing, springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import { fontFamily, layout, radii, spacing, typography } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useCallback, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -88,7 +88,7 @@ const collapseExit = (values: ExitAnimationsValues) => {
   };
 };
 
-export function SwipeableRow({
+export const SwipeableRow = memo(function SwipeableRow({
   expense,
   isOpen,
   initialRender,
@@ -245,8 +245,8 @@ export function SwipeableRow({
     [colors.danger],
   );
   const deleteLabelStyle = useMemo(
-    () => [styles.deleteLabel, { color: colors.onAccent }],
-    [colors.onAccent],
+    () => [styles.deleteLabel, { color: colors.onDanger }],
+    [colors.onDanger],
   );
 
   return (
@@ -271,7 +271,7 @@ export function SwipeableRow({
           <Ionicons
             name="trash-outline"
             size={SWIPE.iconSize}
-            color={colors.onAccent}
+            color={colors.onDanger}
           />
           <Text style={deleteLabelStyle}>Delete</Text>
         </Pressable>
@@ -287,4 +287,4 @@ export function SwipeableRow({
       </GestureDetector>
     </Animated.View>
   );
-}
+});

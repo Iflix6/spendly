@@ -27,12 +27,12 @@ describe("BudgetRing", () => {
     expect(getByText("left: $50.00")).toBeTruthy();
   });
 
-  it("shows the uncapped percentage and overage in danger color", async () => {
+  it("shows the uncapped percentage with accessible overage copy", async () => {
     const { getByText } = await renderRing(12000, 10000);
 
     expect(getByText("120%")).toBeTruthy();
     expect(getByText("over by $20.00")).toHaveStyle({
-      color: lightColors.danger,
+      color: lightColors.onAccent,
     });
   });
 

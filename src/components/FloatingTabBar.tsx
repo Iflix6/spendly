@@ -207,7 +207,8 @@ export function FloatingTabBar({
               focused={index === activeIndex}
               icon={route.icon}
               label={route.title}
-              onPress={() => handleTabPress(route.key)}
+              routeKey={route.key}
+              onPress={handleTabPress}
             />
           ))}
         </View>

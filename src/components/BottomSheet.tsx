@@ -213,9 +213,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
         ),
         transform: [{ translateY: translateY.value - keyboardHeight }],
         backgroundColor: animatedColors.value.surface,
-        borderColor: isDark
-          ? animatedColors.value.border
-          : animatedColors.value.surface,
+        borderColor: animatedColors.value.border,
       };
     });
     const sheetContainerStyle = useMemo(

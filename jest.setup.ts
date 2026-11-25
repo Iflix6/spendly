@@ -98,16 +98,6 @@ jest.mock(
   { virtual: true },
 );
 
-jest.mock("expo-blur", () => {
-  const { View } = require("react-native");
-  return { BlurTargetView: View, BlurView: View };
-});
-
-jest.mock("expo-linear-gradient", () => {
-  const { View } = require("react-native");
-  return { LinearGradient: View };
-});
-
 jest.mock("react-native-gesture-handler", () => {
   const { View } = require("react-native");
   const gesture: Record<string, unknown> = {};

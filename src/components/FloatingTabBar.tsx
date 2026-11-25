@@ -1,33 +1,11 @@
-import { FAB, TAB_BAR, type TabIconName } from "@/constants/navigation";
-import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { ADD_ACTION, TAB_BAR, type TabIconName } from "@/constants/navigation";
 import { selection } from "@/lib/haptics";
-import { springs } from "@/theme/motion";
 import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
-import { layout, opacity, radii, spacing } from "@/theme/tokens";
-import { BlurView } from "expo-blur";
-import {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-    type ComponentRef,
-    type RefObject,
-} from "react";
-import {
-    Platform,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-    type LayoutChangeEvent,
-    type View as NativeView,
-} from "react-native";
-import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-} from "react-native-reanimated";
-import { Fab } from "./Fab";
+import { layout, radii } from "@/theme/tokens";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useCallback } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { FloatingTabItem } from "./FloatingTabItem";
 
 export interface FloatingTabRoute {
@@ -40,15 +18,9 @@ interface FloatingTabBarProps {
   routes: readonly FloatingTabRoute[];
   activeIndex: number;
   bottomInset: number;
-  blurTarget?: RefObject<ComponentRef<typeof NativeView> | null>;
   onTabPress: (routeKey: string) => void;
+  onAddPress: () => void;
 }
-
-const canBlur =
-  Platform.OS === "ios" ||
-  (Platform.OS === "android" &&
-    typeof Platform.Version === "number" &&
-    Platform.Version >= TAB_BAR.androidBlurMinApi);
 
 const styles = StyleSheet.create({
   container: {
@@ -59,40 +31,36 @@ const styles = StyleSheet.create({
     left: TAB_BAR.horizontalMargin,
     right: TAB_BAR.horizontalMargin,
     height: TAB_BAR.height,
-    borderRadius: radii.sheet,
-    borderWidth: layout.borderWidth,
-    overflow: "hidden",
-  },
-  background: {
-    ...StyleSheet.absoluteFill,
-    borderRadius: radii.sheet,
-    overflow: "hidden",
-  },
-  tint: {
-    ...StyleSheet.absoluteFill,
-  },
-  indicator: {
-    position: "absolute",
-    top: TAB_BAR.contentOffset,
-    height: TAB_BAR.itemHeight,
-    borderRadius: radii.pill,
+    paddingTop: TAB_BAR.contentOffset,
+    paddingBottom: TAB_BAR.contentOffset,
+    borderTopWidth: layout.borderWidth,
+    flexDirection: "row",
+    alignItems: "center",
   },
   tabs: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: TAB_BAR.contentOffset,
+    flex: 1,
     height: TAB_BAR.itemHeight,
     flexDirection: "row",
   },
-  notch: {
-    position: "absolute",
-    top: 0,
-    alignSelf: "center",
-    width: FAB.size + spacing.base,
-    height: TAB_BAR.notchHeight,
-    borderBottomLeftRadius: radii.pill,
-    borderBottomRightRadius: radii.pill,
+  addSlot: {
+    flex: 1,
+    height: TAB_BAR.itemHeight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addPressable: {
+    width: "100%",
+    height: "100%",
+    minHeight: layout.minTouchTarget,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButton: {
+    width: ADD_ACTION.size,
+    height: ADD_ACTION.size,
+    borderRadius: radii.input,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
@@ -100,42 +68,11 @@ export function FloatingTabBar({
   routes,
   activeIndex,
   bottomInset,
-  blurTarget,
   onTabPress,
+  onAddPress,
 }: FloatingTabBarProps) {
-  const { isDark } = useTheme();
+  const { colors } = useTheme();
   const animatedColors = useAnimatedThemeColors();
-  const reduceMotion = useReducedMotionSafe();
-  const { width: windowWidth } = useWindowDimensions();
-  const [trackWidth, setTrackWidth] = useState(() =>
-    Math.max(
-      windowWidth - TAB_BAR.horizontalMargin - TAB_BAR.horizontalMargin,
-      0,
-    ),
-  );
-  const routeCount = Math.max(routes.length, TAB_BAR.minimumRouteCount);
-  const slotWidth = trackWidth / routeCount;
-  const selectedIndex = useSharedValue(activeIndex);
-  const animatedSlotWidth = useSharedValue(slotWidth);
-  const previousActiveIndex = useRef(activeIndex);
-
-  useEffect(() => {
-    animatedSlotWidth.value = slotWidth;
-  }, [animatedSlotWidth, slotWidth]);
-
-  useEffect(() => {
-    if (previousActiveIndex.current === activeIndex) {
-      return;
-    }
-    selectedIndex.value = reduceMotion
-      ? activeIndex
-      : withSpring(activeIndex, springs.snappy);
-    previousActiveIndex.current = activeIndex;
-  }, [activeIndex, reduceMotion, selectedIndex]);
-
-  const handleLayout = useCallback((event: LayoutChangeEvent) => {
-    setTrackWidth(event.nativeEvent.layout.width);
-  }, []);
 
   const handleTabPress = useCallback(
     (routeKey: string) => {
@@ -146,60 +83,25 @@ export function FloatingTabBar({
     },
     [activeIndex, onTabPress, routes],
   );
+  const handleAddPress = useCallback(() => {
+    void selection();
+    onAddPress();
+  }, [onAddPress]);
 
-  const indicatorStyle = useAnimatedStyle(() => ({
-    width: animatedSlotWidth.value,
-    transform: [{ translateX: selectedIndex.value * animatedSlotWidth.value }],
-  }));
-  const borderStyle = useAnimatedStyle(() => ({
-    borderColor: animatedColors.value.border,
-  }));
-  const fallbackStyle = useAnimatedStyle(() => ({
+  const barStyle = useAnimatedStyle(() => ({
+    bottom: 0,
+    height: TAB_BAR.height + bottomInset,
+    paddingBottom: TAB_BAR.contentOffset + bottomInset,
     backgroundColor: animatedColors.value.surface,
+    borderTopColor: animatedColors.value.border,
   }));
-  const tintStyle = useAnimatedStyle(() => ({
-    backgroundColor: animatedColors.value.surface,
-    opacity: opacity.glass,
+  const addStyle = useAnimatedStyle(() => ({
+    backgroundColor: animatedColors.value.accent,
   }));
-  const notchStyle = useAnimatedStyle(() => ({
-    backgroundColor: animatedColors.value.bg,
-  }));
-  const fabBottomOffset = useMemo(
-    () =>
-      bottomInset + TAB_BAR.bottomMargin + TAB_BAR.height - TAB_BAR.fabOverlap,
-    [bottomInset],
-  );
 
   return (
     <View style={styles.container} pointerEvents="box-none">
-      <Animated.View style={[styles.bar, borderStyle]} onLayout={handleLayout}>
-        {canBlur ? (
-          <BlurView
-            blurTarget={blurTarget}
-            tint={isDark ? "dark" : "light"}
-            intensity={TAB_BAR.blurIntensity}
-            blurMethod={
-              Platform.OS === "android" ? "dimezisBlurViewSdk31Plus" : undefined
-            }
-            style={styles.background}
-            pointerEvents="none"
-          />
-        ) : (
-          <Animated.View
-            style={[styles.background, fallbackStyle]}
-            pointerEvents="none"
-          />
-        )}
-        {canBlur ? (
-          <Animated.View
-            style={[styles.tint, tintStyle]}
-            pointerEvents="none"
-          />
-        ) : null}
-        <Animated.View
-          style={[styles.indicator, indicatorStyle]}
-          pointerEvents="none"
-        />
+      <Animated.View style={[styles.bar, barStyle]}>
         <View style={styles.tabs}>
           {routes.map((route, index) => (
             <FloatingTabItem
@@ -212,12 +114,27 @@ export function FloatingTabBar({
             />
           ))}
         </View>
-        <Animated.View
-          style={[styles.notch, notchStyle]}
-          pointerEvents="none"
-        />
+        <View style={styles.addSlot}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Add expense"
+            accessibilityHint="Opens the add expense screen"
+            onPress={handleAddPress}
+            style={({ pressed }) => [
+              styles.addPressable,
+              pressed && { transform: [{ scale: ADD_ACTION.pressedScale }] },
+            ]}
+          >
+            <Animated.View style={[styles.addButton, addStyle]}>
+              <Ionicons
+                name="add"
+                size={ADD_ACTION.iconSize}
+                color={colors.onAccent}
+              />
+            </Animated.View>
+          </Pressable>
+        </View>
       </Animated.View>
-      <Fab bottomOffset={fabBottomOffset} />
     </View>
   );
 }

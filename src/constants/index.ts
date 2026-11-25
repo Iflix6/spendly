@@ -12,10 +12,10 @@ export const COMPACT_MILLION_CENTS = 100000000;
 export const COMPACT_DECIMALS = 1;
 export const ID_RADIX = 36;
 export const ID_RANDOM_LENGTH = 8;
-export const DEFAULT_THEME_MODE = "system" as const;
+export const DEFAULT_THEME_MODE = "light" as const;
 
 export const STORE_KEY = "spendly.expense-store.v1";
-export const STORE_VERSION = 1;
+export const STORE_VERSION = 2;
 export const WEEK_BUCKET_BOUNDARIES = [7, 14, 21, 28] as const;
 
 export const MULBERRY32 = {

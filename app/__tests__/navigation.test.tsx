@@ -175,24 +175,25 @@ describe("tab screen shell", () => {
   });
 
   it("opens the budget editor from the hero ring", async () => {
-    const { getByLabelText, getByText } = await renderScreen(<HomeScreen />);
+    const { getByLabelText, getByRole } = await renderScreen(<HomeScreen />);
 
     await fireEvent.press(
       getByLabelText("Edit monthly budget, currently $1,000.00"),
     );
 
-    expect(getByText("Monthly budget")).toBeTruthy();
+    expect(getByRole("button", { name: "Close budget sheet" })).toBeTruthy();
   });
 
   it("reuses the budget editor from Settings", async () => {
-    const { getByLabelText, getByRole, getByText, queryByText } =
-      await renderScreen(<HomeScreen />);
+    const { getByLabelText, getByRole, queryByText } = await renderScreen(
+      <HomeScreen />,
+    );
 
     await fireEvent.press(getByRole("button", { name: "Open settings" }));
     await fireEvent.press(getByLabelText("Monthly budget $1,000.00, edit"));
 
     expect(queryByText("Settings")).toBeNull();
-    expect(getByText("Monthly budget")).toBeTruthy();
+    expect(getByRole("button", { name: "Close budget sheet" })).toBeTruthy();
   });
 
   it("opens settings and links an empty month to Add", async () => {

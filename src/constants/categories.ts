@@ -16,22 +16,22 @@ export interface Category {
 }
 
 export const CATEGORIES: readonly Category[] = [
-  { id: "food", label: "Food", icon: "restaurant-outline", color: "#FF8A5B" },
+  { id: "food", label: "Food", icon: "restaurant-outline", color: "#C8102E" },
   {
     id: "transport",
     label: "Transport",
     icon: "car-outline",
-    color: "#4D9DE0",
+    color: "#E23B45",
   },
-  { id: "shopping", label: "Shopping", icon: "bag-outline", color: "#B779E8" },
-  { id: "bills", label: "Bills", icon: "receipt-outline", color: "#F5B83D" },
+  { id: "shopping", label: "Shopping", icon: "bag-outline", color: "#9F1239" },
+  { id: "bills", label: "Bills", icon: "receipt-outline", color: "#B91C1C" },
   {
     id: "fun",
     label: "Fun",
     icon: "game-controller-outline",
-    color: "#FF5D8F",
+    color: "#D9485F",
   },
-  { id: "health", label: "Health", icon: "medical-outline", color: "#3DCB8F" },
+  { id: "health", label: "Health", icon: "medical-outline", color: "#C2414B" },
 ];
 
 export const CATEGORY_IDS: readonly CategoryId[] = CATEGORIES.map(

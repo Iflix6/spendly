@@ -33,17 +33,23 @@ interface CategoryCardProps {
 
 const styles = StyleSheet.create({
   pressable: {
-    width: CATEGORY_CARD.width,
+    width: "100%",
   },
   card: {
-    width: CATEGORY_CARD.width,
+    width: "100%",
     minHeight: CATEGORY_CARD.minHeight,
     padding: spacing.base,
-    gap: spacing.md,
+    gap: spacing.sm,
+  },
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
   },
   label: {
     ...typography.body,
     fontFamily: fontFamily.semibold,
+    flex: 1,
   },
   amount: {
     ...typography.headline,
@@ -94,8 +100,8 @@ export const CategoryCard = memo(function CategoryCard({
   }));
   const cardStyle = useMemo(() => styles.card, []);
   const fillStyle = useMemo(
-    () => [styles.fill, { backgroundColor: category.color }],
-    [category.color],
+    () => [styles.fill, { backgroundColor: colors.accent }],
+    [colors.accent],
   );
   const trackStyle = useMemo(
     () => [styles.track, { backgroundColor: colors.surfaceAlt }],
@@ -134,10 +140,12 @@ export const CategoryCard = memo(function CategoryCard({
     >
       <Animated.View style={scaleStyle}>
         <Card style={cardStyle}>
-          <CategoryIcon categoryId={category.id} />
-          <Text style={labelStyle} numberOfLines={1}>
-            {category.label}
-          </Text>
+          <View style={styles.topRow}>
+            <CategoryIcon categoryId={category.id} />
+            <Text style={labelStyle} numberOfLines={1}>
+              {category.label}
+            </Text>
+          </View>
           <Text
             style={amountStyle}
             numberOfLines={1}

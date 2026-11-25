@@ -41,6 +41,7 @@ interface ExpenseRowProps {
   expense: Expense;
   onPress: (expense: Expense) => void;
   onAccessibilityDelete?: () => void;
+  contained?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -56,6 +57,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.card,
     borderWidth: layout.borderWidth,
     marginBottom: spacing.sm,
+  },
+  containedCard: {
+    borderWidth: 0,
+    marginBottom: 0,
+    paddingHorizontal: 0,
   },
   details: {
     flex: 1,
@@ -82,6 +88,7 @@ export const ExpenseRow = memo(function ExpenseRow({
   expense,
   onPress,
   onAccessibilityDelete,
+  contained = false,
 }: ExpenseRowProps) {
   const { colors, isDark } = useTheme();
   const reduceMotion = useReducedMotionSafe();
@@ -142,13 +149,14 @@ export const ExpenseRow = memo(function ExpenseRow({
   const cardStyle = useMemo(
     () => [
       styles.card,
+      contained && styles.containedCard,
       {
         backgroundColor: colors.surface,
-        borderColor: isDark ? colors.border : colors.surface,
+        borderColor: colors.border,
       },
-      isDark ? null : lightCardShadow,
+      !contained && !isDark ? lightCardShadow : null,
     ],
-    [colors.border, colors.surface, isDark],
+    [colors.border, colors.surface, contained, isDark],
   );
   const noteStyle = useMemo(
     () => [styles.note, { color: colors.text }],

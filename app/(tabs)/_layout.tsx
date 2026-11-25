@@ -1,18 +1,14 @@
 import {
-    FloatingTabBar,
-    type FloatingTabRoute,
+  FloatingTabBar,
+  type FloatingTabRoute,
 } from "@/components/FloatingTabBar";
-import { TabBlurTargetContext } from "@/components/TabBlurTargetContext";
 import { TAB_ICONS } from "@/constants/navigation";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import {
-    useCallback,
-    useRef,
-    type ComponentProps,
-    type ComponentRef,
+  useCallback,
+  type ComponentProps,
 } from "react";
-import type { View } from "react-native";
 
 type TabBarProps = Parameters<
   NonNullable<ComponentProps<typeof Tabs>["tabBar"]>
@@ -20,8 +16,11 @@ type TabBarProps = Parameters<
 
 export default function TabsLayout() {
   const reduceMotion = useReducedMotionSafe();
-  const blurTarget = useRef<ComponentRef<typeof View>>(null);
+  const router = useRouter();
 
+  const handleAddPress = useCallback(() => {
+    router.push("/add");
+  }, [router]);
   const renderTabBar = useCallback(
     (props: TabBarProps) => {
       const routes: FloatingTabRoute[] = props.state.routes.map((route) => ({
@@ -35,28 +34,26 @@ export default function TabsLayout() {
           routes={routes}
           activeIndex={props.state.index}
           bottomInset={props.insets.bottom}
-          blurTarget={blurTarget}
           onTabPress={props.navigateToTab}
+          onAddPress={handleAddPress}
         />
       );
     },
-    [blurTarget],
+    [handleAddPress],
   );
 
   return (
-    <TabBlurTargetContext.Provider value={blurTarget}>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          animation: reduceMotion ? "none" : "fade",
-          sceneStyle: { backgroundColor: "transparent" },
-        }}
-        tabBar={renderTabBar}
-      >
-        <Tabs.Screen name="index" options={{ title: "Home" }} />
-        <Tabs.Screen name="expenses" options={{ title: "Expenses" }} />
-        <Tabs.Screen name="stats" options={{ title: "Stats" }} />
-      </Tabs>
-    </TabBlurTargetContext.Provider>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? "none" : "fade",
+        sceneStyle: { backgroundColor: "transparent" },
+      }}
+      tabBar={renderTabBar}
+    >
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
+      <Tabs.Screen name="expenses" options={{ title: "Expenses" }} />
+      <Tabs.Screen name="stats" options={{ title: "Stats" }} />
+    </Tabs>
   );
 }

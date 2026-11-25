@@ -25,9 +25,7 @@ export function Card({ children, style }: CardProps) {
   );
   const surfaceStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedColors.value.surface,
-    borderColor: isDark
-      ? animatedColors.value.border
-      : animatedColors.value.surface,
+    borderColor: animatedColors.value.border,
   }));
 
   return (

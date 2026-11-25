@@ -142,6 +142,19 @@ export const useExpenseStore = create<ExpenseState>()(
     {
       name: STORE_KEY,
       version: STORE_VERSION,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<PersistedExpenseState>;
+        return {
+          expenses: Array.isArray(state.expenses) ? state.expenses : [],
+          budgetCents:
+            typeof state.budgetCents === "number"
+              ? state.budgetCents
+              : DEFAULT_BUDGET_CENTS,
+          themeMode: DEFAULT_THEME_MODE,
+          hasSeeded: state.hasSeeded === true,
+          lastDeleted: state.lastDeleted ?? null,
+        };
+      },
       storage: createJSONStorage<PersistedExpenseState>(() => AsyncStorage),
       partialize: (state) => ({
         expenses: state.expenses,

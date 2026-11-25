@@ -71,11 +71,11 @@ export function SearchBar({ value, onChangeText, onClear }: SearchBarProps) {
     () => [
       styles.shell,
       {
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
+        backgroundColor: colors.surfaceAlt,
+        borderColor: colors.surfaceAlt,
       },
     ],
-    [colors],
+    [colors.surfaceAlt],
   );
   const inputStyle = useMemo(
     () => [styles.input, { color: colors.text }],

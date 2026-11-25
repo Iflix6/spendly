@@ -131,19 +131,32 @@ export function EmptyState({
     ],
     [colors.mutedText, colors.onAccent, onAccent],
   );
+  const isPrimaryAdd = !hasFilters && Boolean(onAdd) && !onAccent;
   const clearButtonStyle = useMemo(
     () => [
       styles.clearButton,
-      { backgroundColor: onAccent ? colors.onAccent : colors.surfaceAlt },
+      {
+        backgroundColor: onAccent
+          ? colors.onAccent
+          : isPrimaryAdd
+            ? colors.accent
+            : colors.surfaceAlt,
+      },
     ],
-    [colors.onAccent, colors.surfaceAlt, onAccent],
+    [colors.accent, colors.onAccent, colors.surfaceAlt, isPrimaryAdd, onAccent],
   );
   const clearLabelStyle = useMemo(
     () => [
       styles.clearLabel,
-      { color: onAccent ? colors.accent : colors.accentText },
+      {
+        color: onAccent
+          ? colors.accent
+          : isPrimaryAdd
+            ? colors.onAccent
+            : colors.accentText,
+      },
     ],
-    [colors.accent, colors.accentText, onAccent],
+    [colors.accent, colors.accentText, colors.onAccent, isPrimaryAdd, onAccent],
   );
 
   return (
@@ -223,7 +236,7 @@ export function EmptyState({
             cx={EMPTY_STATE.coinX}
             cy={EMPTY_STATE.coinY}
             r={EMPTY_STATE.coinRadius}
-            color={colors.warning}
+            color={colors.accentAlt}
           />
         </Group>
       </Canvas>

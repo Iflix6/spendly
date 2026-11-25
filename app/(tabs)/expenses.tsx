@@ -1,10 +1,10 @@
+import { Card } from "@/components/Card";
 import { CategoryChip } from "@/components/CategoryChip";
 import { EmptyState } from "@/components/EmptyState";
 import { SearchBar } from "@/components/SearchBar";
 import { SectionHeader } from "@/components/SectionHeader";
 import { useSnackbar } from "@/components/SnackbarProvider";
 import { SwipeableRow } from "@/components/SwipeableRow";
-import { useTabBlurTarget } from "@/components/TabBlurTargetContext";
 import { CATEGORIES, type Category } from "@/constants/categories";
 import {
     EXPENSE_LIST_MOTION,
@@ -22,9 +22,16 @@ import { selection } from "@/lib/haptics";
 import { formatMoney } from "@/lib/money";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { useTheme } from "@/theme/ThemeProvider";
-import { spacing, tabularNums, typography } from "@/theme/tokens";
-import { BlurTargetView } from "expo-blur";
-import { useIsFocused, useLocalSearchParams, useRouter } from "expo-router";
+import {
+    fontFamily,
+    layout,
+    letterSpacing,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
+} from "@/theme/tokens";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     ScrollView,
@@ -53,22 +60,39 @@ const CATEGORY_OPTIONS: readonly CategoryOption[] = [
 ];
 
 const styles = StyleSheet.create({
-  target: {
-    flex: 1,
-  },
   safeArea: {
     flex: 1,
   },
   screenHeader: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.xxl,
     paddingBottom: spacing.lg,
     gap: spacing.base,
   },
+  headerText: {
+    flex: 1,
+    minWidth: 0,
+    gap: spacing.xs,
+  },
+  eyebrow: {
+    ...typography.caption,
+    fontFamily: fontFamily.semibold,
+    letterSpacing: letterSpacing.label,
+  },
+  screenSubtitle: {
+    ...typography.caption,
+  },
   screenTitle: typography.title,
+  totalContainer: {
+    alignItems: "flex-end",
+    gap: spacing.xs,
+  },
+  totalLabel: {
+    ...typography.caption,
+  },
   screenTotal: {
     ...typography.headline,
     ...tabularNums,
@@ -76,18 +100,21 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: spacing.xl,
   },
+  filterPanel: {
+    padding: spacing.base,
+    borderRadius: radii.card,
+    borderWidth: layout.borderWidth,
+  },
   chipsScroll: {
     flexGrow: 0,
   },
   chipsContent: {
-    paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
-    paddingBottom: spacing.sm,
     gap: spacing.sm,
   },
   listContent: {
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xs,
+    paddingTop: spacing.base,
   },
 });
 
@@ -105,8 +132,6 @@ export default function ExpensesScreen() {
     () => categoryFilterFromParam(params.category),
     [params.category],
   );
-  const isFocused = useIsFocused();
-  const blurTarget = useTabBlurTarget();
   const bottomPadding = useTabBarHeight();
   const expenses = useExpenseStore((state) => state.expenses);
   const deleteExpense = useExpenseStore((state) => state.deleteExpense);
@@ -218,29 +243,54 @@ export default function ExpensesScreen() {
     [handleClearFilters, hasFilters],
   );
 
+  const eyebrowStyle = useMemo(
+    () => [styles.eyebrow, { color: colors.accentText }],
+    [colors.accentText],
+  );
   const screenTitleStyle = useMemo(
     () => [styles.screenTitle, { color: colors.text }],
     [colors.text],
   );
+  const screenSubtitleStyle = useMemo(
+    () => [styles.screenSubtitle, { color: colors.mutedText }],
+    [colors.mutedText],
+  );
+  const totalLabelStyle = useMemo(
+    () => [styles.totalLabel, { color: colors.mutedText }],
+    [colors.mutedText],
+  );
   const screenTotalStyle = useMemo(
-    () => [styles.screenTotal, { color: colors.accentText }],
-    [colors.accentText],
+    () => [styles.screenTotal, { color: colors.text }],
+    [colors.text],
+  );
+  const filterPanelStyle = useMemo(
+    () => [
+      styles.filterPanel,
+      { backgroundColor: colors.surface, borderColor: colors.border },
+    ],
+    [colors.border, colors.surface],
   );
   const listContentStyle = useMemo(
     () => [styles.listContent, { paddingBottom: bottomPadding }],
     [bottomPadding],
   );
   return (
-    <BlurTargetView
-      ref={isFocused ? blurTarget : undefined}
-      style={styles.target}
-    >
-      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-        <View style={styles.screenHeader}>
-          <Text style={screenTitleStyle}>Expenses</Text>
+    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+      <View style={styles.screenHeader}>
+        <View style={styles.headerText}>
+          <Text style={eyebrowStyle}>TRANSACTIONS</Text>
+          <Text accessibilityRole="header" style={screenTitleStyle}>
+            Expenses
+          </Text>
+          <Text style={screenSubtitleStyle}>Every purchase, organized</Text>
+        </View>
+        <View style={styles.totalContainer}>
+          <Text style={totalLabelStyle}>Filtered total</Text>
           <Text style={screenTotalStyle}>{formatMoney(visibleTotalCents)}</Text>
         </View>
-        <View style={styles.searchContainer}>
+      </View>
+      <View style={styles.searchContainer}>
+        <Card style={filterPanelStyle}>
           <SearchBar
             value={searchText}
             onChangeText={setSearchText}
@@ -262,22 +312,22 @@ export default function ExpensesScreen() {
               />
             ))}
           </ScrollView>
-        </View>
-        <SectionList
-          sections={sections}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          renderSectionHeader={renderSectionHeader}
-          ListEmptyComponent={listEmptyComponent}
-          contentContainerStyle={listContentStyle}
-          stickySectionHeadersEnabled
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          initialNumToRender={EXPENSE_LIST_MOTION.initialNumToRender}
-          extraData={openRowId}
-        />
-      </SafeAreaView>
-    </BlurTargetView>
+        </Card>
+      </View>
+      <SectionList
+        sections={sections}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={listContentStyle}
+        stickySectionHeadersEnabled
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        initialNumToRender={EXPENSE_LIST_MOTION.initialNumToRender}
+        extraData={openRowId}
+      />
+    </SafeAreaView>
   );
 }

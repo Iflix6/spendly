@@ -7,13 +7,12 @@ export const ANIMATED_NUMBER = {
 } as const;
 
 export const BUDGET_RING = {
-  defaultSize: 112,
-  strokeWidth: 10,
+  defaultSize: 96,
+  strokeWidth: 8,
   startAngleDegrees: -90,
   fullCircleDegrees: 360,
   maxVisualRatio: 1,
   warningStartRatio: 0.7,
-  warningMidRatio: 0.8,
   dangerStartRatio: 0.9,
   pulseScale: 1.04,
 } as const;
@@ -25,8 +24,7 @@ export const HOME = {
 } as const;
 
 export const CATEGORY_CARD = {
-  width: 148,
-  minHeight: 128,
+  minHeight: 116,
   progressHeight: 4,
   pressedScale: 0.97,
 } as const;

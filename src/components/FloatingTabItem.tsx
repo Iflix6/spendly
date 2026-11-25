@@ -1,17 +1,15 @@
-import { TAB_BAR, TAB_MOTION, type TabIconName } from "@/constants/navigation";
+import { TAB_BAR, type TabIconName } from "@/constants/navigation";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { durations, easing, springs } from "@/theme/motion";
+import { springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
-import { layout, spacing, typography } from "@/theme/tokens";
+import { layout, radii, spacing, typography } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { memo, useCallback, useEffect, useRef } from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { memo, useCallback, useMemo } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSequence,
-    withSpring,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 
 interface FloatingTabItemProps {
@@ -30,14 +28,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  iconWrap: {
-    width: TAB_BAR.iconSize,
-    height: TAB_BAR.iconSize,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  icon: {
-    position: "absolute",
+  focused: {
+    marginHorizontal: spacing.xs,
+    borderRadius: radii.input,
   },
   label: {
     ...typography.caption,
@@ -59,53 +52,37 @@ export const FloatingTabItem = memo(function FloatingTabItem({
 }: FloatingTabItemProps) {
   const { colors } = useTheme();
   const reduceMotion = useReducedMotionSafe();
-  const colorProgress = useSharedValue(focused ? 1 : 0);
   const scale = useSharedValue(1);
-  const wasFocused = useRef(focused);
 
-  useEffect(() => {
-    const becameFocused = focused && !wasFocused.current;
-
-    colorProgress.value =
-      reduceMotion || !becameFocused
-        ? focused
-          ? 1
-          : 0
-        : withTiming(1, {
-            duration: durations.fast,
-            easing: easing.standard,
-          });
-
-    if (becameFocused && !reduceMotion) {
-      scale.value = withSequence(
-        withTiming(TAB_MOTION.iconPeakScale, {
-          duration: TAB_MOTION.iconBounceDuration,
-          easing: easing.standard,
-        }),
-        withSpring(1, springs.snappy),
-      );
-    } else {
-      scale.value = reduceMotion ? 1 : withSpring(1, springs.snappy);
-    }
-
-    wasFocused.current = focused;
-  }, [colorProgress, focused, reduceMotion, scale]);
-
-  const scaleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-  const activeIconStyle = useAnimatedStyle(() => ({
-    opacity: colorProgress.value,
-  }));
-  const inactiveIconStyle = useAnimatedStyle(() => ({
-    opacity: 1 - colorProgress.value,
-  }));
-  const labelStyle = useAnimatedStyle(() => ({
-    opacity: colorProgress.value,
-  }));
+  const handlePressIn = useCallback(() => {
+    scale.value = reduceMotion
+      ? 1
+      : withSpring(TAB_BAR.pressedScale, springs.snappy);
+  }, [reduceMotion, scale]);
+  const handlePressOut = useCallback(() => {
+    scale.value = reduceMotion ? 1 : withSpring(1, springs.snappy);
+  }, [reduceMotion, scale]);
   const handlePress = useCallback(() => {
     onPress(routeKey);
   }, [onPress, routeKey]);
+  const itemStyle = useMemo(
+    () => [
+      styles.item,
+      focused && styles.focused,
+      focused && { backgroundColor: colors.surfaceAlt },
+    ],
+    [colors.surfaceAlt, focused],
+  );
+  const labelStyle = useMemo(
+    () => [
+      styles.label,
+      { color: focused ? colors.accentText : colors.mutedText },
+    ],
+    [colors.accentText, colors.mutedText, focused],
+  );
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Pressable
@@ -113,37 +90,22 @@ export const FloatingTabItem = memo(function FloatingTabItem({
       accessibilityLabel={label}
       accessibilityState={{ selected: focused }}
       onPress={handlePress}
-      style={styles.item}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={itemStyle}
     >
-      <Animated.View style={[styles.iconWrap, scaleStyle]} pointerEvents="none">
-        <Animated.View
-          style={[styles.icon, inactiveIconStyle]}
-          pointerEvents="none"
-        >
-          <Ionicons
-            name={icon}
-            size={TAB_BAR.iconSize}
-            color={colors.mutedText}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[styles.icon, activeIconStyle]}
-          pointerEvents="none"
-        >
-          <Ionicons name={icon} size={TAB_BAR.iconSize} color={colors.accent} />
-        </Animated.View>
+      <Animated.View style={scaleStyle} pointerEvents="none">
+        <Ionicons
+          name={icon}
+          size={TAB_BAR.iconSize}
+          color={focused ? colors.accent : colors.mutedText}
+        />
       </Animated.View>
-      <Animated.View
-        style={[styles.labelContainer, labelStyle]}
-        pointerEvents="none"
-      >
-        <Text
-          numberOfLines={1}
-          style={[styles.label, { color: colors.accentText }]}
-        >
+      <View style={styles.labelContainer} pointerEvents="none">
+        <Text numberOfLines={1} style={labelStyle}>
           {label}
         </Text>
-      </Animated.View>
+      </View>
     </Pressable>
   );
 });

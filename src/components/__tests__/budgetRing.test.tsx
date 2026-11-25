@@ -32,7 +32,7 @@ describe("BudgetRing", () => {
 
     expect(getByText("120%")).toBeTruthy();
     expect(getByText("over by $20.00")).toHaveStyle({
-      color: lightColors.onAccent,
+      color: lightColors.dangerText,
     });
   });
 

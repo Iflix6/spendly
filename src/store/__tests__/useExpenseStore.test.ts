@@ -1,4 +1,9 @@
-import { DEFAULT_BUDGET_CENTS, STORE_KEY } from "@/constants";
+import {
+    DEFAULT_BUDGET_CENTS,
+    DEFAULT_THEME_MODE,
+    STORE_KEY,
+    STORE_VERSION,
+} from "@/constants";
 import { toNoonISO } from "@/lib/dates";
 import { useExpenseStore } from "@/store/useExpenseStore";
 import { beforeEach, describe, expect, it } from "@jest/globals";
@@ -60,5 +65,40 @@ describe("useExpenseStore", () => {
     await useExpenseStore.persist.rehydrate();
     expect(useExpenseStore.getState().themeMode).toBe("dark");
     expect(useExpenseStore.getState().budgetCents).toBe(200000);
+  });
+
+  it("migrates the old appearance without losing financial data", async () => {
+    const expense = {
+      ...input,
+      id: "persisted-expense",
+      createdAt: Date.now(),
+    };
+    const lastDeleted = {
+      ...input,
+      id: "deleted-expense",
+      note: "Deleted lunch",
+      createdAt: Date.now(),
+    };
+    await AsyncStorage.setItem(
+      STORE_KEY,
+      JSON.stringify({
+        state: {
+          expenses: [expense],
+          budgetCents: 250000,
+          themeMode: "dark",
+          hasSeeded: true,
+          lastDeleted,
+        },
+        version: STORE_VERSION - 1,
+      }),
+    );
+
+    await useExpenseStore.persist.rehydrate();
+
+    expect(useExpenseStore.getState().themeMode).toBe(DEFAULT_THEME_MODE);
+    expect(useExpenseStore.getState().budgetCents).toBe(250000);
+    expect(useExpenseStore.getState().expenses).toEqual([expense]);
+    expect(useExpenseStore.getState().lastDeleted).toEqual(lastDeleted);
+    expect(useExpenseStore.getState().hasSeeded).toBe(true);
   });
 });

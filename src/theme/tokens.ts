@@ -23,52 +23,52 @@ export interface ThemeColors {
 }
 
 export const lightColors: ThemeColors = {
-  bg: "#F6F7FB",
+  bg: "#FFFFFF",
   backdrop: "#000000",
   surface: "#FFFFFF",
-  surfaceAlt: "#EEF0F6",
-  border: "#E3E6EE",
-  text: "#11131A",
-  textMuted: "#6B7280",
-  mutedText: "#626B7A",
-  accent: "#6C5CE7",
-  accentText: "#5F4BD1",
-  accentAlt: "#8B7CF6",
-  accentDeep: "#4B3CC4",
+  surfaceAlt: "#FFF4F4",
+  border: "#F0DADD",
+  text: "#191919",
+  textMuted: "#737373",
+  mutedText: "#666666",
+  accent: "#D71920",
+  accentText: "#B42318",
+  accentAlt: "#EF4444",
+  accentDeep: "#991B1B",
   onAccent: "#FFFFFF",
-  success: "#34C98B",
-  successText: "#187A52",
-  warning: "#F5B83D",
-  danger: "#FF5C5C",
-  dangerText: "#C53434",
-  onDanger: "#11131A",
+  success: "#187A52",
+  successText: "#137333",
+  warning: "#A15C00",
+  danger: "#B42318",
+  dangerText: "#B42318",
+  onDanger: "#FFFFFF",
 };
 
 export const darkColors: ThemeColors = {
-  bg: "#0B0D12",
+  bg: "#121212",
   backdrop: "#000000",
-  surface: "#151922",
-  surfaceAlt: "#1D2230",
-  border: "#262C3B",
-  text: "#F2F4F8",
-  textMuted: "#9AA3B2",
-  mutedText: "#9AA3B2",
-  accent: "#6C5CE7",
-  accentText: "#A99AF8",
-  accentAlt: "#8B7CF6",
-  accentDeep: "#4B3CC4",
+  surface: "#1C1C1C",
+  surfaceAlt: "#2A1A1C",
+  border: "#3D2A2C",
+  text: "#FAFAFA",
+  textMuted: "#B8B8B8",
+  mutedText: "#C4C4C4",
+  accent: "#E12D36",
+  accentText: "#FF7A7F",
+  accentAlt: "#F05252",
+  accentDeep: "#B42318",
   onAccent: "#FFFFFF",
   success: "#34C98B",
-  successText: "#34C98B",
+  successText: "#5BDAA4",
   warning: "#F5B83D",
-  danger: "#FF5C5C",
-  dangerText: "#FF5C5C",
-  onDanger: "#11131A",
+  danger: "#F05252",
+  dangerText: "#FF8A8F",
+  onDanger: "#FFFFFF",
 };
 
 export const splashColors = {
-  background: "#6C5CE7",
-  backgroundBottom: "#4B3CC4",
+  background: "#D71920",
+  backgroundBottom: "#B42318",
   foreground: "#FFFFFF",
   shimmerTransparent: "#FFFFFF00",
 } as const;
@@ -85,8 +85,8 @@ export const spacing = {
 
 export const radii = {
   input: 12,
-  card: 20,
-  sheet: 28,
+  card: 16,
+  sheet: 24,
   pill: 999,
 } as const;
 
@@ -99,10 +99,9 @@ export const layout = {
 export const opacity = {
   subtle: 0.08,
   muted: 0.65,
-  tint: 0.15,
+  tint: 0.12,
   glass: 0.72,
   modal: 0.96,
-  fabGlow: 0.18,
 } as const;
 
 export const letterSpacing = {
@@ -156,15 +155,8 @@ export const tabularNums = {
 
 export const lightCardShadow = {
   shadowColor: "#000000",
-  shadowOpacity: 0.08,
-  shadowRadius: 16,
-  shadowOffset: { width: 0, height: 6 },
-  elevation: 4,
-} satisfies TextStyle;
-
-export const fabGlow = {
-  shadowOpacity: 0.28,
-  shadowRadius: 20,
-  shadowOffset: { width: 0, height: 8 },
-  elevation: 12,
+  shadowOpacity: 0.04,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 2,
 } satisfies TextStyle;

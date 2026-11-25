@@ -112,7 +112,11 @@ export const CategoryChip = memo(function CategoryChip({
     ),
   }));
   const dotStyle = useAnimatedStyle(() => ({
-    backgroundColor: category?.color ?? colors.value.accent,
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [category?.color ?? colors.value.accent, colors.value.onAccent],
+    ),
   }));
   const handlePress = useCallback(() => {
     onPress(category?.id ?? null);

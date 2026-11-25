@@ -11,12 +11,6 @@ import { fireEvent, render } from "@testing-library/react-native";
 import type { ReactElement } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const mockPush = jest.fn();
-
-jest.mock("expo-router", () => ({
-  useRouter: () => ({ push: mockPush }),
-}));
-
 jest.mock("@expo/vector-icons/Ionicons", () => {
   const React = require("react");
   const { Text } = require("react-native");
@@ -57,12 +51,10 @@ function renderWithProviders(screen: ReactElement) {
 
 beforeEach(() => {
   useExpenseStore.setState({ themeMode: "light" });
-  mockPush.mockClear();
   jest.spyOn(haptics, "selection").mockResolvedValue(undefined);
-  jest.spyOn(haptics, "lightImpact").mockResolvedValue(undefined);
 });
 
-describe("floating navigation", () => {
+describe("bottom navigation", () => {
   it("exposes selected tab state and fires selection haptics only on change", async () => {
     const onTabPress = jest.fn();
     const { getByRole } = await renderWithProviders(
@@ -71,6 +63,7 @@ describe("floating navigation", () => {
         activeIndex={0}
         bottomInset={safeAreaMetrics.insets.bottom}
         onTabPress={onTabPress}
+        onAddPress={jest.fn()}
       />,
     );
 
@@ -88,18 +81,20 @@ describe("floating navigation", () => {
     expect(onTabPress).toHaveBeenCalledWith("home");
   });
 
-  it("fires a light impact and navigates to the Add stub from the FAB", async () => {
+  it("opens Add without overlapping the tab content", async () => {
+    const onAddPress = jest.fn();
     const { getByRole } = await renderWithProviders(
       <FloatingTabBar
         routes={routes}
         activeIndex={0}
         bottomInset={safeAreaMetrics.insets.bottom}
         onTabPress={jest.fn()}
+        onAddPress={onAddPress}
       />,
     );
 
     await fireEvent.press(getByRole("button", { name: "Add expense" }));
-    expect(haptics.lightImpact).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/add");
+    expect(haptics.selection).toHaveBeenCalledTimes(1);
+    expect(onAddPress).toHaveBeenCalledTimes(1);
   });
 });

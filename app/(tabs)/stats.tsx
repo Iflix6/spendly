@@ -5,7 +5,6 @@ import { DeltaPill } from "@/components/DeltaPill";
 import { DonutChart, type DonutDatum } from "@/components/DonutChart";
 import { EmptyState } from "@/components/EmptyState";
 import { MonthSelector } from "@/components/MonthSelector";
-import { useTabBlurTarget } from "@/components/TabBlurTargetContext";
 import { CENTS_PER_DOLLAR, CURRENCY_SYMBOL } from "@/constants";
 import { CATEGORIES } from "@/constants/categories";
 import { STATS_SCREEN } from "@/constants/stats";
@@ -22,35 +21,46 @@ import {
 } from "@/lib/stats";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { useTheme } from "@/theme/ThemeProvider";
-import { fontFamily, spacing, tabularNums, typography } from "@/theme/tokens";
+import {
+    fontFamily,
+    letterSpacing,
+    spacing,
+    tabularNums,
+    typography,
+} from "@/theme/tokens";
 import { addMonths, startOfMonth, subMonths } from "date-fns";
-import { BlurTargetView } from "expo-blur";
-import { useIsFocused, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const styles = StyleSheet.create({
-  target: {
-    flex: 1,
-  },
   safeArea: {
     flex: 1,
   },
   content: {
     flexGrow: 1,
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xxl,
+    paddingTop: spacing.xl,
   },
   header: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.base,
+    gap: spacing.xs,
+  },
+  eyebrow: {
+    ...typography.caption,
+    fontFamily: fontFamily.semibold,
+    letterSpacing: letterSpacing.label,
   },
   title: {
     ...typography.title,
     fontFamily: fontFamily.bold,
   },
-  totalSection: {
+  totalCard: {
     marginTop: spacing.xl,
+    padding: spacing.xl,
+  },
+  totalSection: {
     gap: spacing.sm,
   },
   totalLabel: {
@@ -102,8 +112,6 @@ function earliestExpenseMonth(
 export default function StatsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  const isFocused = useIsFocused();
-  const blurTarget = useTabBlurTarget();
   const bottomPadding = useTabBarHeight();
   const expenses = useExpenseStore((state) => state.expenses);
   const currentMonth = useMemo(() => startOfMonth(new Date()), []);
@@ -182,6 +190,10 @@ export default function StatsScreen() {
     router.push("/add");
   }, [router]);
 
+  const eyebrowStyle = useMemo(
+    () => [styles.eyebrow, { color: colors.accentText }],
+    [colors.accentText],
+  );
   const titleStyle = useMemo(
     () => [styles.title, { color: colors.text }],
     [colors.text],
@@ -204,30 +216,28 @@ export default function StatsScreen() {
   );
 
   return (
-    <BlurTargetView
-      ref={isFocused ? blurTarget : undefined}
-      style={styles.target}
-    >
-      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-        <ScrollView
-          contentContainerStyle={contentStyle}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.header}>
-            <Text accessibilityRole="header" style={titleStyle}>
-              Stats
-            </Text>
-          </View>
+    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+      <ScrollView
+        contentContainerStyle={contentStyle}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={eyebrowStyle}>INSIGHTS</Text>
+          <Text accessibilityRole="header" style={titleStyle}>
+            Stats
+          </Text>
+        </View>
 
-          <MonthSelector
-            month={selectedMonth}
-            direction={direction}
-            canGoPrevious={canGoPrevious}
-            canGoNext={canGoNext}
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-          />
+        <MonthSelector
+          month={selectedMonth}
+          direction={direction}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+        />
 
+        <Card style={styles.totalCard}>
           <View style={styles.totalSection}>
             <Text style={totalLabelStyle}>Total spent</Text>
             <AnimatedNumber
@@ -242,46 +252,46 @@ export default function StatsScreen() {
               previousTotalCents={previousTotalCents}
             />
           </View>
+        </Card>
 
-          {monthExpenses.length > 0 ? (
-            <>
-              <Card style={styles.card}>
-                <View style={styles.sectionHeading}>
-                  <Text accessibilityRole="header" style={sectionTitleStyle}>
-                    By category
-                  </Text>
-                </View>
-                <DonutChart
-                  key={`donut-${monthKey}`}
-                  data={categoryData}
-                  totalCents={totalCents}
-                />
-              </Card>
-              <Card style={styles.card}>
-                <View style={styles.sectionHeading}>
-                  <Text accessibilityRole="header" style={sectionTitleStyle}>
-                    Spending over time
-                  </Text>
-                </View>
-                <BarChart
-                  key={`bar-${monthKey}`}
-                  weekData={weekData}
-                  dayData={dayData}
-                  isCurrentMonth={isCurrentMonth}
-                />
-              </Card>
-            </>
-          ) : (
-            <Card style={[styles.card, styles.emptyCard]}>
-              <EmptyState
-                hasFilters={false}
-                onAdd={handleAddExpense}
-                embedded
+        {monthExpenses.length > 0 ? (
+          <>
+            <Card style={styles.card}>
+              <View style={styles.sectionHeading}>
+                <Text accessibilityRole="header" style={sectionTitleStyle}>
+                  By category
+                </Text>
+              </View>
+              <DonutChart
+                key={`donut-${monthKey}`}
+                data={categoryData}
+                totalCents={totalCents}
               />
             </Card>
-          )}
+            <Card style={styles.card}>
+              <View style={styles.sectionHeading}>
+                <Text accessibilityRole="header" style={sectionTitleStyle}>
+                  Spending over time
+                </Text>
+              </View>
+              <BarChart
+                key={`bar-${monthKey}`}
+                weekData={weekData}
+                dayData={dayData}
+                isCurrentMonth={isCurrentMonth}
+              />
+            </Card>
+          </>
+        ) : (
+          <Card style={[styles.card, styles.emptyCard]}>
+            <EmptyState
+              hasFilters={false}
+              onAdd={handleAddExpense}
+              embedded
+            />
+          </Card>
+        )}
         </ScrollView>
-      </SafeAreaView>
-    </BlurTargetView>
+    </SafeAreaView>
   );
 }

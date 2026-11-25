@@ -1,7 +1,7 @@
 import { AMOUNT_INPUT } from "@/constants/expenseForm";
 import { BUDGET_RING } from "@/constants/home";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { getBudgetRingColorPosition, getBudgetRingState } from "@/lib/budget";
+import { getBudgetRingState } from "@/lib/budget";
 import { formatMoney } from "@/lib/money";
 import { durations, easing, springs } from "@/theme/motion";
 import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
@@ -11,7 +11,6 @@ import { useEffect, useMemo, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {
     cancelAnimation,
-    interpolateColor,
     useDerivedValue,
     useSharedValue,
     withSequence,
@@ -46,10 +45,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-const colorMidpoint =
-  (BUDGET_RING.warningMidRatio - BUDGET_RING.warningStartRatio) /
-  (BUDGET_RING.dangerStartRatio - BUDGET_RING.warningStartRatio);
 
 export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
   const { colors } = useTheme();
@@ -127,15 +122,9 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
 
   const trackColor = useDerivedValue(() => animatedColors.value.surfaceAlt);
   const progressColor = useDerivedValue(() =>
-    interpolateColor(
-      getBudgetRingColorPosition(progress.value),
-      [0, colorMidpoint, BUDGET_RING.maxVisualRatio],
-      [
-        animatedColors.value.success,
-        animatedColors.value.warning,
-        animatedColors.value.danger,
-      ],
-    ),
+    ringState.isOverBudget
+      ? animatedColors.value.danger
+      : animatedColors.value.accent,
   );
   const progressPath = useDerivedValue(() =>
     Skia.PathBuilder.Make()
@@ -186,14 +175,17 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
       <View style={styles.center} accessible={false}>
         <Text
           accessible={false}
-          style={[styles.percent, { color: colors.onAccent }]}
+          style={[styles.percent, { color: colors.text }]}
           numberOfLines={1}
         >
           {ringState.percentLabel}
         </Text>
         <Text
           accessible={false}
-          style={[styles.detail, { color: colors.onAccent }]}
+          style={[
+            styles.detail,
+            { color: ringState.isOverBudget ? colors.dangerText : colors.mutedText },
+          ]}
           numberOfLines={1}
           adjustsFontSizeToFit
           minimumFontScale={AMOUNT_INPUT.minimumFontScale}

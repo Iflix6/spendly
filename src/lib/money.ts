@@ -53,9 +53,7 @@ export function formatMoneySpoken(cents: number): string {
     parts.push(`${dollars} ${dollars === 1 ? "dollar" : "dollars"}`);
   }
   if (remainingCents > 0) {
-    parts.push(
-      `${remainingCents} ${remainingCents === 1 ? "cent" : "cents"}`,
-    );
+    parts.push(`${remainingCents} ${remainingCents === 1 ? "cent" : "cents"}`);
   }
   if (parts.length === 0) {
     parts.push("0 dollars");

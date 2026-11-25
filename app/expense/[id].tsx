@@ -3,22 +3,17 @@ import { useSnackbar } from "@/components/SnackbarProvider";
 import { CATEGORY_BY_ID } from "@/constants/categories";
 import { EXPENSE_DETAIL } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { format } from "date-fns";
 import {
   measureExpenseElement,
-  rememberExpenseTransition,
   takeExpenseTransition,
   type ExpenseElementRect,
-  type ExpenseTransitionOrigin,
+  type ExpenseTransitionOrigin
 } from "@/lib/expenseTransition";
 import { lightImpact, warning } from "@/lib/haptics";
 import { formatMoney, formatMoneySpoken } from "@/lib/money";
 import { useExpenseStore } from "@/store/useExpenseStore";
 import { springs } from "@/theme/motion";
-import {
-  useAnimatedThemeColors,
-  useTheme,
-} from "@/theme/ThemeProvider";
+import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
 import {
   fontFamily,
   layout,
@@ -29,6 +24,7 @@ import {
   typography,
 } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { format } from "date-fns";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -40,6 +36,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -48,7 +45,6 @@ import Animated, {
   withSpring,
   type SharedValue,
 } from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const styles = StyleSheet.create({
@@ -490,7 +486,10 @@ export default function ExpenseDetailScreen() {
   return (
     <GestureDetector gesture={backGesture}>
       <Animated.View style={[{ flex: 1 }, rootStyle]}>
-        <SafeAreaView style={styles.safeArea} edges={["top", "left", "right", "bottom"]}>
+        <SafeAreaView
+          style={styles.safeArea}
+          edges={["top", "left", "right", "bottom"]}
+        >
           <ScrollView
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
@@ -503,7 +502,11 @@ export default function ExpenseDetailScreen() {
                 onPress={dismiss}
                 style={backStyle}
               >
-                <Ionicons name="arrow-back" size={spacing.xl} color={colors.text} />
+                <Ionicons
+                  name="arrow-back"
+                  size={spacing.xl}
+                  color={colors.text}
+                />
               </Pressable>
               <Text accessibilityRole="header" style={titleStyle}>
                 Expense details
@@ -529,7 +532,9 @@ export default function ExpenseDetailScreen() {
                     <Animated.Text
                       ref={amountRef}
                       accessible
-                      accessibilityLabel={formatMoneySpoken(expense.amountCents)}
+                      accessibilityLabel={formatMoneySpoken(
+                        expense.amountCents,
+                      )}
                       numberOfLines={1}
                       adjustsFontSizeToFit
                       minimumFontScale={EXPENSE_DETAIL.amountMinimumFontScale}
@@ -547,7 +552,11 @@ export default function ExpenseDetailScreen() {
                     </View>
                     <View style={styles.detailRow}>
                       <Text style={detailLabelStyle}>Note</Text>
-                      <Text style={expense.note.trim() ? detailValueStyle : noNoteStyle}>
+                      <Text
+                        style={
+                          expense.note.trim() ? detailValueStyle : noNoteStyle
+                        }
+                      >
                         {expense.note.trim() || "No note"}
                       </Text>
                     </View>

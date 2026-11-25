@@ -76,9 +76,7 @@ describe("SwipeableRow", () => {
       color: lightColors.onDanger,
     });
 
-    await fireEvent.press(
-      getByRole("button", { name: "Delete Food expense" }),
-    );
+    await fireEvent.press(getByRole("button", { name: "Delete Food expense" }));
 
     expect(haptics.lightImpact).toHaveBeenCalledTimes(1);
     expect(onDelete).toHaveBeenCalledWith(expense.id);

@@ -1,7 +1,4 @@
-import {
-    useAnimatedThemeColors,
-    useTheme,
-} from "@/theme/ThemeProvider";
+import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
 import { layout, lightCardShadow, radii } from "@/theme/tokens";
 import { useMemo, type ReactNode } from "react";
 import { StyleSheet, type StyleProp, type ViewStyle } from "react-native";

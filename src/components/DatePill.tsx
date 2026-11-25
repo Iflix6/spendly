@@ -86,7 +86,7 @@ export function DatePill({ label, selected, onPress }: DatePillProps) {
     color: interpolateColor(
       progress.value,
       [0, 1],
-      [colors.value.mutedText, colors.value.onAccent]
+      [colors.value.mutedText, colors.value.onAccent],
     ),
   }));
 

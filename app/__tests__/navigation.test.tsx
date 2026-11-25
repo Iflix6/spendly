@@ -30,10 +30,9 @@ const mockRouter = {
 };
 
 jest.mock("@/lib/expenseTransition", () => {
-  const actual =
-    jest.requireActual<typeof import("@/lib/expenseTransition")>(
-      "@/lib/expenseTransition",
-    );
+  const actual = jest.requireActual<typeof import("@/lib/expenseTransition")>(
+    "@/lib/expenseTransition",
+  );
   return {
     ...actual,
     measureExpenseRowTransition: jest.fn(() => Promise.resolve(null)),

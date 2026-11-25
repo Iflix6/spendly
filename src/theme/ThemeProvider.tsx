@@ -68,10 +68,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      if (
-        previous < themeSwitchProgress &&
-        progress >= themeSwitchProgress
-      ) {
+      if (previous < themeSwitchProgress && progress >= themeSwitchProgress) {
         runOnJS(setColors)(darkColors);
       } else if (
         previous >= themeSwitchProgress &&

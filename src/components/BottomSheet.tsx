@@ -3,10 +3,7 @@ import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { useSheetOpenProgress } from "@/hooks/useSheetOpenProgress";
 import { shouldDismissSheet } from "@/lib/sheet";
 import { durations, easing, springs } from "@/theme/motion";
-import {
-    useAnimatedThemeColors,
-    useTheme,
-} from "@/theme/ThemeProvider";
+import { useAnimatedThemeColors, useTheme } from "@/theme/ThemeProvider";
 import { layout, lightCardShadow, radii, spacing } from "@/theme/tokens";
 import {
     forwardRef,

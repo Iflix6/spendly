@@ -147,9 +147,7 @@ export const CategoryCard = memo(function CategoryCard({
             {amount}
           </Text>
           <View style={trackStyle}>
-            <Animated.View
-              style={[fillStyle, progressStyle]}
-            />
+            <Animated.View style={[fillStyle, progressStyle]} />
           </View>
         </Card>
       </Animated.View>

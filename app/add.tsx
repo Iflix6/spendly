@@ -275,17 +275,14 @@ export default function AddExpenseScreen() {
     );
   }, [amountScale, amountShake, reduceMotion]);
 
-  const handleCategoryPress = useCallback(
-    (nextCategory: CategoryId | null) => {
-      if (nextCategory === null) {
-        return;
-      }
+  const handleCategoryPress = useCallback((nextCategory: CategoryId | null) => {
+    if (nextCategory === null) {
+      return;
+    }
 
-      void selection();
-      setCategoryId(nextCategory);
-    },
-    [],
-  );
+    void selection();
+    setCategoryId(nextCategory);
+  }, []);
 
   const handleTodayPress = useCallback(() => {
     void selection();

@@ -179,8 +179,7 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
     () =>
       gridValues.map((value) => {
         const y =
-          BAR_CHART.topPadding +
-          (1 - value / axisMaxCents) * plotHeight;
+          BAR_CHART.topPadding + (1 - value / axisMaxCents) * plotHeight;
         return {
           value,
           y,
@@ -196,10 +195,7 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
     const period = mode === "week" ? "Weekly" : "Daily";
     const entries = bars
       .filter((bar) => bar.amountCents > 0)
-      .map(
-        (bar) =>
-          `${bar.label}, ${formatMoneySpoken(bar.amountCents)}`,
-      );
+      .map((bar) => `${bar.label}, ${formatMoneySpoken(bar.amountCents)}`);
     return entries.length > 0
       ? `${period} spending chart. ${entries.join("; ")}`
       : `${period} spending chart. No spending recorded.`;
@@ -384,15 +380,9 @@ export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
                   />
                 ))}
               </Canvas>
-              <View
-                style={labelsStyle}
-                pointerEvents="none"
-              >
+              <View style={labelsStyle} pointerEvents="none">
                 {bars.map((bar, index) => (
-                  <View
-                    key={bar.key}
-                    style={labelSlotStyles[index]}
-                  >
+                  <View key={bar.key} style={labelSlotStyles[index]}>
                     <Text
                       testID={`bar-label-${bar.key}`}
                       numberOfLines={1}

@@ -9,11 +9,7 @@ import {
 } from "@/theme/ThemeProvider";
 import { fontFamily, layout, radii, spacing, typography } from "@/theme/tokens";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-    Pressable,
-    StyleSheet,
-    type LayoutChangeEvent
-} from "react-native";
+import { Pressable, StyleSheet, type LayoutChangeEvent } from "react-native";
 import Animated, {
     useAnimatedStyle,
     useSharedValue,

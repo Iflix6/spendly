@@ -100,7 +100,7 @@ export const CategoryChip = memo(function CategoryChip({
     color: interpolateColor(
       progress.value,
       [0, 1],
-      [colors.value.mutedText, colors.value.onAccent]
+      [colors.value.mutedText, colors.value.onAccent],
     ),
   }));
   const chipStyle = useAnimatedStyle(() => ({

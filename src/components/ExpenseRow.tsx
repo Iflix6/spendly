@@ -1,7 +1,7 @@
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { CATEGORY_BY_ID } from "@/constants/categories";
-import { EXPENSE_ROW } from "@/constants/expenses";
 import { AMOUNT_INPUT } from "@/constants/expenseForm";
+import { EXPENSE_ROW } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { dayLabel } from "@/lib/dates";
 import {

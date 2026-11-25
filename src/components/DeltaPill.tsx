@@ -93,10 +93,7 @@ export function DeltaPill({
     [colors.border, colors.surface, colors.surfaceAlt, hasPrevious],
   );
   const tintStyle = useMemo(
-    () => [
-      styles.tint,
-      { backgroundColor: tintColor, opacity: opacity.tint },
-    ],
+    () => [styles.tint, { backgroundColor: tintColor, opacity: opacity.tint }],
     [tintColor],
   );
   const labelStyle = useMemo(

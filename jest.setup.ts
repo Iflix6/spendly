@@ -32,6 +32,8 @@ jest.mock("react-native-reanimated", () => {
     FadeOut: createAnimation(),
     FadeOutDown: createAnimation(),
     LinearTransition: createAnimation(),
+    SlideInLeft: createAnimation(),
+    SlideInRight: createAnimation(),
     SlideInUp: createAnimation(),
     cancelAnimation: () => undefined,
     interpolate: (value: number) => value,
@@ -46,6 +48,7 @@ jest.mock("react-native-reanimated", () => {
     useDerivedValue: (updater: () => unknown) => ({ value: updater() }),
     useReducedMotion: () => false,
     useSharedValue: (value: unknown) => ({ value }),
+    withDelay: (_delay: number, animation: unknown) => animation,
     withRepeat: (animation: unknown) => animation,
     withSequence: (...values: unknown[]) => values[values.length - 1],
     withSpring: (value: unknown) => value,
@@ -101,6 +104,8 @@ jest.mock("@shopify/react-native-skia", () => {
   const { View } = require("react-native");
   const Shape = ({ children }: { children?: unknown }) =>
     React.createElement(View, null, children);
+  const Canvas = (props: { children?: unknown }) =>
+    React.createElement(View, props, props.children);
   const pathBuilder: Record<string, () => unknown> = {};
   for (const method of ["moveTo", "lineTo", "quadTo", "addArc", "close"]) {
     pathBuilder[method] = () => pathBuilder;
@@ -109,7 +114,7 @@ jest.mock("@shopify/react-native-skia", () => {
   pathBuilder.detach = () => ({});
 
   return {
-    Canvas: Shape,
+    Canvas,
     Circle: Shape,
     Group: Shape,
     Line: Shape,

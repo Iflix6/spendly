@@ -139,6 +139,7 @@ describe("stats", () => {
 
   it.each([
     [new Date(2024, 1, 15), 29],
+    [new Date(2026, 1, 15), 28],
     [new Date(2026, 3, 15), 30],
     [new Date(2026, 11, 15), 31],
   ])("creates the right number of daily bars for %s", (date, expectedDays) => {

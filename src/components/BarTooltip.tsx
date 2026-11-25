@@ -4,21 +4,21 @@ import { formatMoney } from "@/lib/money";
 import { durations, springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  opacity,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
+    fontFamily,
+    opacity,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
 } from "@/theme/tokens";
 import { useEffect, useMemo } from "react";
 import { StyleSheet, Text } from "react-native";
 import Animated, {
-  cancelAnimation,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
+    cancelAnimation,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+    withTiming,
 } from "react-native-reanimated";
 
 interface BarTooltipProps {

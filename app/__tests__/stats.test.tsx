@@ -152,7 +152,9 @@ describe("Stats screen", () => {
     const { getByText } = await renderScreen();
 
     expect(getByText("No prior month")).toBeTruthy();
-    expect(getByText("remove-outline")).toHaveStyle({ color: lightColors.textMuted });
+    expect(getByText("remove-outline")).toHaveStyle({
+      color: lightColors.textMuted,
+    });
   });
 
   it("replaces charts with the empty state for an empty selected month", async () => {
@@ -219,7 +221,9 @@ describe("Stats screen", () => {
     await fireEvent.press(getByLabelText("Previous month"));
     await fireEvent.press(getByLabelText("Next month"));
 
-    expect(getByText(monthlyDateLabel(addMonths(previousMonth, 1)))).toBeTruthy();
+    expect(
+      getByText(monthlyDateLabel(addMonths(previousMonth, 1))),
+    ).toBeTruthy();
     expect(getByLabelText("Next month")).toBeDisabled();
   });
 });

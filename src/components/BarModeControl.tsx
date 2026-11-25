@@ -1,24 +1,14 @@
-import { selection } from "@/lib/haptics";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { selection } from "@/lib/haptics";
 import { springs } from "@/theme/motion";
 import { useAnimatedThemeColors } from "@/theme/ThemeProvider";
-import {
-  fontFamily,
-  layout,
-  radii,
-  spacing,
-  typography,
-} from "@/theme/tokens";
+import { fontFamily, layout, radii, spacing, typography } from "@/theme/tokens";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  type LayoutChangeEvent,
-} from "react-native";
+import { Pressable, StyleSheet, type LayoutChangeEvent } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
 } from "react-native-reanimated";
 
 export type BarMode = "week" | "day";

@@ -4,10 +4,10 @@ import { BarTooltip } from "@/components/BarTooltip";
 import { BAR_CHART } from "@/constants/stats";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import {
-  getBarHitArea,
-  getBarWidth,
-  getNiceMax,
-  hitTestBar,
+    getBarHitArea,
+    getBarWidth,
+    getNiceMax,
+    hitTestBar,
 } from "@/lib/chartGeometry";
 import { localDateKey } from "@/lib/dates";
 import { selection } from "@/lib/haptics";
@@ -16,32 +16,23 @@ import type { DaySpend, WeekSpend } from "@/lib/stats";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
+    fontFamily,
+    layout,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
 } from "@/theme/tokens";
-import {
-  Canvas,
-  Line,
-  RoundedRect,
-} from "@shopify/react-native-skia";
+import { Canvas, Line, RoundedRect } from "@shopify/react-native-skia";
 import { format } from "date-fns";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  type GestureResponderEvent,
-  type LayoutChangeEvent,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    type GestureResponderEvent,
+    type LayoutChangeEvent,
 } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
@@ -120,11 +111,7 @@ function dayBarLabel(date: string): string {
   return format(new Date(`${date}T12:00:00`), "MMM d");
 }
 
-export function BarChart({
-  weekData,
-  dayData,
-  isCurrentMonth,
-}: BarChartProps) {
+export function BarChart({ weekData, dayData, isCurrentMonth }: BarChartProps) {
   const { colors } = useTheme();
   const reduceMotion = useReducedMotionSafe();
   const [mode, setMode] = useState<BarMode>("week");
@@ -181,21 +168,14 @@ export function BarChart({
   const barWidth = getBarWidth(slotWidth);
   const hitArea = useMemo(
     () =>
-      getBarHitArea(
-        0,
-        plotWidth,
-        BAR_CHART.topPadding,
-        baseline,
-        bars.length,
-      ),
+      getBarHitArea(0, plotWidth, BAR_CHART.topPadding, baseline, bars.length),
     [bars.length, baseline, plotWidth],
   );
   const gridValues = useMemo(
     () => [axisMaxCents, axisMaxCents / 2, 0],
     [axisMaxCents],
   );
-  const selectedBar =
-    selectedIndex === null ? undefined : bars[selectedIndex];
+  const selectedBar = selectedIndex === null ? undefined : bars[selectedIndex];
   const modeEntrance = reduceMotion
     ? FadeIn.duration(durations.reduced)
     : FadeIn.duration(durations.base);
@@ -366,7 +346,10 @@ export function BarChart({
                   />
                 ))}
               </Canvas>
-              <View style={[styles.labels, { width: canvasWidth }]} pointerEvents="none">
+              <View
+                style={[styles.labels, { width: canvasWidth }]}
+                pointerEvents="none"
+              >
                 {bars.map((bar, index) => (
                   <View
                     key={bar.key}

@@ -4,17 +4,21 @@ import { monthlyDateLabel } from "@/lib/stats";
 import { durations, easing } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  opacity,
-  radii,
-  spacing,
-  typography,
+    fontFamily,
+    layout,
+    opacity,
+    radii,
+    spacing,
+    typography,
 } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeIn, SlideInLeft, SlideInRight } from "react-native-reanimated";
+import Animated, {
+    FadeIn,
+    SlideInLeft,
+    SlideInRight,
+} from "react-native-reanimated";
 
 interface MonthSelectorProps {
   month: Date;
@@ -140,7 +144,11 @@ export function MonthSelector({
         onPress={onNext}
         style={nextStyle}
       >
-        <Ionicons name="chevron-forward" size={spacing.xl} color={colors.text} />
+        <Ionicons
+          name="chevron-forward"
+          size={spacing.xl}
+          color={colors.text}
+        />
       </Pressable>
     </View>
   );

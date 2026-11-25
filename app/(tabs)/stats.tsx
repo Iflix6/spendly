@@ -14,23 +14,18 @@ import { isSameMonth, localDateKey } from "@/lib/dates";
 import { selection } from "@/lib/haptics";
 import { formatMoney } from "@/lib/money";
 import {
-  monthDelta,
-  spendByDay,
-  spendByWeek,
-  totalForMonth,
-  totalsByCategory,
+    monthDelta,
+    spendByDay,
+    spendByWeek,
+    totalForMonth,
+    totalsByCategory,
 } from "@/lib/stats";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { useTheme } from "@/theme/ThemeProvider";
-import {
-  fontFamily,
-  spacing,
-  tabularNums,
-  typography,
-} from "@/theme/tokens";
+import { fontFamily, spacing, tabularNums, typography } from "@/theme/tokens";
+import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { BlurTargetView } from "expo-blur";
 import { useIsFocused, useRouter } from "expo-router";
-import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

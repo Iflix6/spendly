@@ -9,10 +9,13 @@ import { lightColors } from "@/theme/tokens";
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { fireEvent, render } from "@testing-library/react-native";
 
-const weekData: readonly WeekSpend[] = Array.from({ length: 5 }, (_, bucket) => ({
-  bucket,
-  amountCents: (bucket + 1) * 1000,
-}));
+const weekData: readonly WeekSpend[] = Array.from(
+  { length: 5 },
+  (_, bucket) => ({
+    bucket,
+    amountCents: (bucket + 1) * 1000,
+  }),
+);
 
 function daysInMonth(year: number, monthIndex: number): DaySpend[] {
   const count = new Date(year, monthIndex + 1, 0).getDate();
@@ -75,9 +78,7 @@ describe("BarChart", () => {
     await fireEvent(getByTestId("bar-chart-root"), "touchStart", {
       nativeEvent: { locationX: 0, locationY: 0 },
     });
-    expect(
-      queryByText("Week 1", { includeHiddenElements: true }),
-    ).toBeNull();
+    expect(queryByText("Week 1", { includeHiddenElements: true })).toBeNull();
   });
 
   it("renders all 31 days in Day mode", async () => {

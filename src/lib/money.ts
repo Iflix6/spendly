@@ -43,6 +43,28 @@ export function formatMoney(
   return `${sign}${symbol}${formatted}`;
 }
 
+export function formatMoneySpoken(cents: number): string {
+  const safeCents = Number.isFinite(cents) ? Math.abs(Math.trunc(cents)) : 0;
+  const dollars = Math.trunc(safeCents / CENTS_PER_DOLLAR);
+  const remainingCents = safeCents % CENTS_PER_DOLLAR;
+  const parts: string[] = [];
+
+  if (dollars > 0) {
+    parts.push(`${dollars} ${dollars === 1 ? "dollar" : "dollars"}`);
+  }
+  if (remainingCents > 0) {
+    parts.push(
+      `${remainingCents} ${remainingCents === 1 ? "cent" : "cents"}`,
+    );
+  }
+  if (parts.length === 0) {
+    parts.push("0 dollars");
+  }
+
+  const label = parts.join(" ");
+  return cents < 0 ? `minus ${label}` : label;
+}
+
 export function parseKeypadInput(current: string, key: string): string {
   if (key === "clear") {
     return "";

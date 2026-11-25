@@ -5,12 +5,12 @@ import { durations, easing, springs } from "@/theme/motion";
 import { Group, Path, Skia } from "@shopify/react-native-skia";
 import { useEffect, useMemo } from "react";
 import {
-  cancelAnimation,
-  useDerivedValue,
-  useSharedValue,
-  withDelay,
-  withSpring,
-  withTiming,
+    cancelAnimation,
+    useDerivedValue,
+    useSharedValue,
+    withDelay,
+    withSpring,
+    withTiming,
 } from "react-native-reanimated";
 
 interface DonutSliceProps {

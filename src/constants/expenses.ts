@@ -25,6 +25,18 @@ export const EXPENSE_ROW = {
   pressedScale: 0.98,
 } as const;
 
+export const EXPENSE_DETAIL = {
+  iconSize: 88,
+  heroMinHeight: 184,
+  cardPadding: 20,
+  amountMinimumFontScale: 0.65,
+  backDismissDistance: 80,
+  backDismissVelocity: 700,
+  edgeSwipeActivation: 24,
+  edgeSwipeZone: 36,
+  verticalFailOffset: 16,
+} as const;
+
 export const SWIPE = {
   actionWidth: 96,
   deleteThreshold: 96,

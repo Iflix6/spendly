@@ -1,33 +1,28 @@
 import { DonutLegendRow } from "@/components/DonutLegendRow";
 import { DonutSlice } from "@/components/DonutSlice";
 import { PERCENT_PRECISION } from "@/constants";
+import {
+    CATEGORY_BY_ID,
+    CATEGORY_IDS,
+    type CategoryId,
+} from "@/constants/categories";
 import { AMOUNT_INPUT } from "@/constants/expenseForm";
 import { DONUT_CHART } from "@/constants/stats";
-import {
-  CATEGORY_BY_ID,
-  CATEGORY_IDS,
-  type CategoryId,
-} from "@/constants/categories";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { getDonutSlices, hitTestDonut } from "@/lib/chartGeometry";
 import { selection } from "@/lib/haptics";
 import { formatMoney } from "@/lib/money";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
-import {
-  fontFamily,
-  spacing,
-  tabularNums,
-  typography,
-} from "@/theme/tokens";
+import { fontFamily, spacing, tabularNums, typography } from "@/theme/tokens";
 import { Canvas } from "@shopify/react-native-skia";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  type GestureResponderEvent,
-  type LayoutChangeEvent,
+    StyleSheet,
+    Text,
+    View,
+    type GestureResponderEvent,
+    type LayoutChangeEvent,
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
@@ -96,18 +91,14 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
     useState<CategoryId | null>(null);
   const chartSize =
     width > 0
-      ? Math.min(
-          DONUT_CHART.maxSize,
-          Math.max(DONUT_CHART.minSize, width),
-        )
+      ? Math.min(DONUT_CHART.maxSize, Math.max(DONUT_CHART.minSize, width))
       : DONUT_CHART.defaultSize;
   const center = chartSize / 2;
   const radius =
     (chartSize - DONUT_CHART.strokeWidth) / 2 - DONUT_CHART.selectedOffset;
   const innerRadius = radius - DONUT_CHART.strokeWidth;
   const capHalfAngleDegrees =
-    ((DONUT_CHART.strokeWidth / 2) / Math.max(1, radius)) *
-    (180 / Math.PI);
+    (DONUT_CHART.strokeWidth / 2 / Math.max(1, radius)) * (180 / Math.PI);
   const sliceGapDegrees = Math.max(
     DONUT_CHART.gapAngleDegrees,
     capHalfAngleDegrees * 2 + DONUT_CHART.gapAngleDegrees,
@@ -203,7 +194,10 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
       onTouchStart={handleOutsideTouch}
     >
       <View style={styles.measure} onLayout={handleLayout}>
-        <Animated.View entering={chartEntrance} style={[styles.chart, canvasStyle]}>
+        <Animated.View
+          entering={chartEntrance}
+          style={[styles.chart, canvasStyle]}
+        >
           <Canvas
             style={canvasStyle}
             onTouchStart={handleTouch}
@@ -254,7 +248,9 @@ export function DonutChart({ data, totalCents }: DonutChartProps) {
             key={datum.categoryId}
             categoryId={datum.categoryId}
             amountCents={datum.amountCents}
-            percent={totalCents > 0 ? (datum.amountCents / totalCents) * 100 : 0}
+            percent={
+              totalCents > 0 ? (datum.amountCents / totalCents) * 100 : 0
+            }
             selected={selectedCategoryId === datum.categoryId}
             index={index}
             onPress={() => handleSelect(datum.categoryId)}

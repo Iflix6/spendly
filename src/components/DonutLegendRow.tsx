@@ -1,26 +1,26 @@
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { PERCENT_PRECISION } from "@/constants";
-import { DONUT_CHART } from "@/constants/stats";
 import { CATEGORY_BY_ID, type CategoryId } from "@/constants/categories";
+import { DONUT_CHART } from "@/constants/stats";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { formatMoney } from "@/lib/money";
 import { durations } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
+    fontFamily,
+    layout,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
 } from "@/theme/tokens";
 import { useCallback, useMemo } from "react";
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  type GestureResponderEvent,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+    type GestureResponderEvent,
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
@@ -79,7 +79,9 @@ export function DonutLegendRow({
   const amountLabel = formatMoney(amountCents);
   const entering = reduceMotion
     ? FadeIn.duration(durations.reduced)
-    : FadeIn.duration(durations.fast).delay(index * DONUT_CHART.legendStaggerMs);
+    : FadeIn.duration(durations.fast).delay(
+        index * DONUT_CHART.legendStaggerMs,
+      );
   const rowStyle = useMemo(
     () => [
       styles.row,

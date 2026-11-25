@@ -4,11 +4,11 @@ import { springs } from "@/theme/motion";
 import { Group, LinearGradient, Path, Skia } from "@shopify/react-native-skia";
 import { useEffect, useMemo } from "react";
 import {
-  cancelAnimation,
-  useDerivedValue,
-  useSharedValue,
-  withDelay,
-  withSpring,
+    cancelAnimation,
+    useDerivedValue,
+    useSharedValue,
+    withDelay,
+    withSpring,
 } from "react-native-reanimated";
 
 interface BarShapeProps {
@@ -51,10 +51,7 @@ export function BarShape({
   useEffect(() => {
     progress.value = reduceMotion
       ? 1
-      : withDelay(
-          index * BAR_CHART.growStaggerMs,
-          withSpring(1, springs.soft),
-        );
+      : withDelay(index * BAR_CHART.growStaggerMs, withSpring(1, springs.soft));
 
     return () => cancelAnimation(progress);
   }, [index, progress, reduceMotion]);
@@ -62,11 +59,7 @@ export function BarShape({
   const path = useDerivedValue(() => {
     const height = targetHeight * progress.value;
     const top = baseline - height;
-    const radius = Math.min(
-      BAR_CHART.cornerRadius,
-      width / 2,
-      height / 2,
-    );
+    const radius = Math.min(BAR_CHART.cornerRadius, width / 2, height / 2);
     const builder = Skia.PathBuilder.Make()
       .moveTo(x, baseline)
       .lineTo(x, top + radius)
@@ -82,10 +75,7 @@ export function BarShape({
   return (
     <Group opacity={isTallest ? 1 : BAR_CHART.nonTallestOpacity}>
       <Path path={path}>
-        <LinearGradient
-          {...gradientPoints}
-          colors={[accentAlt, accent]}
-        />
+        <LinearGradient {...gradientPoints} colors={[accentAlt, accent]} />
       </Path>
     </Group>
   );

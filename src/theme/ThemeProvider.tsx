@@ -58,6 +58,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       [0, 1],
       [lightColors.bg, darkColors.bg],
     ),
+    backdrop: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.backdrop, darkColors.backdrop],
+    ),
     surface: interpolateColor(
       themeProgress.value,
       [0, 1],
@@ -92,6 +97,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       themeProgress.value,
       [0, 1],
       [lightColors.accentAlt, darkColors.accentAlt],
+    ),
+    accentDeep: interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightColors.accentDeep, darkColors.accentDeep],
     ),
     onAccent: interpolateColor(
       themeProgress.value,

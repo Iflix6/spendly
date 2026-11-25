@@ -3,6 +3,7 @@ export const DEFAULT_BUDGET_CENTS = 150000;
 export const NOTE_MAX = 80;
 
 export const CENTS_PER_DOLLAR = 100;
+export const MIN_BUDGET_CENTS = CENTS_PER_DOLLAR;
 export const KEYPAD_MAX_DIGITS = 9;
 export const KEYPAD_MAX_DECIMALS = 2;
 export const PERCENT_PRECISION = 1;

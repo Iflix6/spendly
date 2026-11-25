@@ -2,6 +2,7 @@ import type { TextStyle } from "react-native";
 
 export interface ThemeColors {
   bg: string;
+  backdrop: string;
   surface: string;
   surfaceAlt: string;
   border: string;
@@ -9,6 +10,7 @@ export interface ThemeColors {
   textMuted: string;
   accent: string;
   accentAlt: string;
+  accentDeep: string;
   onAccent: string;
   success: string;
   warning: string;
@@ -17,6 +19,7 @@ export interface ThemeColors {
 
 export const lightColors: ThemeColors = {
   bg: "#F6F7FB",
+  backdrop: "#000000",
   surface: "#FFFFFF",
   surfaceAlt: "#EEF0F6",
   border: "#E3E6EE",
@@ -24,6 +27,7 @@ export const lightColors: ThemeColors = {
   textMuted: "#6B7280",
   accent: "#6C5CE7",
   accentAlt: "#8B7CF6",
+  accentDeep: "#4B3CC4",
   onAccent: "#FFFFFF",
   success: "#34C98B",
   warning: "#F5B83D",
@@ -32,6 +36,7 @@ export const lightColors: ThemeColors = {
 
 export const darkColors: ThemeColors = {
   bg: "#0B0D12",
+  backdrop: "#000000",
   surface: "#151922",
   surfaceAlt: "#1D2230",
   border: "#262C3B",
@@ -39,11 +44,19 @@ export const darkColors: ThemeColors = {
   textMuted: "#9AA3B2",
   accent: "#6C5CE7",
   accentAlt: "#8B7CF6",
+  accentDeep: "#4B3CC4",
   onAccent: "#FFFFFF",
   success: "#34C98B",
   warning: "#F5B83D",
   danger: "#FF5C5C",
 };
+
+export const splashColors = {
+  background: "#6C5CE7",
+  backgroundBottom: "#4B3CC4",
+  foreground: "#FFFFFF",
+  shimmerTransparent: "#FFFFFF00",
+} as const;
 
 export const spacing = {
   xs: 4,

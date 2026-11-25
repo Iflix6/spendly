@@ -2,6 +2,7 @@ import {
     centsFromKeypad,
     centsToDisplayParts,
     formatMoney,
+    isRejectedKeypadInput,
     parseKeypadInput,
 } from "@/lib/money";
 import { describe, expect, it } from "@jest/globals";
@@ -42,7 +43,16 @@ describe("money", () => {
     expect(parseKeypadInput("12.5", "backspace")).toBe("12.");
     expect(parseKeypadInput("0.", "backspace")).toBe("0");
     expect(parseKeypadInput("0", "backspace")).toBe("");
+    expect(parseKeypadInput("", "backspace")).toBe("");
     expect(parseKeypadInput("12", "x")).toBe("12");
+  });
+
+  it("identifies rejected decimal and digit input", () => {
+    expect(isRejectedKeypadInput("12.3", ".")).toBe(true);
+    expect(isRejectedKeypadInput("12.34", "5")).toBe(true);
+    expect(isRejectedKeypadInput("123456789", "1")).toBe(true);
+    expect(isRejectedKeypadInput("12.3", "4")).toBe(false);
+    expect(isRejectedKeypadInput("12", "backspace")).toBe(false);
   });
 
   it("converts keypad strings and display parts without float drift", () => {

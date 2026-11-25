@@ -1,3 +1,4 @@
+import { SnackbarProvider } from "@/components/SnackbarProvider";
 import * as haptics from "@/lib/haptics";
 import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { ThemeProvider } from "@/theme/ThemeProvider";
@@ -209,7 +210,9 @@ const expenses: Expense[] = [
 function renderScreen(screen: ReactElement = <ExpensesScreen />) {
   return render(
     <SafeAreaProvider initialMetrics={safeAreaMetrics}>
-      <ThemeProvider>{screen}</ThemeProvider>
+      <ThemeProvider>
+        <SnackbarProvider>{screen}</SnackbarProvider>
+      </ThemeProvider>
     </SafeAreaProvider>,
   );
 }

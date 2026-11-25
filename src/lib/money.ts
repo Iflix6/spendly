@@ -48,6 +48,9 @@ export function parseKeypadInput(current: string, key: string): string {
     return "";
   }
   if (key === "backspace") {
+    if (current === "") {
+      return current;
+    }
     if (current.length <= 1 || current === "0.") {
       return current === "0" ? "" : "0";
     }
@@ -79,6 +82,27 @@ export function parseKeypadInput(current: string, key: string): string {
     return key;
   }
   return `${current}${key}`;
+}
+
+export function isRejectedKeypadInput(current: string, key: string): boolean {
+  if (key === ".") {
+    return current.includes(".");
+  }
+
+  if (!/^\d$/.test(key)) {
+    return false;
+  }
+
+  const digitCount = current.replace(".", "").length;
+  if (digitCount >= KEYPAD_MAX_DIGITS) {
+    return true;
+  }
+
+  const decimalIndex = current.indexOf(".");
+  return (
+    decimalIndex >= 0 &&
+    current.length - decimalIndex - 1 >= KEYPAD_MAX_DECIMALS
+  );
 }
 
 export function centsFromKeypad(value: string): number {

@@ -1,3 +1,5 @@
+import { SheetOpenProgressProvider } from "@/components/SheetOpenProgressProvider";
+import { SnackbarProvider } from "@/components/SnackbarProvider";
 import { TAB_BAR } from "@/constants/navigation";
 import { useTabBarHeight } from "@/hooks/useTabBarHeight";
 import { useExpenseStore } from "@/store/useExpenseStore";
@@ -8,13 +10,14 @@ import { fireEvent, render } from "@testing-library/react-native";
 import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "../(tabs)/index";
-import AddExpenseStub from "../add";
+import AddExpenseScreen from "../add";
 import ExpenseDetailStub from "../expense/[id]";
 
 const mockBack = jest.fn();
 
 jest.mock("expo-router", () => ({
   useIsFocused: () => true,
+  useLocalSearchParams: () => ({}),
   useRouter: () => ({ back: mockBack }),
 }));
 
@@ -48,7 +51,11 @@ function HeightProbe() {
 function renderScreen(screen: React.ReactElement) {
   return render(
     <SafeAreaProvider initialMetrics={safeAreaMetrics}>
-      <ThemeProvider>{screen}</ThemeProvider>
+      <ThemeProvider>
+        <SheetOpenProgressProvider>
+          <SnackbarProvider>{screen}</SnackbarProvider>
+        </SheetOpenProgressProvider>
+      </ThemeProvider>
     </SafeAreaProvider>,
   );
 }
@@ -81,12 +88,12 @@ describe("tab screen shell", () => {
   });
 });
 
-describe("stack stubs", () => {
-  it("closes the Add stub and returns to the tab shell", async () => {
-    const { getByRole, getByText } = await renderScreen(<AddExpenseStub />);
-    expect(getByText("Add expense")).toHaveStyle({ color: lightColors.text });
+describe("stack screens", () => {
+  it("closes the Add sheet and returns to the tab shell", async () => {
+    const { getByRole, getByText } = await renderScreen(<AddExpenseScreen />);
+    expect(getByText("New expense")).toHaveStyle({ color: lightColors.text });
 
-    await fireEvent.press(getByRole("button", { name: "Close add expense" }));
+    await fireEvent.press(getByRole("button", { name: "Close expense sheet" }));
     expect(mockBack).toHaveBeenCalledTimes(1);
   });
 

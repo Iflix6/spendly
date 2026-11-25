@@ -2,7 +2,7 @@ import { CategoryChip } from "@/components/CategoryChip";
 import { EmptyState } from "@/components/EmptyState";
 import { SearchBar } from "@/components/SearchBar";
 import { SectionHeader } from "@/components/SectionHeader";
-import { Snackbar } from "@/components/Snackbar";
+import { useSnackbar } from "@/components/SnackbarProvider";
 import { SwipeableRow } from "@/components/SwipeableRow";
 import { useTabBlurTarget } from "@/components/TabBlurTargetContext";
 import { CATEGORIES, type Category } from "@/constants/categories";
@@ -105,15 +105,11 @@ export default function ExpensesScreen() {
   const expenses = useExpenseStore((state) => state.expenses);
   const deleteExpense = useExpenseStore((state) => state.deleteExpense);
   const undoDelete = useExpenseStore((state) => state.undoDelete);
+  const { showSnackbar } = useSnackbar();
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("all");
   const [openRowId, setOpenRowId] = useState<string | null>(null);
-  const [snackbar, setSnackbar] = useState<{
-    id: number;
-    message: string;
-  } | null>(null);
-  const snackbarId = useRef(0);
   const isInitialRender = useRef(true);
   const debouncedSearch = useDebouncedValue(
     searchText,
@@ -150,18 +146,14 @@ export default function ExpensesScreen() {
     (id: string) => {
       deleteExpense(id);
       setOpenRowId(null);
-      snackbarId.current += 1;
-      setSnackbar({ id: snackbarId.current, message: "Expense deleted" });
+      showSnackbar({
+        message: "Expense deleted",
+        actionLabel: "Undo",
+        onAction: undoDelete,
+      });
     },
-    [deleteExpense],
+    [deleteExpense, showSnackbar, undoDelete],
   );
-  const handleUndo = useCallback(() => {
-    undoDelete();
-    setSnackbar(null);
-  }, [undoDelete]);
-  const handleDismissSnackbar = useCallback(() => {
-    setSnackbar(null);
-  }, []);
   const handleClearSearch = useCallback(() => {
     setSearchText("");
   }, []);
@@ -224,8 +216,6 @@ export default function ExpensesScreen() {
     () => [styles.listContent, { paddingBottom: bottomPadding }],
     [bottomPadding],
   );
-  const snackbarBottomOffset = bottomPadding - spacing.xl;
-
   return (
     <BlurTargetView
       ref={isFocused ? blurTarget : undefined}
@@ -273,16 +263,6 @@ export default function ExpensesScreen() {
           initialNumToRender={EXPENSE_LIST_MOTION.initialNumToRender}
           extraData={openRowId}
         />
-        {snackbar ? (
-          <Snackbar
-            key={snackbar.id}
-            message={snackbar.message}
-            actionLabel="Undo"
-            onAction={handleUndo}
-            onDismiss={handleDismissSnackbar}
-            bottomOffset={snackbarBottomOffset}
-          />
-        ) : null}
       </SafeAreaView>
     </BlurTargetView>
   );

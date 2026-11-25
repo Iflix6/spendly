@@ -284,14 +284,10 @@ export default function StatsScreen() {
           </>
         ) : (
           <Card style={[styles.card, styles.emptyCard]}>
-            <EmptyState
-              hasFilters={false}
-              onAdd={handleAddExpense}
-              embedded
-            />
+            <EmptyState hasFilters={false} onAdd={handleAddExpense} embedded />
           </Card>
         )}
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }

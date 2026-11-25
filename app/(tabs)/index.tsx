@@ -15,8 +15,8 @@ import { getBudgetRingState } from "@/lib/budget";
 import { isSameMonth } from "@/lib/dates";
 import { selection } from "@/lib/haptics";
 import {
-  markHomeEntrancePresent,
-  shouldPresentHomeEntrance,
+    markHomeEntrancePresent,
+    shouldPresentHomeEntrance,
 } from "@/lib/homeEntrance";
 import { formatMoney } from "@/lib/money";
 import { monthlyDateLabel, totalForMonth, totalsByCategory } from "@/lib/stats";
@@ -24,23 +24,23 @@ import { useExpenseStore, type Expense } from "@/store/useExpenseStore";
 import { durations, easing } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
 import {
-  fontFamily,
-  layout,
-  letterSpacing,
-  radii,
-  spacing,
-  tabularNums,
-  typography,
+    fontFamily,
+    layout,
+    letterSpacing,
+    radii,
+    spacing,
+    tabularNums,
+    typography,
 } from "@/theme/tokens";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+    Fragment,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
@@ -359,9 +359,7 @@ export default function HomeScreen() {
     () => [
       styles.remainingLabel,
       {
-        color: budgetState.isOverBudget
-          ? colors.dangerText
-          : colors.accentText,
+        color: budgetState.isOverBudget ? colors.dangerText : colors.accentText,
       },
     ],
     [budgetState.isOverBudget, colors.accentText, colors.dangerText],
@@ -470,7 +468,10 @@ export default function HomeScreen() {
           </Animated.View>
 
           {monthExpenses.length === 0 ? (
-            <Animated.View entering={getEntrance(1)} style={styles.emptySection}>
+            <Animated.View
+              entering={getEntrance(1)}
+              style={styles.emptySection}
+            >
               <Card style={styles.emptyCard}>
                 <EmptyState
                   hasFilters={false}
@@ -495,8 +496,7 @@ export default function HomeScreen() {
                         amountCents={categoryTotals[category.id]}
                         progress={
                           largestCategoryCents > 0
-                            ? categoryTotals[category.id] /
-                              largestCategoryCents
+                            ? categoryTotals[category.id] / largestCategoryCents
                             : 0
                         }
                         onPress={handleCategoryPress}

@@ -184,7 +184,11 @@ export function BudgetRing({ spentCents, budgetCents, size }: BudgetRingProps) {
           accessible={false}
           style={[
             styles.detail,
-            { color: ringState.isOverBudget ? colors.dangerText : colors.mutedText },
+            {
+              color: ringState.isOverBudget
+                ? colors.dangerText
+                : colors.mutedText,
+            },
           ]}
           numberOfLines={1}
           adjustsFontSizeToFit

@@ -1,14 +1,11 @@
 import {
-  FloatingTabBar,
-  type FloatingTabRoute,
+    FloatingTabBar,
+    type FloatingTabRoute,
 } from "@/components/FloatingTabBar";
 import { TAB_ICONS } from "@/constants/navigation";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { Tabs, useRouter } from "expo-router";
-import {
-  useCallback,
-  type ComponentProps,
-} from "react";
+import { useCallback, type ComponentProps } from "react";
 
 type TabBarProps = Parameters<
   NonNullable<ComponentProps<typeof Tabs>["tabBar"]>

@@ -25,6 +25,8 @@ function clampRatio(value: number): number {
 }
 
 export function getBudgetRingColorPosition(ratio: number): number {
+  "worklet";
+
   const safeRatio = Number.isFinite(ratio) ? Math.max(0, ratio) : 0;
 
   if (safeRatio < BUDGET_RING.warningStartRatio) {

@@ -3,6 +3,8 @@ import { SWIPE } from "@/constants/expenses";
 export type SwipeReleaseAction = "open" | "delete" | "closed";
 
 export function resistSwipeTranslation(translationX: number): number {
+  "worklet";
+
   const leftTranslation = Math.min(0, translationX);
 
   if (leftTranslation >= -SWIPE.actionWidth) {
@@ -16,6 +18,8 @@ export function resistSwipeTranslation(translationX: number): number {
 }
 
 export function swipeReleaseAction(translationX: number): SwipeReleaseAction {
+  "worklet";
+
   const leftTranslation = Math.min(0, translationX);
 
   if (leftTranslation <= -SWIPE.fullDeleteThreshold) {

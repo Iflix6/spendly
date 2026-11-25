@@ -12,6 +12,8 @@ export interface SplashRevealDurationState {
 }
 
 function getConfiguredRevealDurationMs(reduceMotion: boolean): number {
+  "worklet";
+
   return reduceMotion
     ? splash.reduced.fadeOutDurationMs
     : splash.revealDurationMs;
@@ -21,6 +23,8 @@ export function getSplashRevealDurationMs({
   elapsedMs,
   reduceMotion,
 }: SplashRevealDurationState): number {
+  "worklet";
+
   const remainingMs = splash.maximumVisibleMs - elapsedMs;
 
   return Math.max(
@@ -34,6 +38,8 @@ export function shouldRevealSplash({
   elapsedMs,
   reduceMotion,
 }: SplashRevealState): boolean {
+  "worklet";
+
   const minimumVisibleMs = reduceMotion
     ? splash.reduced.minimumHoldMs
     : splash.minimumVisibleMs;

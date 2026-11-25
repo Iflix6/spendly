@@ -278,7 +278,11 @@ export function SwipeableRow({
       </Animated.View>
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.content, contentStyle]}>
-          <ExpenseRow expense={expense} onPress={onPress} />
+          <ExpenseRow
+            expense={expense}
+            onPress={onPress}
+            onAccessibilityDelete={handleDelete}
+          />
         </Animated.View>
       </GestureDetector>
     </Animated.View>

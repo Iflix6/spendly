@@ -13,19 +13,24 @@ import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "../(tabs)/index";
 import AddExpenseScreen from "../add";
-import ExpenseDetailStub from "../expense/[id]";
+import ExpenseDetailScreen from "../expense/[id]";
 
+let mockParams: { id?: string } = {};
 const mockBack = jest.fn();
+const mockCanGoBack = jest.fn(() => true);
 const mockNavigate = jest.fn();
 const mockPush = jest.fn();
+const mockReplace = jest.fn();
 
 jest.mock("expo-router", () => ({
   useIsFocused: () => true,
-  useLocalSearchParams: () => ({}),
+  useLocalSearchParams: () => mockParams,
   useRouter: () => ({
     back: mockBack,
+    canGoBack: mockCanGoBack,
     navigate: mockNavigate,
     push: mockPush,
+    replace: mockReplace,
   }),
 }));
 
@@ -77,7 +82,12 @@ const monthlyExpense: Expense = {
   createdAt: 100,
 };
 
+function recentExpenseLabel(index: number): string {
+  return `Recent expense ${index}, Food, 12 dollars 50 cents, today`;
+}
+
 beforeEach(() => {
+  mockParams = {};
   useExpenseStore.setState({
     expenses: [monthlyExpense],
     budgetCents: 100000,
@@ -85,9 +95,12 @@ beforeEach(() => {
     lastDeleted: null,
   });
   mockBack.mockClear();
+  mockCanGoBack.mockReset().mockReturnValue(true);
   mockNavigate.mockClear();
   mockPush.mockClear();
+  mockReplace.mockClear();
   jest.spyOn(haptics, "selection").mockResolvedValue(undefined);
+  jest.spyOn(haptics, "warning").mockResolvedValue(undefined);
 });
 
 describe("tab screen shell", () => {
@@ -132,13 +145,11 @@ describe("tab screen shell", () => {
     );
 
     for (let index = 1; index <= 5; index += 1) {
-      expect(
-        getByLabelText(`Recent expense ${index}, Food, $12.50`),
-      ).toBeTruthy();
+      expect(getByLabelText(recentExpenseLabel(index))).toBeTruthy();
     }
-    expect(queryByLabelText("Recent expense 0, Food, $12.50")).toBeNull();
+    expect(queryByLabelText(recentExpenseLabel(0))).toBeNull();
 
-    await fireEvent.press(getByLabelText("Recent expense 4, Food, $12.50"));
+    await fireEvent.press(getByLabelText(recentExpenseLabel(4)));
     expect(mockPush).toHaveBeenCalledWith("/expense/recent-4");
   });
 
@@ -208,13 +219,56 @@ describe("stack screens", () => {
     expect(mockBack).toHaveBeenCalledTimes(1);
   });
 
-  it("returns from the expense detail stub", async () => {
-    const { getByRole, getByText } = await renderScreen(<ExpenseDetailStub />);
+  it("renders expense details and returns to the previous screen", async () => {
+    mockParams = { id: monthlyExpense.id };
+    const { getByRole, getByText } = await renderScreen(
+      <ExpenseDetailScreen />,
+    );
     expect(getByText("Expense details")).toHaveStyle({
       color: lightColors.text,
     });
+    expect(getByText("Lunch at Mama Put")).toBeTruthy();
 
     await fireEvent.press(getByRole("button", { name: "Back to expenses" }));
     expect(mockBack).toHaveBeenCalledTimes(1);
+  });
+
+  it("opens the matching expense in the editor", async () => {
+    mockParams = { id: monthlyExpense.id };
+    const { getByRole } = await renderScreen(<ExpenseDetailScreen />);
+
+    await fireEvent.press(getByRole("button", { name: "Edit expense" }));
+    expect(mockPush).toHaveBeenCalledWith("/add?id=home-food");
+  });
+
+  it("deletes an expense and restores it with Undo", async () => {
+    mockParams = { id: monthlyExpense.id };
+    const { getByRole, getByText } = await renderScreen(
+      <ExpenseDetailScreen />,
+    );
+
+    await fireEvent.press(getByRole("button", { name: "Delete expense" }));
+    expect(useExpenseStore.getState().expenses).toHaveLength(0);
+    expect(getByText("Expense deleted")).toBeTruthy();
+
+    await fireEvent.press(getByRole("button", { name: "Undo" }));
+    expect(useExpenseStore.getState().expenses).toEqual([monthlyExpense]);
+  });
+
+  it("returns safely when the expense no longer exists", async () => {
+    mockParams = { id: "missing-expense" };
+    await renderScreen(<ExpenseDetailScreen />);
+
+    expect(mockBack).toHaveBeenCalledTimes(1);
+  });
+
+  it("replaces the route when there is no back entry", async () => {
+    mockParams = { id: monthlyExpense.id };
+    mockCanGoBack.mockReturnValue(false);
+    const { getByRole } = await renderScreen(<ExpenseDetailScreen />);
+
+    await fireEvent.press(getByRole("button", { name: "Back to expenses" }));
+    expect(mockBack).not.toHaveBeenCalled();
+    expect(mockReplace).toHaveBeenCalledWith("/(tabs)/expenses");
   });
 });

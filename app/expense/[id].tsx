@@ -7,7 +7,7 @@ import {
   measureExpenseElement,
   takeExpenseTransition,
   type ExpenseElementRect,
-  type ExpenseTransitionOrigin
+  type ExpenseTransitionOrigin,
 } from "@/lib/expenseTransition";
 import { lightImpact, warning } from "@/lib/haptics";
 import { formatMoney, formatMoneySpoken } from "@/lib/money";
@@ -26,7 +26,14 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { format } from "date-fns";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentRef,
+} from "react";
 import {
   BackHandler,
   Pressable,
@@ -87,6 +94,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: spacing.md,
   },
+  heroIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heroAmount: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   category: {
     ...typography.headline,
     fontFamily: fontFamily.semibold,
@@ -95,6 +111,7 @@ const styles = StyleSheet.create({
   amount: {
     ...typography.display,
     ...tabularNums,
+    width: "100%",
     textAlign: "center",
   },
   details: {
@@ -207,8 +224,8 @@ export default function ExpenseDetailScreen() {
   const [transitionOrigin] = useState<ExpenseTransitionOrigin | null>(() =>
     expenseId ? takeExpenseTransition(expenseId) : null,
   );
-  const iconRef = useRef<View>(null);
-  const amountRef = useRef<Text>(null);
+  const iconRef = useRef<ComponentRef<typeof View> | null>(null);
+  const amountRef = useRef<ComponentRef<typeof View> | null>(null);
   const iconTarget = useSharedValue<ExpenseElementRect | null>(null);
   const amountTarget = useSharedValue<ExpenseElementRect | null>(null);
   const progress = useSharedValue(reduceMotion || !transitionOrigin ? 1 : 0);
@@ -371,11 +388,7 @@ export default function ExpenseDetailScreen() {
               event.velocityX >= EXPENSE_DETAIL.backDismissVelocity);
 
           if (shouldDismiss) {
-            if (reduceMotion) {
-              runOnJS(navigateBack)();
-            } else {
-              runOnJS(dismiss)();
-            }
+            runOnJS(dismiss)();
             return;
           }
 
@@ -399,7 +412,7 @@ export default function ExpenseDetailScreen() {
     }
 
     void lightImpact();
-    router.push(`/add?id=${expenseId}`);
+    router.push(`/add?id=${encodeURIComponent(expenseId)}`);
   }, [expenseId, router]);
 
   const handleDelete = useCallback(() => {
@@ -408,14 +421,13 @@ export default function ExpenseDetailScreen() {
     }
 
     void warning();
-    leaving.current = true;
+    dismiss();
     deleteExpense(expenseId);
     showSnackbar({
       message: "Expense deleted",
       actionLabel: "Undo",
       onAction: undoDelete,
     });
-    dismiss();
   }, [deleteExpense, dismiss, expenseId, showSnackbar, undoDelete]);
 
   const rootStyle = useAnimatedStyle(() => ({
@@ -500,8 +512,9 @@ export default function ExpenseDetailScreen() {
                 accessibilityLabel="Back to expenses"
                 accessibilityHint="Returns to the previous screen"
                 onPress={dismiss}
-                style={backStyle}
+                style={styles.back}
               >
+                <Animated.View style={[StyleSheet.absoluteFill, backStyle]} />
                 <Ionicons
                   name="arrow-back"
                   size={spacing.xl}
@@ -523,25 +536,28 @@ export default function ExpenseDetailScreen() {
                   ]}
                 >
                   <View style={styles.hero}>
-                    <Animated.View ref={iconRef} style={iconStyle}>
-                      <CategoryIcon
-                        categoryId={expense.categoryId}
-                        size={EXPENSE_DETAIL.iconSize}
-                      />
-                    </Animated.View>
-                    <Animated.Text
-                      ref={amountRef}
-                      accessible
-                      accessibilityLabel={formatMoneySpoken(
-                        expense.amountCents,
-                      )}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={EXPENSE_DETAIL.amountMinimumFontScale}
-                      style={[amountTextStyle, amountStyle]}
-                    >
-                      {amount}
-                    </Animated.Text>
+                    <View ref={iconRef} style={styles.heroIcon}>
+                      <Animated.View style={iconStyle}>
+                        <CategoryIcon
+                          categoryId={expense.categoryId}
+                          size={EXPENSE_DETAIL.iconSize}
+                        />
+                      </Animated.View>
+                    </View>
+                    <View ref={amountRef} style={styles.heroAmount}>
+                      <Animated.Text
+                        accessible
+                        accessibilityLabel={formatMoneySpoken(
+                          expense.amountCents,
+                        )}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={EXPENSE_DETAIL.amountMinimumFontScale}
+                        style={[amountTextStyle, amountStyle]}
+                      >
+                        {amount}
+                      </Animated.Text>
+                    </View>
                     <Text style={categoryStyle}>{category.label}</Text>
                   </View>
 
@@ -570,8 +586,11 @@ export default function ExpenseDetailScreen() {
                     accessibilityLabel="Edit expense"
                     accessibilityHint="Opens the expense editor"
                     onPress={handleEdit}
-                    style={editStyle}
+                    style={styles.action}
                   >
+                    <Animated.View
+                      style={[StyleSheet.absoluteFill, editStyle]}
+                    />
                     <Text style={editLabelStyle}>Edit</Text>
                   </Pressable>
                   <Pressable
@@ -579,8 +598,11 @@ export default function ExpenseDetailScreen() {
                     accessibilityLabel="Delete expense"
                     accessibilityHint="Deletes this expense and offers Undo"
                     onPress={handleDelete}
-                    style={deleteStyle}
+                    style={styles.action}
                   >
+                    <Animated.View
+                      style={[StyleSheet.absoluteFill, deleteStyle]}
+                    />
                     <Text style={deleteLabelStyle}>Delete</Text>
                   </Pressable>
                 </Animated.View>

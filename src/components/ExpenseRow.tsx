@@ -2,7 +2,13 @@ import { CategoryIcon } from "@/components/CategoryIcon";
 import { CATEGORY_BY_ID } from "@/constants/categories";
 import { EXPENSE_ROW } from "@/constants/expenses";
 import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
-import { formatMoney } from "@/lib/money";
+import { dayLabel } from "@/lib/dates";
+import {
+    measureExpenseRowTransition,
+    rememberExpenseTransition,
+} from "@/lib/expenseTransition";
+import { lightImpact } from "@/lib/haptics";
+import { formatMoney, formatMoneySpoken } from "@/lib/money";
 import type { Expense } from "@/store/useExpenseStore";
 import { springs } from "@/theme/motion";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -16,8 +22,14 @@ import {
     typography,
 } from "@/theme/tokens";
 import { format } from "date-fns";
-import { memo, useCallback, useMemo } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { memo, useCallback, useMemo, useRef, type ComponentRef } from "react";
+import {
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+    type AccessibilityActionEvent,
+} from "react-native";
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -27,6 +39,7 @@ import Animated, {
 interface ExpenseRowProps {
   expense: Expense;
   onPress: (expense: Expense) => void;
+  onAccessibilityDelete?: () => void;
 }
 
 const styles = StyleSheet.create({
@@ -65,14 +78,21 @@ const styles = StyleSheet.create({
 export const ExpenseRow = memo(function ExpenseRow({
   expense,
   onPress,
+  onAccessibilityDelete,
 }: ExpenseRowProps) {
   const { colors, isDark } = useTheme();
   const reduceMotion = useReducedMotionSafe();
   const pressScale = useSharedValue(1);
+  const rowRef = useRef<ComponentRef<typeof Animated.View> | null>(null);
+  const iconRef = useRef<ComponentRef<typeof View> | null>(null);
+  const amountRef = useRef<ComponentRef<typeof View> | null>(null);
   const category = CATEGORY_BY_ID[expense.categoryId];
   const note = expense.note.trim() || category.label;
-  const time = format(new Date(expense.date), "h:mm a");
+  const expenseDate = new Date(expense.date);
+  const time = format(expenseDate, "h:mm a");
+  const dateLabel = dayLabel(expenseDate);
   const amount = formatMoney(expense.amountCents);
+  const accessibilityLabel = `${note}, ${category.label}, ${formatMoneySpoken(expense.amountCents)}, ${dateLabel.toLocaleLowerCase()}`;
 
   const handlePressIn = useCallback(() => {
     pressScale.value = reduceMotion
@@ -85,8 +105,33 @@ export const ExpenseRow = memo(function ExpenseRow({
   }, [pressScale, reduceMotion]);
 
   const handlePress = useCallback(() => {
-    onPress(expense);
-  }, [expense, onPress]);
+    void lightImpact();
+    if (reduceMotion) {
+      onPress(expense);
+      return;
+    }
+
+    void measureExpenseRowTransition(
+      rowRef.current,
+      iconRef.current,
+      amountRef.current,
+    )
+      .then((origin) => {
+        if (origin) {
+          rememberExpenseTransition(expense.id, origin);
+        }
+        onPress(expense);
+      })
+      .catch(() => onPress(expense));
+  }, [expense, onPress, reduceMotion]);
+  const handleAccessibilityAction = useCallback(
+    (event: AccessibilityActionEvent) => {
+      if (event.nativeEvent.actionName === "delete") {
+        onAccessibilityDelete?.();
+      }
+    },
+    [onAccessibilityDelete],
+  );
 
   const scaleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pressScale.value }],
@@ -118,15 +163,25 @@ export const ExpenseRow = memo(function ExpenseRow({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${note}, ${category.label}, ${amount}`}
+      accessibilityLabel={accessibilityLabel}
       accessibilityHint="Opens expense details"
+      accessibilityActions={
+        onAccessibilityDelete
+          ? [{ name: "delete", label: "Delete" }]
+          : undefined
+      }
+      onAccessibilityAction={
+        onAccessibilityDelete ? handleAccessibilityAction : undefined
+      }
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.pressable}
     >
-      <Animated.View style={[cardStyle, scaleStyle]}>
-        <CategoryIcon categoryId={expense.categoryId} />
+      <Animated.View ref={rowRef} style={[cardStyle, scaleStyle]}>
+        <View ref={iconRef}>
+          <CategoryIcon categoryId={expense.categoryId} />
+        </View>
         <View style={styles.details}>
           <Text style={noteStyle} numberOfLines={1}>
             {note}
@@ -135,7 +190,9 @@ export const ExpenseRow = memo(function ExpenseRow({
             {category.label} · {time}
           </Text>
         </View>
-        <Text style={amountStyle}>{amount}</Text>
+        <Text ref={amountRef} style={amountStyle}>
+          {amount}
+        </Text>
       </Animated.View>
     </Pressable>
   );

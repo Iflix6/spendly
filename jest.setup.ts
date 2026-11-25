@@ -2,8 +2,8 @@ jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
-jest.mock("react-native-reanimated", () => {
-  const { Text, View } = require("react-native");
+/* jest.mock("react-native-reanimated", () => {
+  const { Pressable, Text, View } = require("react-native");
   const createBuilder = () => {
     const builder: {
       duration: () => unknown;
@@ -20,7 +20,12 @@ jest.mock("react-native-reanimated", () => {
 
   return {
     __esModule: true,
-    default: { Text, View },
+    default: {
+      Pressable,
+      Text,
+      View,
+      createAnimatedComponent: (component: unknown) => component,
+    },
     Easing: {
       bezier: () => () => 0,
       cubic: () => 0,
@@ -51,7 +56,14 @@ jest.mock("react-native-reanimated", () => {
     withDelay: (_delay: number, animation: unknown) => animation,
     withRepeat: (animation: unknown) => animation,
     withSequence: (...values: unknown[]) => values[values.length - 1],
-    withSpring: (value: unknown) => value,
+    withSpring: (
+      value: unknown,
+      _config?: unknown,
+      callback?: (finished: boolean) => void,
+    ) => {
+      callback?.(true);
+      return value;
+    },
     withTiming: (
       value: unknown,
       _config?: unknown,
@@ -60,8 +72,8 @@ jest.mock("react-native-reanimated", () => {
       callback?.(true);
       return value;
     },
-  };
-});
+  },
+}); */
 
 jest.mock("expo-blur", () => {
   const { View } = require("react-native");

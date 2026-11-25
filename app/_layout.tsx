@@ -97,7 +97,11 @@ export default function RootLayout() {
                 />
                 <Stack.Screen
                   name="expense/[id]"
-                  options={{ presentation: "card" }}
+                  options={{
+                    presentation: "card",
+                    animation: "none",
+                    gestureEnabled: false,
+                  }}
                 />
               </Stack>
               {!splashFinished && (
